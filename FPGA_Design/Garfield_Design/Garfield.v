@@ -120,7 +120,13 @@ module Garfield(
       output      [7:0]  LED,
 
       ///////// SW /////////
-      input       [3:0]  SW
+      input       [3:0]  SW,
+
+      ///////// SPI_0 interface ////////////
+      input             spi_0_miso,
+      output            spi_0_mosi,
+      output            spi_0_sclk,
+      output      [1:0] spi_0_cs_n
 );
 
 
@@ -151,7 +157,9 @@ module Garfield(
 		//Clock&Reset
 	  .clk_clk                               (FPGA_CLK1_50 ),                               //                            clk.clk
 	  .reset_reset_n                         (hps_fpga_reset_n ),                         //                          reset.reset_n
-	  //HPS ddr3
+      .clk_1_fpga_clock_clk                  (FPGA_CLK2_50),
+      .clk_1_fpga_reset_reset_n              (hps_fpga_reset_n),
+      //HPS ddr3
 	  .memory_mem_a                          ( HPS_DDR3_ADDR),                       //                memory.mem_a
 	  .memory_mem_ba                         ( HPS_DDR3_BA),                         //                .mem_ba
 	  .memory_mem_ck                         ( HPS_DDR3_CK_P),                       //                .mem_ck
@@ -233,6 +241,12 @@ module Garfield(
       .hps_0_f2h_debug_reset_req_reset_n           (~hps_debug_reset ),     //      hps_0_f2h_debug_reset_req.reset_n
       .hps_0_f2h_stm_hw_events_stm_hwevents        (stm_hw_events ),  //        hps_0_f2h_stm_hw_events.stm_hwevents
       .hps_0_f2h_warm_reset_req_reset_n            (~hps_warm_reset ),      //       hps_0_f2h_warm_reset_req.reset_n
+
+      // fpga spi interface 
+      .spi_0_external_connection_MISO              (spi_0_miso),            //          spi_0_external_connection.MISO
+      .spi_0_external_connection_MOSI              (spi_0_mosi),            //                                   .MOSI
+      .spi_0_external_connection_SCLK              (spi_0_sclk),            //                                   .SCLK
+      .spi_0_external_connection_SS_n              (spi_0_cs_n),
  );
 
 // Debounce logic to clean out glitches within 1ms
