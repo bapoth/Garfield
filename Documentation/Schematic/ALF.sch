@@ -522,7 +522,9 @@ VCC_33
 Text GLabel 10200 4700 2    60   BiDi ~ 0
 VCC_5
 Wire Wire Line
-	8100 4300 8100 4400
+	8100 4300 8100 4350
+Wire Wire Line
+	8100 4350 8100 4400
 Wire Wire Line
 	8100 4350 8200 4350
 Wire Wire Line
@@ -540,7 +542,9 @@ Wire Wire Line
 Wire Notes Line
 	4050 5150 5850 5150
 Wire Wire Line
-	2750 4750 2750 4850
+	2750 4750 2750 4800
+Wire Wire Line
+	2750 4800 2750 4850
 Text GLabel 2900 4800 2    60   Input ~ 0
 GND
 Text GLabel 2900 4650 2    60   Input ~ 0
@@ -607,7 +611,9 @@ $EndComp
 Text GLabel 5950 7050 0    60   Input ~ 0
 GND
 Wire Wire Line
-	5950 7050 6200 7050
+	5950 7050 6050 7050
+Wire Wire Line
+	6050 7050 6200 7050
 Wire Wire Line
 	6200 7250 6050 7250
 Wire Wire Line
@@ -844,19 +850,19 @@ Wire Wire Line
 Wire Wire Line
 	8850 1700 8950 1700
 Text GLabel 5050 5400 2    60   Input ~ 0
-SCLK_5V
+SCLK
 Text GLabel 5050 5500 2    60   Input ~ 0
-MISO_5V
+MISO
 Text GLabel 5050 5600 2    60   Input ~ 0
-MOSI_5V
+MOSI
 Text GLabel 5050 5700 2    60   Input ~ 0
-TFT_CS_5V
+TFT_CS
 Text GLabel 5050 5800 2    60   Input ~ 0
-TFT_DC_5V
+TFT_DC
 Text GLabel 5050 5900 2    60   Input ~ 0
-TOUCH_CS_5V
+TOUCH_CS
 Text GLabel 5050 6200 2    60   Input ~ 0
-SD_CS_5V
+SD_CS
 Wire Wire Line
 	5050 5400 4950 5400
 Wire Wire Line
@@ -871,22 +877,6 @@ Wire Wire Line
 	5050 5900 4950 5900
 Wire Wire Line
 	5050 6200 4950 6200
-Text GLabel 3200 6550 2    60   Input ~ 0
-TFT_CS_5V
-Text GLabel 3200 6750 2    60   Input ~ 0
-TOUCH_CS_5V
-Text GLabel 3200 6850 2    60   Input ~ 0
-SD_CS_5V
-Wire Wire Line
-	2950 6550 3200 6550
-Wire Wire Line
-	2950 6650 3200 6650
-Wire Wire Line
-	2950 6750 3200 6750
-Text GLabel 3200 6650 2    60   Input ~ 0
-TFT_DC_5V
-Wire Wire Line
-	3200 6850 2950 6850
 Text GLabel 3200 7150 2    60   Input ~ 0
 SDA_5V
 Text GLabel 3200 7250 2    60   Input ~ 0
@@ -895,54 +885,16 @@ Wire Wire Line
 	3200 7150 2950 7150
 Wire Wire Line
 	3200 7250 2950 7250
-Text GLabel 3150 6100 2    60   Input ~ 0
-SCLK_5V
-Text GLabel 3150 6200 2    60   Input ~ 0
-MISO_5V
-Text GLabel 3150 6300 2    60   Input ~ 0
-MOSI_5V
-Wire Wire Line
-	3150 6100 2950 6100
-Wire Wire Line
-	3150 6200 2950 6200
-Wire Wire Line
-	3150 6300 2950 6300
-Text GLabel 1300 7150 0    60   Input ~ 0
+Text GLabel 850  7150 0    60   Input ~ 0
 SDA
 Text GLabel 1300 7250 0    60   Input ~ 0
 SCL
 Wire Wire Line
 	1550 7250 1300 7250
 Wire Wire Line
-	1300 7150 1550 7150
-Text GLabel 1300 6100 0    60   Input ~ 0
-SCLK
-Text GLabel 1300 6200 0    60   Input ~ 0
-MISO
-Text GLabel 1300 6300 0    60   Input ~ 0
-MOSI
-Text GLabel 1300 6550 0    60   Input ~ 0
-TFT_CS
-Text GLabel 1300 6650 0    60   Input ~ 0
-TFT_DC
-Text GLabel 1300 6750 0    60   Input ~ 0
-TOUCH_CS
-Text GLabel 1300 6850 0    60   Input ~ 0
-SD_CS
+	850  7150 900  7150
 Wire Wire Line
-	1550 6100 1300 6100
-Wire Wire Line
-	1300 6200 1550 6200
-Wire Wire Line
-	1300 6300 1550 6300
-Wire Wire Line
-	1300 6550 1550 6550
-Wire Wire Line
-	1300 6650 1550 6650
-Wire Wire Line
-	1300 6750 1550 6750
-Wire Wire Line
-	1300 6850 1550 6850
+	900  7150 1550 7150
 Wire Notes Line
 	550  5100 550  4350
 Wire Notes Line
@@ -979,4 +931,9 @@ Wire Notes Line
 	6900 7750 4050 7750
 Wire Notes Line
 	550  5100 650  5100
+Text GLabel 900  7300 3    60   Input ~ 0
+VCC_33
+Wire Wire Line
+	900  7300 900  7150
+Connection ~ 900  7150
 $EndSCHEMATC
