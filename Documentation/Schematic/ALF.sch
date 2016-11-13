@@ -344,8 +344,6 @@ Text GLabel 5800 1050 2    60   BiDi ~ 0
 LED_VL_IN
 Text GLabel 5800 1150 2    60   BiDi ~ 0
 LED_VR_IN
-Text GLabel 5800 1250 2    60   BiDi ~ 0
-GPIO_1_D9
 Text GLabel 5800 1350 2    60   BiDi ~ 0
 GND
 Text GLabel 5800 1450 2    60   BiDi ~ 0
@@ -475,14 +473,14 @@ F 3 "" H 2450 4750 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Sheet
-S 8950 1100 1300 1100
+S 9000 1100 1300 1100
 U 582051C8
 F0 "Ultraschall" 60
 F1 "Ultraschall.sch" 60
-F2 "VCC" I L 8950 1550 60 
-F3 "GND" I L 8950 1700 60 
-F4 "SDA" B R 10250 1550 60 
-F5 "SCL" I R 10250 1700 60 
+F2 "VCC" I L 9000 1550 60 
+F3 "GND" I L 9000 1700 60 
+F4 "SDA" B R 10300 1550 60 
+F5 "SCL" I R 10300 1700 60 
 $EndSheet
 $Sheet
 S 9300 2600 1150 1000
@@ -548,7 +546,7 @@ Wire Wire Line
 Text GLabel 2900 4800 2    60   Input ~ 0
 GND
 Text GLabel 2900 4650 2    60   Input ~ 0
-VCC33
+VCC_5
 Wire Wire Line
 	2900 4650 2750 4650
 Wire Wire Line
@@ -734,26 +732,26 @@ Wire Notes Line
 	8500 3750 8500 2450
 Wire Notes Line
 	550  7750 2500 7750
-Text GLabel 3250 7500 2    60   Input ~ 0
+Text GLabel 3150 7500 2    60   Input ~ 0
 GND
 Text GLabel 1350 5500 0    60   Input ~ 0
-VCC_33
+VCC3P3
 Wire Wire Line
 	1350 5500 1550 5500
 Wire Wire Line
-	3250 7500 2950 7500
+	3150 7500 2950 7500
 Text GLabel 3150 5500 2    60   Input ~ 0
 VCC_5
 Wire Wire Line
 	3150 5500 2950 5500
-Text GLabel 1300 6450 0    60   Input ~ 0
-VCC_33
+Text GLabel 1350 6450 0    60   Input ~ 0
+VCC3P3
 Wire Wire Line
-	1300 6450 1550 6450
-Text GLabel 3200 6450 2    60   Input ~ 0
+	1350 6450 1550 6450
+Text GLabel 3150 6450 2    60   Input ~ 0
 VCC_5
 Wire Wire Line
-	3200 6450 2950 6450
+	3150 6450 2950 6450
 Wire Notes Line
 	550  5150 4000 5150
 Wire Notes Line
@@ -838,17 +836,17 @@ SDA_5V
 Text GLabel 10400 1700 2    60   Input ~ 0
 SCL_5V
 Wire Wire Line
-	10400 1550 10250 1550
+	10400 1550 10300 1550
 Wire Wire Line
-	10400 1700 10250 1700
+	10400 1700 10300 1700
 Text GLabel 8850 1550 0    60   Input ~ 0
 VCC_5
 Text GLabel 8850 1700 0    60   Input ~ 0
 GND
 Wire Wire Line
-	8850 1550 8950 1550
+	8850 1550 9000 1550
 Wire Wire Line
-	8850 1700 8950 1700
+	8850 1700 9000 1700
 Text GLabel 5050 5400 2    60   Input ~ 0
 SCLK
 Text GLabel 5050 5500 2    60   Input ~ 0
@@ -877,24 +875,26 @@ Wire Wire Line
 	5050 5900 4950 5900
 Wire Wire Line
 	5050 6200 4950 6200
-Text GLabel 3200 7150 2    60   Input ~ 0
+Text GLabel 3150 7150 2    60   Input ~ 0
 SDA_5V
-Text GLabel 3200 7250 2    60   Input ~ 0
+Text GLabel 3150 7250 2    60   Input ~ 0
 SCL_5V
 Wire Wire Line
-	3200 7150 2950 7150
+	3150 7150 2950 7150
 Wire Wire Line
-	3200 7250 2950 7250
+	3150 7250 2950 7250
 Text GLabel 850  7150 0    60   Input ~ 0
 SDA
-Text GLabel 1300 7250 0    60   Input ~ 0
+Text GLabel 850  7250 0    60   Input ~ 0
 SCL
 Wire Wire Line
-	1550 7250 1300 7250
+	850  7250 1250 7250
 Wire Wire Line
-	850  7150 900  7150
+	1250 7250 1550 7250
 Wire Wire Line
-	900  7150 1550 7150
+	850  7150 1050 7150
+Wire Wire Line
+	1050 7150 1550 7150
 Wire Notes Line
 	550  5100 550  4350
 Wire Notes Line
@@ -905,18 +905,18 @@ Wire Notes Line
 	4000 5100 600  5100
 Text Notes 600  4450 0    60   ~ 0
 Spannungsversorgung FPGA
-Text GLabel 3200 6950 2    60   Input ~ 0
+Text GLabel 3150 6950 2    60   Input ~ 0
 MOTOR_PWM_5V
 Text GLabel 1350 6950 0    60   Input ~ 0
 MOTOR_PWM_33
-Text GLabel 3200 7050 2    60   Input ~ 0
+Text GLabel 3150 7050 2    60   Input ~ 0
 MOTOR_DIR_5V
 Text GLabel 1350 7050 0    60   Input ~ 0
 MOTOR_DIR_33
 Wire Wire Line
-	3200 6950 2950 6950
+	3150 6950 2950 6950
 Wire Wire Line
-	3200 7050 2950 7050
+	3150 7050 2950 7050
 Wire Wire Line
 	1550 6950 1350 6950
 Wire Wire Line
@@ -931,9 +931,88 @@ Wire Notes Line
 	6900 7750 4050 7750
 Wire Notes Line
 	550  5100 650  5100
-Text GLabel 900  7300 3    60   Input ~ 0
-VCC_33
+Text GLabel 950  7650 0    60   Input ~ 0
+VCC3P3
+$Comp
+L R R?
+U 1 1 5828C7A0
+P 1050 7450
+F 0 "R?" V 1130 7450 50  0000 C CNN
+F 1 "82k" V 1050 7450 50  0000 C CNN
+F 2 "" V 980 7450 50  0000 C CNN
+F 3 "" H 1050 7450 50  0000 C CNN
+	1    1050 7450
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 5828CA79
+P 1250 7450
+F 0 "R?" V 1330 7450 50  0000 C CNN
+F 1 "82k" V 1250 7450 50  0000 C CNN
+F 2 "" V 1180 7450 50  0000 C CNN
+F 3 "" H 1250 7450 50  0000 C CNN
+	1    1250 7450
+	1    0    0    -1  
+$EndComp
 Wire Wire Line
-	900  7300 900  7150
-Connection ~ 900  7150
+	1050 7300 1050 7150
+Connection ~ 1050 7150
+Wire Wire Line
+	1250 7300 1250 7250
+Connection ~ 1250 7250
+Wire Wire Line
+	1250 7650 1250 7600
+Wire Wire Line
+	950  7650 1050 7650
+Wire Wire Line
+	1050 7650 1250 7650
+Wire Wire Line
+	1050 7600 1050 7650
+Connection ~ 1050 7650
+Wire Notes Line
+	7250 3800 7250 5100
+Text Notes 6400 3900 0    60   ~ 0
+Servo BMS 630MG
+$Comp
+L CONN_01X03 P?
+U 1 1 582956EF
+P 6800 4950
+F 0 "P?" H 6800 5150 50  0000 C CNN
+F 1 "CONN_01X03" V 6900 4950 50  0000 C CNN
+F 2 "" H 6800 4950 50  0000 C CNN
+F 3 "" H 6800 4950 50  0000 C CNN
+	1    6800 4950
+	0    1    1    0   
+$EndComp
+Text GLabel 6900 4500 1    60   Input ~ 0
+GND
+Text GLabel 6800 4500 1    60   Input ~ 0
+VCC_5
+Text GLabel 6700 4500 1    60   Input ~ 0
+SERVO_OUT
+Wire Wire Line
+	6900 4750 6900 4500
+Wire Wire Line
+	6800 4750 6800 4500
+Wire Wire Line
+	6700 4750 6700 4500
+Text GLabel 3150 6300 2    60   Input ~ 0
+SERVO_OUT
+Text GLabel 1350 6300 0    60   Input ~ 0
+SERVO_IN
+Wire Wire Line
+	1350 6300 1550 6300
+Wire Wire Line
+	2950 6300 3150 6300
+Text GLabel 5800 1250 2    60   BiDi ~ 0
+SERVO_IN
+Wire Notes Line
+	7250 5100 6650 5100
+Wire Notes Line
+	6350 5100 6350 3800
+Wire Notes Line
+	6350 3800 7250 3800
+Wire Notes Line
+	6700 5100 6350 5100
 $EndSCHEMATC
