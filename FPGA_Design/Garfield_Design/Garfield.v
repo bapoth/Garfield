@@ -120,32 +120,46 @@ module Garfield(
       output      [7:0]  LED,
 
       ///////// SW /////////
-      input       [3:0]  SW,
-
-      ///////// SPI_0 interface ////////////
-      input             spi_0_miso,
-      output            spi_0_mosi,
-      output            spi_0_sclk,
-      output      [1:0] spi_0_cs_n
+      input       [3:0]  SW
 );
 
 
 //=======================================================
 //  REG/WIRE declarations
 //=======================================================
-  wire  hps_fpga_reset_n;
-  wire [1:0] fpga_debounced_buttons;
-  wire [6:0]  fpga_led_internal;
-  wire [2:0]  hps_reset_req;
-  wire        hps_cold_reset;
-  wire        hps_warm_reset;
-  wire        hps_debug_reset;
-  wire [27:0] stm_hw_events;
-  wire 		  fpga_clk_50;
+  wire          hps_fpga_reset_n;
+  wire [1:0]    fpga_debounced_buttons;
+  wire [6:0]    fpga_led_internal;
+  wire [2:0]    hps_reset_req;
+  wire          hps_cold_reset;
+  wire          hps_warm_reset;
+  wire          hps_debug_reset;
+  wire [27:0]   stm_hw_events;
+  wire 		   fpga_clk_50;
+  wire          spi_0_miso;
+  wire          spi_0_mosi;
+  wire          spi_0_sclk;
+  wire [2:0]    spi_0_cs_n;
+
+  wire          i2c_0_scl;
+  wire          i2c_0_sda;
+
+  wire [3:0]    garfield_lighting;
+  wire [7:0]    garfield_gpio;
+
 // connection of internal logics
   assign LED[7:1] = fpga_led_internal;
   assign fpga_clk_50=FPGA_CLK1_50;
   assign stm_hw_events    = {{27{1'b0}}};
+
+  //garfield assigns
+  assign GPIO_1[1] = garfield_lighting[0];
+  assign GPIO_1[3] = garfield_lighting[1];
+  assign GPIO_1[5] = garfield_lighting[2];
+  assign GPIO_1[7] = garfield_lighting[3];
+
+  assign GPIO_1[0] = i2c_0_sda;
+  assign GPIO_1[2] = i2c_0_scl;
 
 
 //=======================================================
@@ -242,11 +256,19 @@ module Garfield(
       .hps_0_f2h_stm_hw_events_stm_hwevents        (stm_hw_events ),  //        hps_0_f2h_stm_hw_events.stm_hwevents
       .hps_0_f2h_warm_reset_req_reset_n            (~hps_warm_reset ),      //       hps_0_f2h_warm_reset_req.reset_n
 
-      // fpga spi interface 
+      // fpga spi interface
       .spi_0_external_connection_MISO              (spi_0_miso),            //          spi_0_external_connection.MISO
       .spi_0_external_connection_MOSI              (spi_0_mosi),            //                                   .MOSI
       .spi_0_external_connection_SCLK              (spi_0_sclk),            //                                   .SCLK
       .spi_0_external_connection_SS_n              (spi_0_cs_n),
+
+      // fpga i2c interface
+      .i2c_0_external_connection_scl_pad_io        (i2c_0_scl),
+      .i2c_0_external_connection_sda_pad_io        (i2c_0_sda),
+
+      // garfield io's
+      .garfield_general_io_external_connection_export       (garfield_gpio),
+      .garfield_lighting_led_external_connection_export     (garfield_lighting),
  );
 
 // Debounce logic to clean out glitches within 1ms
