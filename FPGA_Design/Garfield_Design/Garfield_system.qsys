@@ -1436,7 +1436,7 @@
    kind="altera_avalon_sysid_qsys"
    version="16.0"
    enabled="1">
-  <parameter name="id" value="17899542" />
+  <parameter name="id" value="319889430" />
  </module>
  <module
    name="timer_0_nios2"

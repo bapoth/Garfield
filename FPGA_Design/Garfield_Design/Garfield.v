@@ -161,6 +161,13 @@ module Garfield(
   assign GPIO_1[0] = i2c_0_sda;
   assign GPIO_1[2] = i2c_0_scl;
 
+  assign ARDUINO_IO[13] = spi_0_sclk;
+  assign ARDUINO_IO[12] = spi_0_miso;
+  assign ARDUINO_IO[11] = spi_0_mosi;
+  assign ARDUINO_IO[10] = spi_0_cs_n[0];    //tft chipselect
+  assign ARDUINO_IO[4] = spi_0_cs_n[1];     //sd-card chipselect
+  assign ARDUINO_IO[9] = garfield_gpio[7];  //tft data command switch
+
 
 //=======================================================
 //  Structural coding
