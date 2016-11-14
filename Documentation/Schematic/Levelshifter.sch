@@ -28,12 +28,11 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:ALF-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 6 7
+Sheet 7 7
 Title ""
 Date ""
 Rev ""
@@ -144,5 +143,56 @@ B27
 Text HLabel 3450 2050 2    60   BiDi ~ 0
 B28
 Text HLabel 3450 2150 2    60   Input ~ 0
+GND
+$Comp
+L CONN_02X10 P?
+U 1 1 5829D056
+P 4600 1700
+F 0 "P?" H 4600 2250 50  0000 C CNN
+F 1 "Levelshifter3" V 4600 1700 50  0000 C CNN
+F 2 "" H 4600 500 50  0000 C CNN
+F 3 "" H 4600 500 50  0000 C CNN
+	1    4600 1700
+	1    0    0    -1  
+$EndComp
+Text HLabel 4350 1350 0    60   Input ~ 0
+VCC3A
+Text HLabel 4350 1250 0    60   BiDi ~ 0
+A31
+Text HLabel 4350 1450 0    60   BiDi ~ 0
+A32
+Text HLabel 4350 1550 0    60   BiDi ~ 0
+A33
+Text HLabel 4350 1650 0    60   BiDi ~ 0
+A34
+Text HLabel 4350 1750 0    60   BiDi ~ 0
+A35
+Text HLabel 4350 1850 0    60   BiDi ~ 0
+A36
+Text HLabel 4350 1950 0    60   BiDi ~ 0
+A37
+Text HLabel 4350 2050 0    60   BiDi ~ 0
+A38
+Text HLabel 4350 2150 0    60   Input ~ 0
+OE3
+Text HLabel 4850 1250 2    60   BiDi ~ 0
+B31
+Text HLabel 4850 1350 2    60   Input ~ 0
+VCC3B
+Text HLabel 4850 1450 2    60   BiDi ~ 0
+B32
+Text HLabel 4850 1550 2    60   BiDi ~ 0
+B33
+Text HLabel 4850 1650 2    60   BiDi ~ 0
+B34
+Text HLabel 4850 1750 2    60   BiDi ~ 0
+B35
+Text HLabel 4850 1850 2    60   BiDi ~ 0
+B36
+Text HLabel 4850 1950 2    60   BiDi ~ 0
+B37
+Text HLabel 4850 2050 2    60   BiDi ~ 0
+B38
+Text HLabel 4850 2150 2    60   Input ~ 0
 GND
 $EndSCHEMATC
