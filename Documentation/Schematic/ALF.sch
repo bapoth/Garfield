@@ -28,6 +28,7 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:ALF-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
@@ -176,9 +177,9 @@ ADC_IN2
 Text GLabel 2650 2500 2    60   Input ~ 0
 ADC_IN3
 Text GLabel 2650 2600 2    60   Input ~ 0
-ADC_IN4
+SDA
 Text GLabel 2650 2700 2    60   Input ~ 0
-ADC_IN5
+SCL
 Text GLabel 4250 1000 0    60   BiDi ~ 0
 Arduino_IO15
 Text GLabel 4250 1100 0    60   BiDi ~ 0
