@@ -402,7 +402,7 @@ Wire Notes Line
 	7250 5150 7250 6450
 Text Notes 5950 5250 0    60   ~ 0
 MPU 6050
-Text Notes 4150 6600 0    60   ~ 0
+Text Notes 5650 6600 0    60   ~ 0
 Drehzahlsensor
 Wire Notes Line
 	5850 6450 5850 5150
@@ -516,9 +516,7 @@ VCC_33
 Text GLabel 10200 4700 2    60   BiDi ~ 0
 VCC_5
 Wire Wire Line
-	8100 4300 8100 4350
-Wire Wire Line
-	8100 4350 8100 4400
+	8100 4300 8100 4400
 Wire Wire Line
 	8100 4350 8200 4350
 Wire Wire Line
@@ -536,9 +534,7 @@ Wire Wire Line
 Wire Notes Line
 	4050 5150 5850 5150
 Wire Wire Line
-	5150 4800 5150 4850
-Wire Wire Line
-	5150 4850 5150 4900
+	5150 4800 5150 4900
 Text GLabel 5300 4850 2    60   Input ~ 0
 GND
 Text GLabel 5300 4700 2    60   Input ~ 0
@@ -594,46 +590,41 @@ Wire Wire Line
 $Comp
 L CONN_01X04 P?
 U 1 1 58230541
-P 6400 7200
-F 0 "P?" H 6400 7450 50  0000 C CNN
-F 1 "CONN_01X04" V 6500 7200 50  0000 C CNN
-F 2 "" H 6400 7200 50  0000 C CNN
-F 3 "" H 6400 7200 50  0000 C CNN
-	1    6400 7200
+P 6700 7200
+F 0 "P?" H 6700 7450 50  0000 C CNN
+F 1 "CONN_01X04" V 6800 7200 50  0000 C CNN
+F 2 "" H 6700 7200 50  0000 C CNN
+F 3 "" H 6700 7200 50  0000 C CNN
+	1    6700 7200
 	1    0    0    -1  
 $EndComp
-Text GLabel 5950 7050 0    60   Input ~ 0
+Text GLabel 6100 7050 0    60   Input ~ 0
 GND
 Wire Wire Line
-	5950 7050 6050 7050
+	6100 7050 6500 7050
 Wire Wire Line
-	6050 7050 6200 7050
-Wire Wire Line
-	6200 7250 6050 7250
-Wire Wire Line
-	6050 7250 6050 7050
-Connection ~ 6050 7050
-Text GLabel 5950 7150 0    60   Input ~ 0
+	6500 7250 6400 7250
+Text GLabel 6100 7150 0    60   Input ~ 0
 VCC_33
-Text GLabel 5250 7350 0    60   Output ~ 0
+Text GLabel 6100 7350 0    60   Output ~ 0
 ROT_OUT
 Wire Wire Line
-	5750 7350 6200 7350
+	6450 7350 6500 7350
 Wire Wire Line
-	6200 7150 5950 7150
+	6500 7150 6100 7150
 $Comp
 L R R?
 U 1 1 58231B4F
-P 5600 7350
-F 0 "R?" V 5680 7350 50  0000 C CNN
-F 1 "120" V 5600 7350 50  0000 C CNN
-F 2 "" V 5530 7350 50  0000 C CNN
-F 3 "" H 5600 7350 50  0000 C CNN
-	1    5600 7350
+P 6300 7350
+F 0 "R?" V 6380 7350 50  0000 C CNN
+F 1 "120" V 6300 7350 50  0000 C CNN
+F 2 "" V 6230 7350 50  0000 C CNN
+F 3 "" H 6300 7350 50  0000 C CNN
+	1    6300 7350
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	5450 7350 5250 7350
+	6150 7350 6100 7350
 $Sheet
 S 8300 5400 1600 800 
 U 58232BD1
@@ -712,7 +703,7 @@ Wire Notes Line
 Wire Notes Line
 	4000 7750 2450 7750
 Wire Notes Line
-	4050 7750 4050 6500
+	5600 7750 5600 6500
 Wire Notes Line
 	6900 7750 6900 6500
 Wire Notes Line
@@ -864,10 +855,6 @@ Wire Notes Line
 	5900 5150 7250 5150
 Wire Notes Line
 	7250 6450 5900 6450
-Wire Notes Line
-	6900 6500 4050 6500
-Wire Notes Line
-	6900 7750 4050 7750
 Text GLabel 4850 550  0    60   Input ~ 0
 VCC3P3
 $Comp
@@ -1012,9 +999,7 @@ Wire Wire Line
 Wire Wire Line
 	5300 950  4850 950 
 Wire Wire Line
-	4850 550  5000 550 
-Wire Wire Line
-	5000 550  5200 550 
+	4850 550  5200 550 
 Wire Wire Line
 	5200 550  5200 650 
 Connection ~ 5000 550 
@@ -1090,4 +1075,45 @@ Wire Wire Line
 	3100 7050 2900 7050
 Wire Wire Line
 	3100 7150 2900 7150
+Wire Wire Line
+	6400 7250 6400 7050
+Connection ~ 6400 7050
+Wire Notes Line
+	6900 6500 5600 6500
+Wire Notes Line
+	5600 7750 6900 7750
+Wire Notes Line
+	4050 6500 5550 6500
+Wire Notes Line
+	5550 6500 5550 7750
+Wire Notes Line
+	5550 7750 4050 7750
+Wire Notes Line
+	4050 7750 4050 6500
+Text Notes 4100 6600 0    60   ~ 0
+Spannungsversorgung Router
+$Comp
+L USB_A P?
+U 1 1 58338FBE
+P 4800 6900
+F 0 "P?" H 5000 6700 50  0000 C CNN
+F 1 "USB_A" H 4750 7100 50  0000 C CNN
+F 2 "" V 4750 6800 50  0000 C CNN
+F 3 "" V 4750 6800 50  0000 C CNN
+	1    4800 6900
+	1    0    0    -1  
+$EndComp
+Text GLabel 4900 7300 3    60   Input ~ 0
+GND
+Text GLabel 4600 7300 3    60   Input ~ 0
+VCC_5
+Wire Wire Line
+	4900 7300 4900 7200
+Wire Wire Line
+	4600 7200 4600 7300
+Wire Wire Line
+	5100 6800 5100 7250
+Wire Wire Line
+	5100 7250 4900 7250
+Connection ~ 4900 7250
 $EndSCHEMATC
