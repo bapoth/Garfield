@@ -1,1 +1,6 @@
 This is the documentation file for all software projects
+
+OS: 
+    - contains the FreeRTOS source files to build a runnable OS on NIOS2 core
+Applications_LIDAR:  
+    - contains the source files for the LIDAR handling without ROS system (VM software project is _NOT_ included)
