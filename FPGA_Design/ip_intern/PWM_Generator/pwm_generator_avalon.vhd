@@ -11,6 +11,7 @@ entity pwm_generator_avalonn is
 	port(
 		-- avalon clk interface, there is no need for a reset
 		clk                     : in  std_logic;
+		reset                   : in  std_logic;
 		-- avalon MM interface
 		address                 : in  std_logic_vector(0 downto 0);
 		read, write, chipselect : in  std_logic;
@@ -78,7 +79,7 @@ begin
 	----------------------------------------
 	-- processes
 	----------------------------------------
-	
+
 	--! @brief
 	write_proc : process(clk) is
 	begin
