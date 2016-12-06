@@ -13,7 +13,7 @@
 /// init function for the pwm, writing 0 to the output
 #define PWMGen_Init PWMGen_Set_DutyCycle(0)
 
-typedef alt_u8 PWMGen_DutyCycle_Width;
+typedef alt_u32 PWMGen_DutyCycle_Width;
 /*!
    \brief sets the dutycycle in the pwm control register
    \param base - the base address of the pwm control register, can be normally found in the generated system.h header file

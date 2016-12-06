@@ -2,9 +2,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity pwm_generator_avalonn is
+entity pwm_generator_avalon is
 	generic(
-		datawidth : natural := 8;
+		datawidth : natural := 32;
 		freq_core : natural := 100_000_000;
 		freq_pwm  : natural := 10_000
 	);
@@ -21,13 +21,14 @@ entity pwm_generator_avalonn is
 		-- avalon output interface
 		pwm_output_signal       : out std_logic
 	);
-end entity pwm_generator_avalonn;
+end entity pwm_generator_avalon;
 
-architecture RTL of pwm_generator_avalonn is
+architecture RTL of pwm_generator_avalon is
 
 	----------------------------------------
 	-- constants
 	----------------------------------------
+    constant pwm_generator_bit_width : natural := 8;
 
 	----------------------------------------
 	-- signals
@@ -61,13 +62,13 @@ begin
 	----------------------------------------
 	pwm_gen_inst : pwm_generator
 		generic map(
-			width      => datawidth,
+			width      => pwm_generator_bit_width,
 			freq_clock => freq_core,
 			freq_pwm   => freq_pwm
 		)
 		port map(
 			clk      => clk,
-			pwmvalue => control_register,
+			pwmvalue(pwm_generator_bit_width -1 downto 0) => control_register(pwm_generator_bit_width - 1 downto 0),
 			pwmout   => pwm_output_signal
 		);
 
@@ -80,19 +81,23 @@ begin
 	-- processes
 	----------------------------------------
 
-	--! @brief
+    --! @brief
 	write_proc : process(clk) is
 	begin
 		if rising_edge(clk) then
-			datavalid_write <= false;
-			if write = '1' and chipselect = '1' then
-				case address is
-					when "0" =>
-						control_register <= writedata;
-					when others =>
-						null;
-				end case;
-				datavalid_write <= true;
+            datavalid_write <= false;
+			if reset = '1' then
+				control_register <= (others => '0');
+			elsif chipselect = '1' then
+                if write = '1' then
+    				case (address) is
+    					when "0" =>
+    						control_register(pwm_generator_bit_width - 1 downto 0) <= writedata(pwm_generator_bit_width - 1 downto 0);
+                        when others =>
+                            null;
+    				end case;
+    				datavalid_write <= true;
+                end if;
 			end if;
 		end if;
 	end process write_proc;
