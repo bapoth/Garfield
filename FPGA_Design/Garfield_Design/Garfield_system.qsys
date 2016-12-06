@@ -9,6 +9,22 @@
    categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
+   element Drive_PWM
+   {
+      datum _sortIndex
+      {
+         value = "16";
+         type = "int";
+      }
+   }
+   element Drive_PWM.avalon_slave_0
+   {
+      datum baseAddress
+      {
+         value = "128";
+         type = "String";
+      }
+   }
    element Garfield_GPIO
    {
       datum _sortIndex
@@ -23,6 +39,38 @@
       {
          value = "14";
          type = "int";
+      }
+   }
+   element Garfield_system
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element Garfield_system
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element Garfield_system
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element Garfield_system
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
       }
    }
    element Garfield_system
@@ -101,6 +149,22 @@
       datum baseAddress
       {
          value = "65600";
+         type = "String";
+      }
+   }
+   element Steering_PWM
+   {
+      datum _sortIndex
+      {
+         value = "17";
+         type = "int";
+      }
+   }
+   element Steering_PWM.avalon_slave_0
+   {
+      datum baseAddress
+      {
+         value = "144";
          type = "String";
       }
    }
@@ -288,6 +352,11 @@
    type="reset"
    dir="end" />
  <interface
+   name="drive_pwm_pwm_signal"
+   internal="Drive_PWM.PWM_Signal"
+   type="conduit"
+   dir="end" />
+ <interface
    name="garfield_general_io_external_connection"
    internal="Garfield_GPIO.external_connection"
    type="conduit"
@@ -351,6 +420,16 @@
    internal="spi_0.external"
    type="conduit"
    dir="end" />
+ <interface
+   name="steering_pwm_pwm_signal"
+   internal="Steering_PWM.PWM_Signal"
+   type="conduit"
+   dir="end" />
+ <module name="Drive_PWM" kind="PWM_Generator" version="1.0" enabled="1">
+  <parameter name="datawidth" value="32" />
+  <parameter name="freq_core" value="100000000" />
+  <parameter name="freq_pwm" value="10000" />
+ </module>
  <module
    name="Garfield_GPIO"
    kind="altera_avalon_pio"
@@ -440,6 +519,11 @@
   <parameter name="simDoTestBenchWiring" value="false" />
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="8" />
+ </module>
+ <module name="Steering_PWM" kind="PWM_Generator" version="1.0" enabled="1">
+  <parameter name="datawidth" value="32" />
+  <parameter name="freq_core" value="100000000" />
+  <parameter name="freq_pwm" value="10000" />
  </module>
  <module name="clk_0" kind="clock_source" version="16.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
@@ -1031,7 +1115,7 @@
   <parameter name="dataAddrWidth" value="23" />
   <parameter name="dataMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="dataMasterHighPerformanceMapParam" value="" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='timer_0_nios2.s1' start='0x0' end='0x20' type='altera_avalon_timer.s1' /><slave name='spi_0.spi_control_port' start='0x20' end='0x40' type='altera_avalon_spi.spi_control_port' /><slave name='Garfield_lighting.s1' start='0x60' end='0x70' type='altera_avalon_pio.s1' /><slave name='Garfield_GPIO.s1' start='0x70' end='0x80' type='altera_avalon_pio.s1' /><slave name='sysid_fpga.control_slave' start='0x10000' end='0x10008' type='altera_avalon_sysid_qsys.control_slave' /><slave name='Onboard_LED.s1' start='0x10040' end='0x10050' type='altera_avalon_pio.s1' /><slave name='Onboard_DipSW.s1' start='0x10080' end='0x10090' type='altera_avalon_pio.s1' /><slave name='Onboard_Button.s1' start='0x100C0' end='0x100D0' type='altera_avalon_pio.s1' /><slave name='onchip_memory2_nios2.s1' start='0x20000' end='0x40000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40800' end='0x41000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='jtag_uart_nios2.avalon_jtag_slave' start='0x41000' end='0x41008' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='i2c_opencores_0.avalon_slave_0' start='0x400000' end='0x400020' type='i2c_opencores.avalon_slave_0' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='timer_0_nios2.s1' start='0x0' end='0x20' type='altera_avalon_timer.s1' /><slave name='spi_0.spi_control_port' start='0x20' end='0x40' type='altera_avalon_spi.spi_control_port' /><slave name='Garfield_lighting.s1' start='0x60' end='0x70' type='altera_avalon_pio.s1' /><slave name='Garfield_GPIO.s1' start='0x70' end='0x80' type='altera_avalon_pio.s1' /><slave name='Drive_PWM.avalon_slave_0' start='0x80' end='0x88' type='PWM_Generator.avalon_slave_0' /><slave name='Steering_PWM.avalon_slave_0' start='0x90' end='0x98' type='PWM_Generator.avalon_slave_0' /><slave name='sysid_fpga.control_slave' start='0x10000' end='0x10008' type='altera_avalon_sysid_qsys.control_slave' /><slave name='Onboard_LED.s1' start='0x10040' end='0x10050' type='altera_avalon_pio.s1' /><slave name='Onboard_DipSW.s1' start='0x10080' end='0x10090' type='altera_avalon_pio.s1' /><slave name='Onboard_Button.s1' start='0x100C0' end='0x100D0' type='altera_avalon_pio.s1' /><slave name='onchip_memory2_nios2.s1' start='0x20000' end='0x40000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40800' end='0x41000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='jtag_uart_nios2.avalon_jtag_slave' start='0x41000' end='0x41008' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='i2c_opencores_0.avalon_slave_0' start='0x400000' end='0x400020' type='i2c_opencores.avalon_slave_0' /></address-map>]]></parameter>
   <parameter name="data_master_high_performance_paddr_base" value="0" />
   <parameter name="data_master_high_performance_paddr_size" value="0" />
   <parameter name="data_master_paddr_base" value="0" />
@@ -1284,7 +1368,7 @@
   <parameter name="gui_cascade_outclk_index" value="0" />
   <parameter name="gui_channel_spacing" value="0.0" />
   <parameter name="gui_clk_bad" value="false" />
-  <parameter name="gui_device_speed_grade" value="2" />
+  <parameter name="gui_device_speed_grade" value="1" />
   <parameter name="gui_divide_factor_c0" value="1" />
   <parameter name="gui_divide_factor_c1" value="1" />
   <parameter name="gui_divide_factor_c10" value="1" />
@@ -1422,7 +1506,7 @@
   <parameter name="gui_reference_clock_frequency" value="50.0" />
   <parameter name="gui_switchover_delay" value="0" />
   <parameter name="gui_switchover_mode">Automatic Switchover</parameter>
-  <parameter name="gui_use_locked" value="false" />
+  <parameter name="gui_use_locked" value="true" />
  </module>
  <module name="spi_0" kind="altera_avalon_spi" version="16.1" enabled="1">
   <parameter name="avalonSpec" value="2.0" />
@@ -1479,6 +1563,24 @@
    end="i2c_opencores_0.avalon_slave_0">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00400000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="nios2_gen2_0.data_master"
+   end="Drive_PWM.avalon_slave_0">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0080" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="nios2_gen2_0.data_master"
+   end="Steering_PWM.avalon_slave_0">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0090" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -1662,6 +1764,16 @@
    start="pll_0.outclk0"
    end="i2c_opencores_0.clock" />
  <connection
+   kind="clock"
+   version="16.1"
+   start="pll_0.outclk0"
+   end="Drive_PWM.clock" />
+ <connection
+   kind="clock"
+   version="16.1"
+   start="pll_0.outclk0"
+   end="Steering_PWM.clock" />
+ <connection
    kind="interrupt"
    version="16.1"
    start="nios2_gen2_0.irq"
@@ -1741,6 +1853,16 @@
    start="clk_1.clk_reset"
    end="Garfield_GPIO.reset" />
  <connection kind="reset" version="16.1" start="clk_1.clk_reset" end="pll_0.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_1.clk_reset"
+   end="Drive_PWM.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_1.clk_reset"
+   end="Steering_PWM.reset" />
  <connection
    kind="reset"
    version="16.1"

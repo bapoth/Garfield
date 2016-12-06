@@ -135,7 +135,7 @@ module Garfield(
   wire          hps_warm_reset;
   wire          hps_debug_reset;
   wire [27:0]   stm_hw_events;
-  wire 		   fpga_clk_50;
+  wire 		    fpga_clk_50;
   wire          spi_0_miso;
   wire          spi_0_mosi;
   wire          spi_0_sclk;
@@ -146,6 +146,10 @@ module Garfield(
 
   wire [3:0]    garfield_lighting;
   wire [7:0]    garfield_gpio;
+
+  wire          garfield_drive_pwm;
+  wire          garfield_steering_pwm;
+
 
 // connection of internal logics
   assign LED[7:1] = fpga_led_internal;
@@ -167,6 +171,9 @@ module Garfield(
   assign ARDUINO_IO[10] = spi_0_cs_n[0];    //tft chipselect
   assign ARDUINO_IO[4] = spi_0_cs_n[1];     //sd-card chipselect
   assign ARDUINO_IO[9] = garfield_gpio[7];  //tft data command switch
+
+  assign GPIO_1[4] = garfield_drive_pwm;
+  assign GPIO_1[6] = garfield_steering_pwm;
 
 
 //=======================================================
@@ -276,6 +283,10 @@ module Garfield(
       // garfield io's
       .garfield_general_io_external_connection_export       (garfield_gpio),
       .garfield_lighting_led_external_connection_export     (garfield_lighting),
+
+      // pwm signals
+      .drive_pwm_pwm_signal_export      (garfield_drive_pwm),
+      .steering_pwm_pwm_signal_export         (garfield_steering_pwm),
  );
 
 // Debounce logic to clean out glitches within 1ms
