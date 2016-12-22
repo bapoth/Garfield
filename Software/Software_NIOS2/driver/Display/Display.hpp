@@ -118,6 +118,10 @@ void spi_write_byte(alt_u8 byte);
  */
 void delay_ms(alt_u8 ms);
 
+void reversestr(char s[]);
+
+void itochptr(int n, char s[]);
+
 /*!
  *class Display wich contains all necessary methods for witing to LCD
  */
