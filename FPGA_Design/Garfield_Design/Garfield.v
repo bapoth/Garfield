@@ -149,6 +149,7 @@ module Garfield(
 
   wire          garfield_drive_pwm;
   wire          garfield_steering_pwm;
+  wire          speed_rotary;
 
 
 // connection of internal logics
@@ -173,7 +174,8 @@ module Garfield(
   assign ARDUINO_IO[9] = garfield_gpio[7];  //tft data command switch
 
   assign GPIO_1[4] = garfield_drive_pwm;
-  assign GPIO_1[6] = garfield_steering_pwm;
+      assign GPIO_1[6] = garfield_steering_pwm;
+  assign speed_rotary = GPIO_1[11];
 
 
 //=======================================================
@@ -287,6 +289,7 @@ module Garfield(
       // pwm signals
       .drive_pwm_pwm_signal_export      (garfield_drive_pwm),
       .steering_pwm_pwm_signal_export         (garfield_steering_pwm),
+      .rotary_encoder_0_conduit_end_rot_input           (speed_rotary)
  );
 
 // Debounce logic to clean out glitches within 1ms
