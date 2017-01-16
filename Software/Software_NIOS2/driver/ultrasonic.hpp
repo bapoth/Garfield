@@ -1,10 +1,14 @@
+/*!
+ * @file
+ * @brief this file contains the definition of all ultrasonic specific modules (currently only UltraSonicDevice)
+ */
 #ifndef ULTRASONIC_HPP_
 #define ULTRASONIC_HPP_
 
 #include "alt_types.h"
 
-/*
- * defines all possible IIC addresses for the SRF08 ultra sonic range finder
+/*!
+ * @brief defines all possible IIC addresses for the SRF08 ultra sonic range finder
  * */
 enum class UltraSonicAddress : alt_u8  {
 	DEVICE_00 = 0xE0,
@@ -25,8 +29,8 @@ enum class UltraSonicAddress : alt_u8  {
 	DEVICE_15 = 0xFE,
 };
 
-/*
- * defines all possible write registers
+/*!
+ * @brief defines all possible write registers
  * */
 enum class UltraSonicRegistersWrite : alt_u8 {
 	COMMAND 	= 0x00, // can init a ranging
@@ -35,8 +39,8 @@ enum class UltraSonicRegistersWrite : alt_u8 {
 };
 
 
-/*
- * defines all possible read registers
+/*!
+ * @brief defines all possible read registers
  * */
 enum class UltraSonicRegisterRead : alt_u8 {
 	SW_REVISION		= 0x00,
@@ -77,8 +81,8 @@ enum class UltraSonicRegisterRead : alt_u8 {
 	ECHO_LOW_0x11	= 0x23,
 };
 
-/*
- * defines all possible commands for the ultrasonic sensor
+/*!
+ * @brief defines all possible commands for the ultrasonic sensor
  * */
 enum class UltraSonicCommands : alt_u8 {
 	START_MEAS_INCHES			= 0x50,
@@ -92,25 +96,56 @@ enum class UltraSonicCommands : alt_u8 {
 	CHANGE_ADDRESS_COMMAND_3	= 0xAA,
 };
 
-/*
- * represents a ultrasonic hardware device
+/*!
+ *@brief represents a ultrasonic hardware device
  * */
 class UltraSonicDevice {
 private:
-	/* no default cstr is allowed */
+	/*! @brief no default cstr is allowed */
 	UltraSonicDevice() = delete;
 
-	/* used for broadcasting a command to all devices on the iic bus */
+	/*! @brief used for broadcasting a command to all devices on the iic bus */
 	static const alt_u8 __broadcastAddress = 0;
+	/*! @brief holds the current device address */
 	UltraSonicAddress __deviceAddress;
 public:
+	/*! @brief constructs a ultrasonic device with the given address */
 	UltraSonicDevice(const UltraSonicAddress deviceAddress);
-	alt_u8 writeRegister(const UltraSonicRegistersWrite reg, const alt_u8 val);
+	/*!
+	 * @brief function to write to the command srf08 register
+	 * @param[in] val: value which will be written to reg
+	 * @return result (status) of this operation
+	 * */
+	alt_u8 writeCMDRegister(const UltraSonicCommands val);
+	/*!
+	 * @brief function to write to the gain srf08 register
+	 * @param[in] val: value which will be written to reg
+	 * @return result (status) of this operation
+	 * */
+	alt_u8 writeGAINRegister(const alt_u8 val);
+	/*!
+	 * @brief function to write to the range srf08 register
+	 * @param[in] val: value which will be written to reg
+	 * @return result (status) of this operation
+	 * */
+	alt_u8 writeRANGERegister(const alt_u8 val);
+	/*!
+	 * @brief function to read from specific srf08 register
+	 * @param[in] reg: register to read from
+	 * @param[out] readPtr: stores the read value from reg
+	 * @return result (status) of this operation
+	 * */
 	alt_u8 readRegister(const UltraSonicRegisterRead reg, alt_u8& readPtr);
 
-	alt_u8 readMeasurement(alt_u8* const ultrasonic_measurement);
 
-	alt_u8 changeAddress(const UltraSonicAddress currentAddress, const UltraSonicAddress newAddress);
+	alt_u8 readMeasurement(alt_u8* ultrasonic_measurement, const alt_u8 length);
+
+	/*!
+	 * @brief function to change the IIC address of the ultrasonic devicer
+	 * @param[in] newAddress: the new address that should be given to the device
+	 * @return result (status) of this operation
+	 * */
+	alt_u8 changeAddress(const UltraSonicAddress newAddress);
 };
 
 #endif /* ULTRASONIC_HPP_ */
