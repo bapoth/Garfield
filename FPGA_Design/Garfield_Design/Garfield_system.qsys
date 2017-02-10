@@ -451,7 +451,7 @@
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
-  <parameter name="clockRate" value="100000000" />
+  <parameter name="clockRate" value="50000000" />
   <parameter name="direction" value="Output" />
   <parameter name="edgeType" value="RISING" />
   <parameter name="generateIRQ" value="false" />
@@ -469,7 +469,7 @@
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
-  <parameter name="clockRate" value="100000000" />
+  <parameter name="clockRate" value="50000000" />
   <parameter name="direction" value="Output" />
   <parameter name="edgeType" value="RISING" />
   <parameter name="generateIRQ" value="false" />
@@ -487,7 +487,7 @@
   <parameter name="bitClearingEdgeCapReg" value="true" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="true" />
-  <parameter name="clockRate" value="100000000" />
+  <parameter name="clockRate" value="50000000" />
   <parameter name="direction" value="Input" />
   <parameter name="edgeType" value="FALLING" />
   <parameter name="generateIRQ" value="false" />
@@ -505,7 +505,7 @@
   <parameter name="bitClearingEdgeCapReg" value="true" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="true" />
-  <parameter name="clockRate" value="100000000" />
+  <parameter name="clockRate" value="50000000" />
   <parameter name="direction" value="Input" />
   <parameter name="edgeType" value="ANY" />
   <parameter name="generateIRQ" value="false" />
@@ -523,7 +523,7 @@
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
-  <parameter name="clockRate" value="100000000" />
+  <parameter name="clockRate" value="50000000" />
   <parameter name="direction" value="Output" />
   <parameter name="edgeType" value="RISING" />
   <parameter name="generateIRQ" value="false" />
@@ -1099,7 +1099,7 @@
    enabled="1">
   <parameter name="allowMultipleConnections" value="false" />
   <parameter name="avalonSpec" value="2.0" />
-  <parameter name="clkFreq" value="100000000" />
+  <parameter name="clkFreq" value="50000000" />
   <parameter name="hubInstanceID" value="0" />
   <parameter name="readBufferDepth" value="64" />
   <parameter name="readIRQThreshold" value="8" />
@@ -1124,7 +1124,7 @@
   <parameter name="breakOffset" value="32" />
   <parameter name="breakSlave" value="None" />
   <parameter name="cdx_enabled" value="false" />
-  <parameter name="clockFrequency" value="100000000" />
+  <parameter name="clockFrequency" value="50000000" />
   <parameter name="cpuArchRev" value="1" />
   <parameter name="cpuID" value="0" />
   <parameter name="cpuReset" value="false" />
@@ -1444,7 +1444,7 @@
   <parameter name="gui_multiply_factor" value="1" />
   <parameter name="gui_number_of_clocks" value="2" />
   <parameter name="gui_operation_mode" value="direct" />
-  <parameter name="gui_output_clock_frequency0" value="100.0" />
+  <parameter name="gui_output_clock_frequency0" value="50.0" />
   <parameter name="gui_output_clock_frequency1" value="48.0" />
   <parameter name="gui_output_clock_frequency10" value="100.0" />
   <parameter name="gui_output_clock_frequency11" value="100.0" />
@@ -1563,7 +1563,7 @@
   <parameter name="periodUnits" value="MSEC" />
   <parameter name="resetOutput" value="false" />
   <parameter name="snapshot" value="true" />
-  <parameter name="systemFrequency" value="100000000" />
+  <parameter name="systemFrequency" value="50000000" />
   <parameter name="timeoutPulseOutput" value="false" />
   <parameter name="watchdogPulse" value="2" />
  </module>

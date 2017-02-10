@@ -5,11 +5,11 @@
  version="1.0"
  fabric="QSYS">
  <!-- Format version 16.1 196 (Future versions may contain additional information.) -->
- <!-- 2017.01.04.22:42:26 -->
+ <!-- 2017.01.23.12:40:23 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1483566121</value>
+  <value>1485171607</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -722,7 +722,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.FREQ</name>
-   <value>100000000</value>
+   <value>50000000</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.HAS_IN</name>
@@ -858,7 +858,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="clockRate">
    <type>long</type>
-   <value>100000000</value>
+   <value>50000000</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -992,7 +992,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="clockRate">
     <type>java.lang.Long</type>
-    <value>100000000</value>
+    <value>50000000</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -1500,7 +1500,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.FREQ</name>
-   <value>100000000</value>
+   <value>50000000</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.HAS_IN</name>
@@ -1636,7 +1636,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="clockRate">
    <type>long</type>
-   <value>100000000</value>
+   <value>50000000</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -1770,7 +1770,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="clockRate">
     <type>java.lang.Long</type>
-    <value>100000000</value>
+    <value>50000000</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -2278,7 +2278,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.FREQ</name>
-   <value>100000000</value>
+   <value>50000000</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.HAS_IN</name>
@@ -2414,7 +2414,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="clockRate">
    <type>long</type>
-   <value>100000000</value>
+   <value>50000000</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -2548,7 +2548,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="clockRate">
     <type>java.lang.Long</type>
-    <value>100000000</value>
+    <value>50000000</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -3056,7 +3056,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.FREQ</name>
-   <value>100000000</value>
+   <value>50000000</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.HAS_IN</name>
@@ -3192,7 +3192,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="clockRate">
    <type>long</type>
-   <value>100000000</value>
+   <value>50000000</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -3326,7 +3326,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="clockRate">
     <type>java.lang.Long</type>
-    <value>100000000</value>
+    <value>50000000</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -3834,7 +3834,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.FREQ</name>
-   <value>100000000</value>
+   <value>50000000</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.HAS_IN</name>
@@ -3970,7 +3970,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="clockRate">
    <type>long</type>
-   <value>100000000</value>
+   <value>50000000</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -4104,7 +4104,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="clockRate">
     <type>java.lang.Long</type>
-    <value>100000000</value>
+    <value>50000000</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -80358,7 +80358,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="clkFreq">
    <type>long</type>
-   <value>100000000</value>
+   <value>50000000</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -80461,7 +80461,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="clockRate">
     <type>java.lang.Long</type>
-    <value>100000000</value>
+    <value>50000000</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -81001,7 +81001,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.CPU_FREQ</name>
-   <value>100000000u</value>
+   <value>50000000u</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.CPU_ID_SIZE</name>
@@ -81185,7 +81185,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.clock-frequency</name>
-   <value>100000000u</value>
+   <value>50000000u</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.dcache-line-size</name>
@@ -82725,7 +82725,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="clockFrequency">
    <type>long</type>
-   <value>100000000</value>
+   <value>50000000</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -82901,7 +82901,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="clockRate">
     <type>java.lang.Long</type>
-    <value>100000000</value>
+    <value>50000000</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -85422,7 +85422,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="gui_output_clock_frequency0">
    <type>double</type>
-   <value>100.0</value>
+   <value>50.0</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -85454,7 +85454,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="gui_actual_divide_factor0">
    <type>int</type>
-   <value>12</value>
+   <value>24</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -87142,7 +87142,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="output_clock_frequency0">
    <type>java.lang.String</type>
-   <value>100.000000 MHz</value>
+   <value>50.000000 MHz</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -87710,7 +87710,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="c_cnt_hi_div0">
    <type>int</type>
-   <value>6</value>
+   <value>12</value>
    <derived>true</derived>
    <enabled>false</enabled>
    <visible>false</visible>
@@ -87718,7 +87718,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="c_cnt_lo_div0">
    <type>int</type>
-   <value>6</value>
+   <value>12</value>
    <derived>true</derived>
    <enabled>false</enabled>
    <visible>false</visible>
@@ -88806,7 +88806,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="gui_parameter_values">
    <type>[Ljava.lang.String;</type>
-   <value>12,12,256,256,false,true,false,false,6,6,1,0,ph_mux_clk,false,false,13,12,1,0,ph_mux_clk,false,true,1,20,4000,1200.0 MHz,1,none,glb,m_cnt,ph_mux_clk,false</value>
+   <value>12,12,256,256,false,true,false,false,12,12,1,0,ph_mux_clk,false,false,13,12,1,0,ph_mux_clk,false,true,1,20,4000,1200.0 MHz,1,none,glb,m_cnt,ph_mux_clk,false</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -89108,7 +89108,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="clockRate">
     <type>long</type>
-    <value>100000000</value>
+    <value>50000000</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -90253,7 +90253,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.TIMESTAMP</name>
-   <value>1483566121</value>
+   <value>1485171607</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.compatible</name>
@@ -90273,7 +90273,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.timestamp</name>
-   <value>1483566121</value>
+   <value>1485171607</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.vendor</name>
@@ -90289,7 +90289,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="timestamp">
    <type>int</type>
-   <value>1483566121</value>
+   <value>1485171607</value>
    <derived>true</derived>
    <enabled>false</enabled>
    <visible>false</visible>
@@ -90767,11 +90767,11 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.FREQ</name>
-   <value>100000000</value>
+   <value>50000000</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.LOAD_VALUE</name>
-   <value>99999</value>
+   <value>49999</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.MULT</name>
@@ -90871,7 +90871,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="systemFrequency">
    <type>long</type>
-   <value>100000000</value>
+   <value>50000000</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -90913,7 +90913,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="loadValue">
    <type>java.lang.String</type>
-   <value>99999</value>
+   <value>49999</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -91005,7 +91005,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="clockRate">
     <type>java.lang.Long</type>
-    <value>100000000</value>
+    <value>50000000</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
