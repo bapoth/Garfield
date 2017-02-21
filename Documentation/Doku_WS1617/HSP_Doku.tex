@@ -1,0 +1,156 @@
+\documentclass[a4paper,11pt,bibliography=totoc,listof=totoc]{scrreprt}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+
+\usepackage{geometry}
+\geometry{a4paper}
+% ===========================================================
+% Optionale Pakete und Einstellungen
+% ===========================================================
+
+ \usepackage{scrhack}    % Sollte mit listings zusammen aktiviert werden
+ \usepackage{listings}   % Für Code-Beispiele
+\usepackage{caption}
+ \usepackage{multicol}   % Mehrspaltige Aufzählungen
+ \usepackage{amssymb}    % Mathematische Symbole
+ \usepackage{amsmath}    % Mathematisch Formeln
+\usepackage{textcomp}   % Weitere Symbole
+\usepackage{todonotes}
+% \usepackage{ifsym}      % Weitere Symbole
+\usepackage{url}          % URL Formatierung
+\usepackage{dirtree}	% Directory Tree
+\usepackage{chngcntr}
+\usepackage{longtable}
+\usepackage{blindtext}
+\usepackage{lscape}
+\usepackage{rotating}
+\usepackage{afterpage}
+\usepackage[automark]{scrlayer-scrpage}
+\pagestyle{headings}
+\counterwithout{footnote}{chapter}
+\bibliographystyle{natdin}
+
+\captionsetup{format=hang,margin=10pt,font=small,labelfont=bf}
+
+
+% \setcounter{tocdepth}{3}   % Tiefe der Überschriften die ins Inhaltsverzeichnis sollen
+% \renewcommand{\baselinestretch}{1.5}\normalsize   % Zeilenabstand ändern, falls gewollt
+\newcommand{\highlight}{\textbf}   % Zum hervorheben wichtiger Punkte \highlight{} (default: Fett) benutzen (Bei Änderungen nur hier und nicht im ganzen Dokument)
+% newcommand für spezielle Begriffe
+\newcommand{\kursiv}[1]{\textit{#1}}
+% kommando für TODOS:
+\newcommand{\TODO}[1]{\todo[inline]{#1}}
+
+% ===========================================================
+% Einfügen von PDF's und Bildern
+% ===========================================================
+
+%\usepackage[pdftex]{color}
+\usepackage{graphicx}
+
+\usepackage{pdfpages}
+
+% ===========================================================
+% Literaturverzeichnis
+% Muss in Alphabetischer Reihenfolge sein
+% ===========================================================
+
+\usepackage[style=numeric,backend=biber, sorting=nyt,natbib=true]{biblatex} % Alternative Zitierung mit [x]
+%\usepackage[citestyle=authoryear,bibstyle=authortitle,backend=biber, sorting=nyt,natbib=true]{biblatex} % Ähnlich
+%Harvard-Citation style mit \autocite (übernommen aus "Hinweise zum Praktikumsbericht")
+%\usepackage[babel,german=guillemets]{csquotes}
+\bibliography{Literaturverzeichnis}
+% ===========================================================
+% Änderung der Überschrift des Literaturverzeichnisses
+% ===========================================================
+
+\DefineBibliographyStrings{ngerman}{
+    bibliography = {Literaturverzeichnis}
+}
+
+% ===========================================================
+% Für Abkürzungen und Abkürzungsverzeichnis
+% ===========================================================
+
+% option printonlyused - einfügen vor abgaben
+\usepackage[footnote]{acronym}
+
+% ===========================================================
+% Inhaltsverzeichns
+% ===========================================================
+
+\usepackage[colorlinks=true,linkcolor=black]{hyperref}
+\usepackage[all]{hypcap}
+
+
+%====================================================
+% Informationen
+%===================================================
+\date{\today}
+\author{Philipp Eidenschink, Florian Laufenböck, Tobias Schwindl\\Matrikelnummern : 3080919, 2894759, 3080498}
+\title{HSP Projektbericht}
+% ===========================================================
+% Dokument Anfang
+% ===========================================================
+
+\begin{document}
+
+% ===========================================================
+% Abstand zwischen Literatureinträgen (muss hier stehen)
+% ===========================================================
+
+\setlength{\bibitemsep}{12pt}
+
+% ===========================================================
+% NUR ZU TESTZWECKEN!! UNGENUTZTE LITERATUR DARF NICHT VORKOMMEN AM ENDE! Danach kommentieren!!!!!!!!!!!!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<
+%  \nocite{*} % Ganze Literaturliste anzeigen, auch ungenutzte
+% ===========================================================
+
+% ===========================================================
+% Deckblatt
+% ===========================================================
+
+\maketitle
+% ===========================================================
+% Kurzzusammenfassung - auskommentiert
+% ===========================================================
+%\begin{abstract}
+%\begin{center} \textbf{\abstractname} \end{center} \vspace{\baselineskip}
+%Blabla Praktikum, blabla 5. Semester, blabla ...
+%\end{abstract}
+
+% ===========================================================
+% Inhaltsverzeichnis
+% ===========================================================
+
+\tableofcontents
+
+% ===========================================================
+% Bericht Teile - Anpassen je nach Notwendigkeit
+% ===========================================================
+
+
+% ===========================================================
+% Abbildungsverzeichnis
+% ===========================================================
+
+\listoffigures
+
+% ===========================================================
+% Abkürzungsverzeichnis
+% ===========================================================
+
+\input{acronym}
+
+% ===========================================================
+% Literaturverzeichnis
+% ===========================================================
+
+\printbibliography
+
+\appendix
+%\input{Inhalt/Anhang}
+
+\end{document}

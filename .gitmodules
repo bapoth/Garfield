@@ -1,0 +1,3 @@
+[submodule "Software/Software_ARM/Linux/socfpga-kernel-dev"]
+	path = Software/Software_ARM/Linux/socfpga-kernel-dev
+	url = https://github.com/RobertCNelson/socfpga-kernel-dev
