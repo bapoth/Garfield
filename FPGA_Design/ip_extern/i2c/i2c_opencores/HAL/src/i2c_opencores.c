@@ -63,7 +63,7 @@ int I2C_start(alt_u32 base, alt_u32 add, alt_u32 read)
 #endif
 
           /* transmit the address shifted by one and the read/write bit*/
-  IOWR_I2C_OPENCORES_TXR(base, ((add<<1) + (0x1 & read)));
+  IOWR_I2C_OPENCORES_TXR(base, ((add) + (0x1 & read)));
 
           /* set start and write  bits which will start the transaction*/
   IOWR_I2C_OPENCORES_CR(base, I2C_OPENCORES_CR_STA_MSK | I2C_OPENCORES_CR_WR_MSK );
