@@ -62,7 +62,7 @@ int I2C_start(alt_u32 base, alt_u32 add, alt_u32 read)
         printf(" Start  I2C at 0x%x, \n\twith address 0x%x \n\tand read 0x%x \n\tand prescale 0x%x\n",base,add,read);
 #endif
 
-          /* transmit the address shifted by one and the read/write bit*/
+          /* transmit the address and the read/write bit*/
   IOWR_I2C_OPENCORES_TXR(base, ((add) + (0x1 & read)));
 
           /* set start and write  bits which will start the transaction*/
