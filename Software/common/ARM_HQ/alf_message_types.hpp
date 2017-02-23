@@ -14,6 +14,10 @@ enum ALF_MESSAGE_TYPES{
 	ALF_INIT_ID = 2,
 	/// a measurement is sended
 	ALF_MEASUREMENT_DATA_ID = 1,
+    /// ALF drive command
+    ALF_DRIVE_COMMAND_ID = 3,
+    /// ALF drive info
+    ALF_DRIVE_INFO_ID = 4,
 	/// the communication should stop or interrupt now
 	ALF_END_ID = 255
 };

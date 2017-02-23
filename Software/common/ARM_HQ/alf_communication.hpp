@@ -112,6 +112,20 @@ public:
 	 */
 	alf_error Write(Alf_Urg_Measurement &meas);
 
+    /*!
+     * @brief Creates a string with all, for application relevant information for steering the Alf
+     * @param[in] Command - command object
+     * @return
+     */
+    alf_error Write(Alf_Drive_Command &command);
+
+    /*!
+     * @brief Creates a string with all, for application relevant information for driving infos
+     * @param[in] Info - Info object
+     * @return
+     */
+    alf_error Write(Alf_Drive_Info &info);
+
 	/*!
 	 * @brief Writes the init message over the choosen communication type with information about the urg sensor
 	 * @return

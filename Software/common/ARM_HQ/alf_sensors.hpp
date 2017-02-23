@@ -9,13 +9,13 @@
 #include <stdint.h>
 #include <string>
 
-#include <urg_connection.h>
+//#include <urg_connection.h>
 
 /*!
  * @brief Represents the laser scanner on the alf vehicle and provide common settings etc.
  * @attention this settings are only vaild with the URG-04LX
  */
-class Alf_Urg_Sensor {
+/*class Alf_Urg_Sensor {
 public:
 	/// how much measurement points does the sensor have
 	static const uint16_t measurement_points = 768;
@@ -28,7 +28,7 @@ public:
 
 private:
 };
-
+*/
 
 
 #endif /* HAL_ALF_SENSORS_HPP_ */

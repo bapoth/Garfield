@@ -71,7 +71,7 @@ public:
 	 * @param[in] log_level the significance of the message
 	 * @return true if successful otherwise false
 	 */
-	static bool alf_log_write(const std::string& log_entry, const alf_log_level_e& log_level = log_debug);
+    static bool alf_log_write(const std::string& log_entry, const alf_log_level_e& log_level = log_debug);
 	/*!
 	 * @brief close the logging
 	 * @param[in] -

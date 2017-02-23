@@ -122,6 +122,28 @@ void Server::closeConnection(void){
 	__valid = false;
 }
 
+alf_error Server::readOverSocket(string& s)
+{
+    alf_error ret_val = ALF_CANNOT_READ_SOCKET;
+    s.clear();
+    char hlp;
+    if(__valid)
+    {
+        do {
+            if( read(__newsocketfd, &hlp, 1) == 1)
+            {
+                s.append(&hlp,1);
+            }
+            else
+            {
+
+            }
+        } while (hlp != ';');
+        ret_val = ALF_NO_ERROR;
+    }
+    return ret_val;
+}
+
 alf_error Server::sendOverSocket(const string &data){
 	alf_error ret_val;
 	if(__valid){

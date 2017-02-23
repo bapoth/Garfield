@@ -113,9 +113,45 @@ alf_error Alf_Communication<_comType>::Write(Alf_Urg_Measurement &meas){
 		to_send += __end_delim;
 
 		ret_val = ALF_NO_ERROR;
-		ret_val = __writeLine(__comHandler, to_send);
+        ret_val = __writeLine(__comHandler, to_send);
 	}
 	return ret_val;
+}
+
+template<class _comType>
+alf_error Alf_Communication<_comType>::Write(Alf_Drive_Command &command) {
+    alf_error ret_val = ALF_CANNOT_SEND_MESSAGE;
+    if(__comHandler.good() and __comHandler.is_open()){
+        string to_send;
+        to_send = std::to_string((uint8_t) ALF_DRIVE_COMMAND_ID) + __delim;
+        to_send += std::to_string(command.speed) + __delim;
+        to_send += std::to_string(command.direction) + __delim;
+        to_send += std::to_string(command.angle) + __delim;
+        to_send += std::to_string(command.light) + __end_delim;
+        ret_val = ALF_NO_ERROR;
+        ret_val = __writeLine(__comHandler, to_send);
+    }
+    return ret_val;
+}
+
+template<class _comType>
+alf_error Alf_Communication<_comType>::Write(Alf_Drive_Info &info) {
+    alf_error ret_val = ALF_CANNOT_SEND_MESSAGE;
+    if(__comHandler.good() and __comHandler.is_open()){
+        string to_send;
+        to_send = std::to_string((uint8_t) ALF_DRIVE_INFO_ID) + __delim;
+        to_send += std::to_string(info.speed) + __delim;
+        to_send += std::to_string(info.acceleration) + __delim;
+        to_send += std::to_string(info.lateral_acceleration) + __delim;
+        to_send += std::to_string(info.z_acceleration) + __delim;
+        to_send += std::to_string(info.Gyroscope_X) + __delim;
+        to_send += std::to_string(info.Gyroscope_Y) + __delim;
+        to_send += std::to_string(info.Gyroscope_Z) + __delim;
+        to_send += std::to_string(info.temperature) + __end_delim;
+        ret_val = ALF_NO_ERROR;
+        ret_val = __writeLine(__comHandler, to_send);
+    }
+    return ret_val;
 }
 
 template<class _comType>
@@ -214,6 +250,54 @@ alf_error Alf_Communication<_comType>::Read(Alf_Urg_Measurements_Buffer& readBuf
 					{
 						break;
 					}
+                    else if(msgType == ALF_DRIVE_INFO_ID)
+                    {
+                        switch(idx++)
+                        {
+                            case 1:
+                                Alf_Drive_Info::speed = std::stoi(match.str());
+                                break;
+                            case 2:
+                                Alf_Drive_Info::acceleration = std::stoi(match.str());
+                                break;
+                            case 3:
+                                Alf_Drive_Info::lateral_acceleration = std::stoi(match.str());
+                                break;
+                            case 4:
+                                Alf_Drive_Info::z_acceleration = std::stoi(match.str());
+                                break;
+                            case 5:
+                                Alf_Drive_Info::Gyroscope_X = std::stoi(match.str());
+                                break;
+                            case 6:
+                                Alf_Drive_Info::Gyroscope_Y = std::stoi(match.str());
+                                break;
+                            case 7:
+                                Alf_Drive_Info::Gyroscope_Z = std::stoi(match.str());
+                                break;
+                            case 8:
+                                Alf_Drive_Info::temperature = std::stof(match.str());
+                                break;
+                        }
+                    }
+                    else if(msgType == ALF_DRIVE_COMMAND_ID)
+                    {
+                        switch(idx++)
+                        {
+                            case 1:
+                                Alf_Drive_Command::speed = std::stoi(match.str());
+                                break;
+                            case 2:
+                                Alf_Drive_Command::direction = std::stoi(match.str());
+                                break;
+                            case 3:
+                                Alf_Drive_Command::angle = std::stoi(match.str());
+                                break;
+                            case 4:
+                                Alf_Drive_Command::light = std::stoi(match.str());
+                            break;
+                        }
+                    }
 					else
 					{
 						switch(idx++)

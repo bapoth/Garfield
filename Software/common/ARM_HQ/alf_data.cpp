@@ -8,14 +8,24 @@
  * static variables
  */
 
-bool Alf_Data::is_light_on = false;
 float Alf_Data::urg_angle_min = 0.0;
 float Alf_Data::urg_angle_max = 0.0;
 float Alf_Data::urg_angle_increment = 0;
 int Alf_Data::urg_time_increment = 100;
 uint32_t Alf_Data::urg_range_min = 0;
 uint32_t Alf_Data::urg_range_max = 0;
-
+uint8_t Alf_Drive_Info::speed = 0;
+int16_t Alf_Drive_Info::acceleration = 0;
+int16_t Alf_Drive_Info::lateral_acceleration = 0;
+int16_t Alf_Drive_Info::z_acceleration = 0;
+int16_t Alf_Drive_Info::Gyroscope_X = 0;
+int16_t Alf_Drive_Info::Gyroscope_Y = 0;
+int16_t Alf_Drive_Info::Gyroscope_Z = 0;
+float Alf_Drive_Info::temperature = 0.0;
+uint8_t Alf_Drive_Command::speed = 0;
+uint8_t Alf_Drive_Command::direction = 0;
+uint8_t Alf_Drive_Command::angle = 90;
+bool Alf_Drive_Command::light = false;
 
 /*
  * global variables
