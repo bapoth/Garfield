@@ -199,7 +199,7 @@
       }
       datum baseAddress
       {
-         value = "65600";
+         value = "65616";
          type = "String";
       }
    }
@@ -306,7 +306,7 @@
       }
       datum sopceditor_expanded
       {
-         value = "1";
+         value = "0";
          type = "boolean";
       }
    }
@@ -335,7 +335,7 @@
       }
       datum sopceditor_expanded
       {
-         value = "1";
+         value = "0";
          type = "boolean";
       }
    }
@@ -390,12 +390,17 @@
       }
       datum sopceditor_expanded
       {
-         value = "0";
+         value = "1";
          type = "boolean";
       }
    }
    element mailbox_arm2nios_0.avmm_msg_receiver
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
          value = "192";
@@ -404,6 +409,11 @@
    }
    element mailbox_arm2nios_0.avmm_msg_sender
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
          value = "65552";
@@ -414,7 +424,7 @@
    {
       datum _sortIndex
       {
-         value = "22";
+         value = "24";
          type = "int";
       }
       datum sopceditor_expanded
@@ -425,6 +435,11 @@
    }
    element mailbox_nios2arm_0.avmm_msg_receiver
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
          value = "208";
@@ -433,9 +448,14 @@
    }
    element mailbox_nios2arm_0.avmm_msg_sender
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
-         value = "65568";
+         value = "65584";
          type = "String";
       }
    }
@@ -448,7 +468,7 @@
       }
       datum sopceditor_expanded
       {
-         value = "0";
+         value = "1";
          type = "boolean";
       }
    }
@@ -530,17 +550,22 @@
    {
       datum _sortIndex
       {
-         value = "24";
+         value = "23";
          type = "int";
       }
       datum sopceditor_expanded
       {
-         value = "0";
+         value = "1";
          type = "boolean";
       }
    }
    element shared_memory_master_hps_0.s1
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
          value = "6144";
@@ -551,7 +576,7 @@
    {
       datum _sortIndex
       {
-         value = "23";
+         value = "26";
          type = "int";
       }
       datum sopceditor_expanded
@@ -562,9 +587,66 @@
    }
    element shared_memory_master_nios_0.s1
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
          value = "4096";
+         type = "String";
+      }
+   }
+   element shared_memory_mutex_master_hps_0
+   {
+      datum _sortIndex
+      {
+         value = "22";
+         type = "int";
+      }
+      datum sopceditor_expanded
+      {
+         value = "1";
+         type = "boolean";
+      }
+   }
+   element shared_memory_mutex_master_hps_0.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "65568";
+         type = "String";
+      }
+   }
+   element shared_memory_mutex_master_nios_0
+   {
+      datum _sortIndex
+      {
+         value = "25";
+         type = "int";
+      }
+      datum sopceditor_expanded
+      {
+         value = "0";
+         type = "boolean";
+      }
+   }
+   element shared_memory_mutex_master_nios_0.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "65600";
          type = "String";
       }
    }
@@ -1491,7 +1573,7 @@
   <parameter name="cdx_enabled" value="false" />
   <parameter name="clockFrequency" value="100000000" />
   <parameter name="cpuArchRev" value="1" />
-  <parameter name="cpuID" value="0" />
+  <parameter name="cpuID" value="3" />
   <parameter name="cpuReset" value="false" />
   <parameter name="customInstSlavesSystemInfo" value="&lt;info/&gt;" />
   <parameter name="customInstSlavesSystemInfo_nios_a" value="&lt;info/&gt;" />
@@ -1500,7 +1582,7 @@
   <parameter name="dataAddrWidth" value="23" />
   <parameter name="dataMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="dataMasterHighPerformanceMapParam" value="" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='timer_0_nios2.s1' start='0x0' end='0x20' type='altera_avalon_timer.s1' /><slave name='spi_0.spi_control_port' start='0x20' end='0x40' type='altera_avalon_spi.spi_control_port' /><slave name='Garfield_lighting.s1' start='0x60' end='0x70' type='altera_avalon_pio.s1' /><slave name='Garfield_GPIO.s1' start='0x70' end='0x80' type='altera_avalon_pio.s1' /><slave name='Drive_PWM.avalon_slave_0' start='0x80' end='0x88' type='PWM_Generator.avalon_slave_0' /><slave name='Steering_PWM.avalon_slave_0' start='0x90' end='0x98' type='PWM_Generator.avalon_slave_0' /><slave name='Rotary_Encoder_0.avalon_slave_0' start='0xA0' end='0xA8' type='Rotary_Encoder.avalon_slave_0' /><slave name='mailbox_arm2nios_0.avmm_msg_receiver' start='0xC0' end='0xD0' type='altera_avalon_mailbox_simple.avmm_msg_receiver' /><slave name='shared_memory_master_nios_0.s1' start='0x1000' end='0x1800' type='altera_avalon_onchip_memory2.s1' /><slave name='shared_memory_master_hps_0.s1' start='0x1800' end='0x2000' type='altera_avalon_onchip_memory2.s1' /><slave name='sysid_fpga.control_slave' start='0x10000' end='0x10008' type='altera_avalon_sysid_qsys.control_slave' /><slave name='mailbox_nios2arm_0.avmm_msg_sender' start='0x10020' end='0x10030' type='altera_avalon_mailbox_simple.avmm_msg_sender' /><slave name='Onboard_LED.s1' start='0x10040' end='0x10050' type='altera_avalon_pio.s1' /><slave name='Onboard_DipSW.s1' start='0x10080' end='0x10090' type='altera_avalon_pio.s1' /><slave name='Onboard_Button.s1' start='0x100C0' end='0x100D0' type='altera_avalon_pio.s1' /><slave name='onchip_memory2_nios2.s1' start='0x20000' end='0x40000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40800' end='0x41000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='jtag_uart_nios2.avalon_jtag_slave' start='0x41000' end='0x41008' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='i2c_opencores_0.avalon_slave_0' start='0x400000' end='0x400020' type='i2c_opencores.avalon_slave_0' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='timer_0_nios2.s1' start='0x0' end='0x20' type='altera_avalon_timer.s1' /><slave name='spi_0.spi_control_port' start='0x20' end='0x40' type='altera_avalon_spi.spi_control_port' /><slave name='Garfield_lighting.s1' start='0x60' end='0x70' type='altera_avalon_pio.s1' /><slave name='Garfield_GPIO.s1' start='0x70' end='0x80' type='altera_avalon_pio.s1' /><slave name='Drive_PWM.avalon_slave_0' start='0x80' end='0x88' type='PWM_Generator.avalon_slave_0' /><slave name='Steering_PWM.avalon_slave_0' start='0x90' end='0x98' type='PWM_Generator.avalon_slave_0' /><slave name='Rotary_Encoder_0.avalon_slave_0' start='0xA0' end='0xA8' type='Rotary_Encoder.avalon_slave_0' /><slave name='mailbox_arm2nios_0.avmm_msg_receiver' start='0xC0' end='0xD0' type='altera_avalon_mailbox_simple.avmm_msg_receiver' /><slave name='shared_memory_master_nios_0.s1' start='0x1000' end='0x1800' type='altera_avalon_onchip_memory2.s1' /><slave name='shared_memory_master_hps_0.s1' start='0x1800' end='0x2000' type='altera_avalon_onchip_memory2.s1' /><slave name='sysid_fpga.control_slave' start='0x10000' end='0x10008' type='altera_avalon_sysid_qsys.control_slave' /><slave name='shared_memory_mutex_master_hps_0.s1' start='0x10020' end='0x10028' type='altera_avalon_mutex.s1' /><slave name='mailbox_nios2arm_0.avmm_msg_sender' start='0x10030' end='0x10040' type='altera_avalon_mailbox_simple.avmm_msg_sender' /><slave name='shared_memory_mutex_master_nios_0.s1' start='0x10040' end='0x10048' type='altera_avalon_mutex.s1' /><slave name='Onboard_LED.s1' start='0x10050' end='0x10060' type='altera_avalon_pio.s1' /><slave name='Onboard_DipSW.s1' start='0x10080' end='0x10090' type='altera_avalon_pio.s1' /><slave name='Onboard_Button.s1' start='0x100C0' end='0x100D0' type='altera_avalon_pio.s1' /><slave name='onchip_memory2_nios2.s1' start='0x20000' end='0x40000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40800' end='0x41000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='jtag_uart_nios2.avalon_jtag_slave' start='0x41000' end='0x41008' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='i2c_opencores_0.avalon_slave_0' start='0x400000' end='0x400020' type='i2c_opencores.avalon_slave_0' /></address-map>]]></parameter>
   <parameter name="data_master_high_performance_paddr_base" value="0" />
   <parameter name="data_master_high_performance_paddr_size" value="0" />
   <parameter name="data_master_paddr_base" value="0" />
@@ -1957,6 +2039,22 @@
   <parameter name="useShallowMemBlocks" value="false" />
   <parameter name="writable" value="true" />
  </module>
+ <module
+   name="shared_memory_mutex_master_hps_0"
+   kind="altera_avalon_mutex"
+   version="16.1"
+   enabled="1">
+  <parameter name="initialOwner" value="1" />
+  <parameter name="initialValue" value="1" />
+ </module>
+ <module
+   name="shared_memory_mutex_master_nios_0"
+   kind="altera_avalon_mutex"
+   version="16.1"
+   enabled="1">
+  <parameter name="initialOwner" value="3" />
+  <parameter name="initialValue" value="1" />
+ </module>
  <module name="spi_0" kind="altera_avalon_spi" version="16.1" enabled="1">
   <parameter name="avalonSpec" value="2.0" />
   <parameter name="clockPhase" value="0" />
@@ -1978,7 +2076,7 @@
    kind="altera_avalon_sysid_qsys"
    version="16.1"
    enabled="1">
-  <parameter name="id" value="23207959" />
+  <parameter name="id" value="570564631" />
  </module>
  <module
    name="timer_0_nios2"
@@ -2056,7 +2154,7 @@
    start="nios2_gen2_0.data_master"
    end="mailbox_nios2arm_0.avmm_msg_sender">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00010020" />
+  <parameter name="baseAddress" value="0x00010030" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -2092,7 +2190,7 @@
    start="nios2_gen2_0.data_master"
    end="Onboard_LED.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00010040" />
+  <parameter name="baseAddress" value="0x00010050" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -2162,6 +2260,24 @@
    kind="avalon"
    version="16.1"
    start="nios2_gen2_0.data_master"
+   end="shared_memory_mutex_master_nios_0.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00010040" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="nios2_gen2_0.data_master"
+   end="shared_memory_mutex_master_hps_0.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00010020" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="nios2_gen2_0.data_master"
    end="spi_0.spi_control_port">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0020" />
@@ -2210,6 +2326,24 @@
    end="shared_memory_master_nios_0.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x1000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="hps_0.h2f_lw_axi_master"
+   end="shared_memory_mutex_master_nios_0.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00010040" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="hps_0.h2f_lw_axi_master"
+   end="shared_memory_mutex_master_hps_0.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00010020" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -2314,6 +2448,16 @@
    version="16.1"
    start="pll_0.outclk0"
    end="mailbox_nios2arm_0.clk" />
+ <connection
+   kind="clock"
+   version="16.1"
+   start="pll_0.outclk0"
+   end="shared_memory_mutex_master_nios_0.clk" />
+ <connection
+   kind="clock"
+   version="16.1"
+   start="pll_0.outclk0"
+   end="shared_memory_mutex_master_hps_0.clk" />
  <connection
    kind="clock"
    version="16.1"
@@ -2479,6 +2623,16 @@
    start="clk_1.clk_reset"
    end="Steering_PWM.reset" />
  <connection kind="reset" version="16.1" start="clk_1.clk_reset" end="spi_0.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_1.clk_reset"
+   end="shared_memory_mutex_master_nios_0.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_1.clk_reset"
+   end="shared_memory_mutex_master_hps_0.reset" />
  <connection
    kind="reset"
    version="16.1"
