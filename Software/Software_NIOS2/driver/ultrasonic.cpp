@@ -12,7 +12,7 @@ UltraSonicDevice::UltraSonicDevice(const UltraSonicAddress deviceAddress) : __de
 }
 
 
-alt_u8 UltraSonicDevice::writeCMDRegister(const UltraSonicCommands val, const bool broadcast = false) const
+alt_u8 UltraSonicDevice::writeCMDRegister(const UltraSonicCommands val, const bool broadcast) const
 {
 	alt_u8 result = 1;
 
@@ -141,4 +141,3 @@ alt_u8 UltraSonicDevice::checkUltraSonicState(bool& check) const
 
 	return result;
 }
-

@@ -98,7 +98,7 @@ public:
 	 * @param[in] broadcast: if true the command will be sent with address 0x00, which indicates a broadcast
 	 * @return result (status) of this operation
 	 * */
-	alt_u8 writeCMDRegister(const UltraSonicCommands val, const bool broadcast) const;
+	alt_u8 writeCMDRegister(const UltraSonicCommands val, const bool broadcast = false) const;
 	/*!
 	 * @brief function to write to the gain srf08 register
 	 * @param[in] val: value which will be written to reg
