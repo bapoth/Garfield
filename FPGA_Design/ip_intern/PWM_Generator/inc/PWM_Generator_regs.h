@@ -17,4 +17,4 @@
 /// macro for writing to the control register
 #define IOWR_PWMGen_Control(base, data)         IOWR(base, PWM_GENERATOR_CONTROL_REG, data)
 
-#endif PWM_GENERATOR_REGS_H
+#endif //PWM_GENERATOR_REGS_H
