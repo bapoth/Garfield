@@ -122,10 +122,18 @@ private:
 	/*!
 	 * @brief
 	 * */
-	static const alt_u16 accelerometer_sensitivity_2g = 0x4000;
-	static const alt_u16 accelerometer_sensitivity_4g = 0x2000;
-	static const alt_u16 accelerometer_sensitivity_8g = 0x1000;
-	static const alt_u16 accelerometer_sensitivity_16g = 0x0800;
+	float gyro_sens_factor;
+	/*!
+	 * @brief
+	 * */
+	float acc_sens_factor;
+	/*!
+	 * @brief
+	 * */
+	static constexpr alt_u16 accelerometer_sensitivity_2g = 1 / 0x4000;
+	static constexpr alt_u16 accelerometer_sensitivity_4g = 1 / 0x2000;
+	static constexpr alt_u16 accelerometer_sensitivity_8g = 1 / 0x1000;
+	static constexpr alt_u16 accelerometer_sensitivity_16g = 1 / 0x0800;
 	/*!
 	 * @brief
 	 * */
