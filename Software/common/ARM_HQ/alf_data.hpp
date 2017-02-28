@@ -96,8 +96,8 @@ public:
     static uint8_t speed;
     /// This is the direction to drive (0: forward, 1: backward)
     static uint8_t direction;
-    /// This is the currents steering angle (0 - 180°)
-    static uint8_t angle;
+    /// This is the currents steering angle (-90 - 90°)
+    static int8_t angle;
     /// This holds the state of the light
     static bool light;
 };

@@ -13,8 +13,8 @@
 #include <QTimer>
 #include <QDebug>
 
-#define ANGLE_MAX_VAL 180
-#define ANGLE_MIN_VAL 0
+#define ANGLE_MAX_VAL 90
+#define ANGLE_MIN_VAL -90
 #define SPEED_MAX_VAL 100
 #define SPEED_MIN_VAL 0
 #define ACC_MAX_VAL 100
@@ -26,8 +26,8 @@
 
 #define SEND_REC_INTERVAL_MS 20
 
-int norm_value(int in_min, int int_max, int out_min, int out_max, int value) {
-    return (((out_max-out_min)*(value-in_min))/(int_max-in_min))+out_min;
+int norm_value(int in_min, int in_max, int out_min, int out_max, int value) {
+    return (((out_max-out_min)*(value-in_min))/(in_max-in_min))+out_min;
 }
 
 Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
@@ -60,7 +60,7 @@ Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
     connect(ui->checkBox_light, SIGNAL(stateChanged(int)), this, SLOT(command_toggleLights(int)));
 
     //UI Default values
-    ui->angle_lineEdit->setText("90");
+    ui->angle_lineEdit->setText("0");
     ui->speed_lineEdit->setText("0");
     ui->Gyro_X_lineEdit->setText("0");
     ui->Gyro_Y_lineEdit->setText("0");
@@ -131,14 +131,14 @@ void Garfield_control::poll_gamepad() {
 
             //Backwards
             if(event.number == GAMEPAD_AXIS_L2) {
-                command_setBackSpeed(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, 0, 100, event.value));
+                command_setBackSpeed(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, SPEED_MIN_VAL, SPEED_MAX_VAL, event.value));
             }
             //Forwards
             else if(event.number == GAMEPAD_AXIS_R2) {
-                command_setForwardSpeed(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, 0, 100, event.value));
+                command_setForwardSpeed(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, SPEED_MIN_VAL, SPEED_MAX_VAL, event.value));
             }
             if(event.number == GAMEPAD_AXIS_ANALOG_LEFT_LR) {
-                command_setDirection(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, 0, 180, event.value));
+                command_setDirection(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, ANGLE_MIN_VAL, ANGLE_MAX_VAL, event.value));
             }
         }
     }
@@ -234,7 +234,7 @@ void Garfield_control::command_right() {
 
 void Garfield_control::command_leftright_rel() {
     ui->DebugSlider_Dir->setValue(ui->DebugSlider_Dir->maximum()-((ui->DebugSlider_Dir->maximum()-ui->DebugSlider_Dir->minimum())/2));
-    ui->angle_lineEdit->setText(QString::number((ANGLE_MAX_VAL-ANGLE_MIN_VAL)/2));
+    ui->angle_lineEdit->setText(QString::number((ANGLE_MAX_VAL-std::abs(ANGLE_MIN_VAL))/2));
     _angle = (ANGLE_MAX_VAL-ANGLE_MIN_VAL)/2;
 }
 

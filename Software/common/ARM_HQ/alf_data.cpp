@@ -24,7 +24,7 @@ int16_t Alf_Drive_Info::Gyroscope_Z = 0;
 float Alf_Drive_Info::temperature = 0.0;
 uint8_t Alf_Drive_Command::speed = 0;
 uint8_t Alf_Drive_Command::direction = 0;
-uint8_t Alf_Drive_Command::angle = 90;
+int8_t Alf_Drive_Command::angle = 0;
 bool Alf_Drive_Command::light = false;
 
 /*
