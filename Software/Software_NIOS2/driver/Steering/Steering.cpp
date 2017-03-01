@@ -24,9 +24,13 @@ void Steering::Set(alt_8 angle) {
 	}
 	else {
 
-		alt_u8 duty_cycle_percent = (MIN_PULSE_LENGTH_US + ((MAX_PULSE_LENGTH_US - MIN_PULSE_LENGTH_US)/2) + ((((MAX_PULSE_LENGTH_US - MIN_PULSE_LENGTH_US)/2)/(MAX_STEERING_ANGLE/2))*angle)) /  ONE_PERCENT_PERIOD_TIME;
+        
+        
+		//alt_u8 duty_cycle_percent = (NEUTRAL_POS + ((((MAX_PULSE_LENGTH_US - MIN_PULSE_LENGTH_US)/2)/(MAX_STEERING_ANGLE/2))*angle)) /  ONE_VALUE_PERIOD_TIME;
+        
+        PWMgen_Set_DutyCycle((NEUTRAL_POS + ((((MAX_PULSE_LENGTH_US - MIN_PULSE_LENGTH_US)/2)/(MAX_STEERING_ANGLE/2))*angle)) /  ONE_VALUE_PERIOD_TIME);
 
-		IOWR_8DIRECT(STEERING_PWM_BASE, 2, duty_cycle_percent);
+		//IOWR_8DIRECT(STEERING_PWM_BASE, 2, duty_cycle_percent);
 
 	}
 }
