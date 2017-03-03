@@ -3,7 +3,7 @@
 
 #include "mpu6050.hpp"
 
-mpu6050::mpu6050(MPU6050_Addresses deviceAddress) : __deviceAddress(static_cast<MPU6050_Addresses>(static_cast<alt_u8>(deviceAddress) + 0xD0)), gyro_sens_factor(0.0), acc_sens_factor(0.0)
+mpu6050::mpu6050(MPU6050_Addresses deviceAddress) : __deviceAddress(deviceAddress), gyro_sens_factor(0.0), acc_sens_factor(0.0)
 {
 
 }
@@ -29,16 +29,16 @@ alt_u8 mpu6050::InitMPU6050(AccelerometerSettings acc_sens, GyroscopeSettings gy
 	switch (gyro_sens)
 	{
 	case GyroscopeSettings::RANGE_250_DEG:
-		gyro_sens_factor = gyroscope_sensitivity_2g;
+		gyro_sens_factor = gyroscope_sensitivity_250_degree;
 		break;
 	case GyroscopeSettings::RANGE_500_DEG:
-		gyro_sens_factor = gyroscope_sensitivity_4g;
+		gyro_sens_factor = gyroscope_sensitivity_500_degree;
 		break;
 	case GyroscopeSettings::RANGE_1000_DEG:
-		gyro_sens_factor = gyroscope_sensitivity_8g;
+		gyro_sens_factor = gyroscope_sensitivity_1000_degree;
 		break;
 	case GyroscopeSettings::RANGE_2000_DEG:
-		gyro_sens_factor = gyroscope_sensitivity_16g;
+		gyro_sens_factor = gyroscope_sensitivity_2000_degree;
 		break;
 	}
 

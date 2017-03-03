@@ -130,17 +130,17 @@ private:
 	/*!
 	 * @brief
 	 * */
-	static constexpr alt_u16 accelerometer_sensitivity_2g = 1 / 0x4000;
-	static constexpr alt_u16 accelerometer_sensitivity_4g = 1 / 0x2000;
-	static constexpr alt_u16 accelerometer_sensitivity_8g = 1 / 0x1000;
-	static constexpr alt_u16 accelerometer_sensitivity_16g = 1 / 0x0800;
+	static constexpr float accelerometer_sensitivity_2g = 1.0 / 0x4000;
+	static constexpr float accelerometer_sensitivity_4g = 1.0 / 0x2000;
+	static constexpr float accelerometer_sensitivity_8g = 1.0 / 0x1000;
+	static constexpr float accelerometer_sensitivity_16g = 1.0 / 0x0800;
 	/*!
 	 * @brief
 	 * */
-	static constexpr float gyroscope_sensitivity_2g = 1 / 131.0;
-	static constexpr float gyroscope_sensitivity_4g = 1 / 65.5;
-	static constexpr float gyroscope_sensitivity_8g = 1 / 32.8;
-	static constexpr float gyroscope_sensitivity_16g = 1 / 16.4;
+	static constexpr float gyroscope_sensitivity_250_degree = 1 / 131.0;
+	static constexpr float gyroscope_sensitivity_500_degree = 1 / 65.5;
+	static constexpr float gyroscope_sensitivity_1000_degree = 1 / 32.8;
+	static constexpr float gyroscope_sensitivity_2000_degree = 1 / 16.4;
 };
 
 
