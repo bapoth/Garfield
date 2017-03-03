@@ -24,6 +24,6 @@ void Steering::Set(alt_8 angle) {
 	}
 	else {
         static const float val_per_deg = 19/60;
-        //PWMgen_Set_DutyCycle(NEUTRAL_POS_VALUE - (val_per_deg*angle));
+        PWMgen_Set_DutyCycle(STEERING_PWM_BASE, NEUTRAL_POS_VALUE - (val_per_deg*angle));
 	}
 }
