@@ -18,7 +18,7 @@
       }
       datum sopceditor_expanded
       {
-         value = "0";
+         value = "1";
          type = "boolean";
       }
    }
@@ -272,7 +272,7 @@
       }
       datum sopceditor_expanded
       {
-         value = "0";
+         value = "1";
          type = "boolean";
       }
    }
@@ -306,7 +306,7 @@
       }
       datum sopceditor_expanded
       {
-         value = "0";
+         value = "1";
          type = "boolean";
       }
    }
@@ -359,6 +359,11 @@
          value = "1";
          type = "boolean";
       }
+      datum baseAddress
+      {
+         value = "32768";
+         type = "String";
+      }
    }
    element jtag_uart_nios2
    {
@@ -375,6 +380,11 @@
    }
    element jtag_uart_nios2.avalon_jtag_slave
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
          value = "266240";
@@ -390,7 +400,7 @@
       }
       datum sopceditor_expanded
       {
-         value = "1";
+         value = "0";
          type = "boolean";
       }
    }
@@ -482,6 +492,11 @@
    }
    element nios2_gen2_0.debug_mem_slave
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
          value = "264192";
@@ -511,6 +526,11 @@
    }
    element onchip_memory2_nios2.s1
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
          value = "131072";
@@ -526,7 +546,7 @@
       }
       datum sopceditor_expanded
       {
-         value = "0";
+         value = "1";
          type = "boolean";
       }
    }
@@ -555,7 +575,7 @@
       }
       datum sopceditor_expanded
       {
-         value = "1";
+         value = "0";
          type = "boolean";
       }
    }
@@ -607,7 +627,7 @@
       }
       datum sopceditor_expanded
       {
-         value = "1";
+         value = "0";
          type = "boolean";
       }
    }
@@ -680,7 +700,7 @@
       }
       datum sopceditor_expanded
       {
-         value = "0";
+         value = "1";
          type = "boolean";
       }
    }
@@ -801,7 +821,7 @@
  <interface name="hps_0_h2f_user0_clock" internal="hps_0.h2f_user0_clock" />
  <interface name="hps_0_hps_io" internal="hps_0.hps_io" type="conduit" dir="end" />
  <interface
-   name="i2c_0_external_connection"
+   name="i2c_opencores_0_export"
    internal="i2c_opencores_0.export"
    type="conduit"
    dir="end" />
@@ -840,7 +860,7 @@
  <module name="Drive_PWM" kind="PWM_Generator" version="1.0" enabled="1">
   <parameter name="datawidth" value="32" />
   <parameter name="freq_core" value="100000000" />
-  <parameter name="freq_pwm" value="10000" />
+  <parameter name="freq_pwm" value="2000" />
  </module>
  <module
    name="Garfield_GPIO"
@@ -942,7 +962,7 @@
  <module name="Steering_PWM" kind="PWM_Generator" version="1.0" enabled="1">
   <parameter name="datawidth" value="32" />
   <parameter name="freq_core" value="100000000" />
-  <parameter name="freq_pwm" value="10000" />
+  <parameter name="freq_pwm" value="125" />
  </module>
  <module name="clk_0" kind="clock_source" version="16.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
@@ -1579,10 +1599,10 @@
   <parameter name="customInstSlavesSystemInfo_nios_a" value="&lt;info/&gt;" />
   <parameter name="customInstSlavesSystemInfo_nios_b" value="&lt;info/&gt;" />
   <parameter name="customInstSlavesSystemInfo_nios_c" value="&lt;info/&gt;" />
-  <parameter name="dataAddrWidth" value="23" />
+  <parameter name="dataAddrWidth" value="19" />
   <parameter name="dataMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="dataMasterHighPerformanceMapParam" value="" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='timer_0_nios2.s1' start='0x0' end='0x20' type='altera_avalon_timer.s1' /><slave name='spi_0.spi_control_port' start='0x20' end='0x40' type='altera_avalon_spi.spi_control_port' /><slave name='Garfield_lighting.s1' start='0x60' end='0x70' type='altera_avalon_pio.s1' /><slave name='Garfield_GPIO.s1' start='0x70' end='0x80' type='altera_avalon_pio.s1' /><slave name='Drive_PWM.avalon_slave_0' start='0x80' end='0x88' type='PWM_Generator.avalon_slave_0' /><slave name='Steering_PWM.avalon_slave_0' start='0x90' end='0x98' type='PWM_Generator.avalon_slave_0' /><slave name='Rotary_Encoder_0.avalon_slave_0' start='0xA0' end='0xA8' type='Rotary_Encoder.avalon_slave_0' /><slave name='mailbox_arm2nios_0.avmm_msg_receiver' start='0xC0' end='0xD0' type='altera_avalon_mailbox_simple.avmm_msg_receiver' /><slave name='shared_memory_master_nios_0.s1' start='0x1000' end='0x1800' type='altera_avalon_onchip_memory2.s1' /><slave name='shared_memory_master_hps_0.s1' start='0x1800' end='0x2000' type='altera_avalon_onchip_memory2.s1' /><slave name='sysid_fpga.control_slave' start='0x10000' end='0x10008' type='altera_avalon_sysid_qsys.control_slave' /><slave name='shared_memory_mutex_master_hps_0.s1' start='0x10020' end='0x10028' type='altera_avalon_mutex.s1' /><slave name='mailbox_nios2arm_0.avmm_msg_sender' start='0x10030' end='0x10040' type='altera_avalon_mailbox_simple.avmm_msg_sender' /><slave name='shared_memory_mutex_master_nios_0.s1' start='0x10040' end='0x10048' type='altera_avalon_mutex.s1' /><slave name='Onboard_LED.s1' start='0x10050' end='0x10060' type='altera_avalon_pio.s1' /><slave name='Onboard_DipSW.s1' start='0x10080' end='0x10090' type='altera_avalon_pio.s1' /><slave name='Onboard_Button.s1' start='0x100C0' end='0x100D0' type='altera_avalon_pio.s1' /><slave name='onchip_memory2_nios2.s1' start='0x20000' end='0x40000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40800' end='0x41000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='jtag_uart_nios2.avalon_jtag_slave' start='0x41000' end='0x41008' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='i2c_opencores_0.avalon_slave_0' start='0x400000' end='0x400020' type='i2c_opencores.avalon_slave_0' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='timer_0_nios2.s1' start='0x0' end='0x20' type='altera_avalon_timer.s1' /><slave name='spi_0.spi_control_port' start='0x20' end='0x40' type='altera_avalon_spi.spi_control_port' /><slave name='Garfield_lighting.s1' start='0x60' end='0x70' type='altera_avalon_pio.s1' /><slave name='Garfield_GPIO.s1' start='0x70' end='0x80' type='altera_avalon_pio.s1' /><slave name='Drive_PWM.avalon_slave_0' start='0x80' end='0x88' type='PWM_Generator.avalon_slave_0' /><slave name='Steering_PWM.avalon_slave_0' start='0x90' end='0x98' type='PWM_Generator.avalon_slave_0' /><slave name='Rotary_Encoder_0.avalon_slave_0' start='0xA0' end='0xA8' type='Rotary_Encoder.avalon_slave_0' /><slave name='mailbox_arm2nios_0.avmm_msg_receiver' start='0xC0' end='0xD0' type='altera_avalon_mailbox_simple.avmm_msg_receiver' /><slave name='shared_memory_master_nios_0.s1' start='0x1000' end='0x1800' type='altera_avalon_onchip_memory2.s1' /><slave name='shared_memory_master_hps_0.s1' start='0x1800' end='0x2000' type='altera_avalon_onchip_memory2.s1' /><slave name='i2c_opencores_0.avalon_slave_0' start='0x8000' end='0x8020' type='i2c_opencores.avalon_slave_0' /><slave name='sysid_fpga.control_slave' start='0x10000' end='0x10008' type='altera_avalon_sysid_qsys.control_slave' /><slave name='shared_memory_mutex_master_hps_0.s1' start='0x10020' end='0x10028' type='altera_avalon_mutex.s1' /><slave name='mailbox_nios2arm_0.avmm_msg_sender' start='0x10030' end='0x10040' type='altera_avalon_mailbox_simple.avmm_msg_sender' /><slave name='shared_memory_mutex_master_nios_0.s1' start='0x10040' end='0x10048' type='altera_avalon_mutex.s1' /><slave name='Onboard_LED.s1' start='0x10050' end='0x10060' type='altera_avalon_pio.s1' /><slave name='Onboard_DipSW.s1' start='0x10080' end='0x10090' type='altera_avalon_pio.s1' /><slave name='Onboard_Button.s1' start='0x100C0' end='0x100D0' type='altera_avalon_pio.s1' /><slave name='onchip_memory2_nios2.s1' start='0x20000' end='0x40000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40800' end='0x41000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='jtag_uart_nios2.avalon_jtag_slave' start='0x41000' end='0x41008' type='altera_avalon_jtag_uart.avalon_jtag_slave' /></address-map>]]></parameter>
   <parameter name="data_master_high_performance_paddr_base" value="0" />
   <parameter name="data_master_high_performance_paddr_size" value="0" />
   <parameter name="data_master_paddr_base" value="0" />
@@ -2076,7 +2096,7 @@
    kind="altera_avalon_sysid_qsys"
    version="16.1"
    enabled="1">
-  <parameter name="id" value="570564631" />
+  <parameter name="id" value="50536471" />
  </module>
  <module
    name="timer_0_nios2"
@@ -2107,15 +2127,6 @@
    kind="avalon"
    version="16.1"
    start="nios2_gen2_0.data_master"
-   end="i2c_opencores_0.avalon_slave_0">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00400000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="16.1"
-   start="nios2_gen2_0.data_master"
    end="Drive_PWM.avalon_slave_0">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0080" />
@@ -2137,6 +2148,15 @@
    end="Rotary_Encoder_0.avalon_slave_0">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00a0" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="nios2_gen2_0.data_master"
+   end="i2c_opencores_0.avalon_slave_0">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x8000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -2477,11 +2497,6 @@
    kind="clock"
    version="16.1"
    start="pll_0.outclk0"
-   end="i2c_opencores_0.clock" />
- <connection
-   kind="clock"
-   version="16.1"
-   start="pll_0.outclk0"
    end="Drive_PWM.clock" />
  <connection
    kind="clock"
@@ -2493,6 +2508,11 @@
    version="16.1"
    start="pll_0.outclk0"
    end="Rotary_Encoder_0.clock" />
+ <connection
+   kind="clock"
+   version="16.1"
+   start="pll_0.outclk0"
+   end="i2c_opencores_0.clock" />
  <connection
    kind="clock"
    version="16.1"

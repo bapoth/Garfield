@@ -67,7 +67,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
   </table>
   <table class="blueBar">
    <tr>
-    <td class="l">2017.02.22.21:57:12</td>
+    <td class="l">2017.03.03.10:04:36</td>
     <td class="r">Datasheet</td>
    </tr>
   </table>
@@ -1467,7 +1467,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
     <td class="empty"></td>
     <td class="empty"></td>
     <td class="empty"></td>
-    <td class="addr"><span style="color:#989898">0x</span>00400000</td>
+    <td class="addr"><span style="color:#989898">0x</span>00008000</td>
     <td class="empty"></td>
    </tr>
    <tr>
@@ -1853,7 +1853,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">freq_pwm</td>
-        <td class="parametervalue">10000</td>
+        <td class="parametervalue">2000</td>
        </tr>
        <tr>
         <td class="parametername">deviceFamily</td>
@@ -3027,7 +3027,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">freq_pwm</td>
-        <td class="parametervalue">10000</td>
+        <td class="parametervalue">125</td>
        </tr>
        <tr>
         <td class="parametername">deviceFamily</td>
@@ -31401,32 +31401,6 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
       <td></td>
       <td></td>
       <td class="from">data_master&#160;&#160;</td>
-      <td class="neighbor" rowspan="4">
-       <a href="#module_i2c_opencores_0">i2c_opencores_0</a>
-      </td>
-     </tr>
-     <tr>
-      <td></td>
-      <td></td>
-      <td class="to">&#160;&#160;avalon_slave_0</td>
-     </tr>
-     <tr>
-      <td></td>
-      <td></td>
-      <td class="from">irq&#160;&#160;</td>
-     </tr>
-     <tr>
-      <td></td>
-      <td></td>
-      <td class="to">&#160;&#160;interrupt_sender</td>
-     </tr>
-     <tr style="height:6px">
-      <td></td>
-     </tr>
-     <tr>
-      <td></td>
-      <td></td>
-      <td class="from">data_master&#160;&#160;</td>
       <td class="neighbor" rowspan="2">
        <a href="#module_Drive_PWM">Drive_PWM</a>
       </td>
@@ -31467,6 +31441,32 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
       <td></td>
       <td></td>
       <td class="to">&#160;&#160;avalon_slave_0</td>
+     </tr>
+     <tr style="height:6px">
+      <td></td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="from">data_master&#160;&#160;</td>
+      <td class="neighbor" rowspan="4">
+       <a href="#module_i2c_opencores_0">i2c_opencores_0</a>
+      </td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="to">&#160;&#160;avalon_slave_0</td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="from">irq&#160;&#160;</td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="to">&#160;&#160;interrupt_sender</td>
      </tr>
      <tr style="height:6px">
       <td></td>
@@ -32395,7 +32395,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">dataAddrWidth</td>
-        <td class="parametervalue">23</td>
+        <td class="parametervalue">19</td>
        </tr>
        <tr>
         <td class="parametername">tightlyCoupledDataMaster0AddrWidth</td>
@@ -32447,7 +32447,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">dataSlaveMapParam</td>
-        <td class="parametervalue">&lt;address-map&gt;&lt;slave name='timer_0_nios2.s1' start='0x0' end='0x20' type='altera_avalon_timer.s1' /&gt;&lt;slave name='spi_0.spi_control_port' start='0x20' end='0x40' type='altera_avalon_spi.spi_control_port' /&gt;&lt;slave name='Garfield_lighting.s1' start='0x60' end='0x70' type='altera_avalon_pio.s1' /&gt;&lt;slave name='Garfield_GPIO.s1' start='0x70' end='0x80' type='altera_avalon_pio.s1' /&gt;&lt;slave name='Drive_PWM.avalon_slave_0' start='0x80' end='0x88' type='PWM_Generator.avalon_slave_0' /&gt;&lt;slave name='Steering_PWM.avalon_slave_0' start='0x90' end='0x98' type='PWM_Generator.avalon_slave_0' /&gt;&lt;slave name='Rotary_Encoder_0.avalon_slave_0' start='0xA0' end='0xA8' type='Rotary_Encoder.avalon_slave_0' /&gt;&lt;slave name='mailbox_arm2nios_0.avmm_msg_receiver' start='0xC0' end='0xD0' type='altera_avalon_mailbox_simple.avmm_msg_receiver' /&gt;&lt;slave name='shared_memory_master_nios_0.s1' start='0x1000' end='0x1800' type='altera_avalon_onchip_memory2.s1' /&gt;&lt;slave name='shared_memory_master_hps_0.s1' start='0x1800' end='0x2000' type='altera_avalon_onchip_memory2.s1' /&gt;&lt;slave name='sysid_fpga.control_slave' start='0x10000' end='0x10008' type='altera_avalon_sysid_qsys.control_slave' /&gt;&lt;slave name='shared_memory_mutex_master_hps_0.s1' start='0x10020' end='0x10028' type='altera_avalon_mutex.s1' /&gt;&lt;slave name='mailbox_nios2arm_0.avmm_msg_sender' start='0x10030' end='0x10040' type='altera_avalon_mailbox_simple.avmm_msg_sender' /&gt;&lt;slave name='shared_memory_mutex_master_nios_0.s1' start='0x10040' end='0x10048' type='altera_avalon_mutex.s1' /&gt;&lt;slave name='Onboard_LED.s1' start='0x10050' end='0x10060' type='altera_avalon_pio.s1' /&gt;&lt;slave name='Onboard_DipSW.s1' start='0x10080' end='0x10090' type='altera_avalon_pio.s1' /&gt;&lt;slave name='Onboard_Button.s1' start='0x100C0' end='0x100D0' type='altera_avalon_pio.s1' /&gt;&lt;slave name='onchip_memory2_nios2.s1' start='0x20000' end='0x40000' type='altera_avalon_onchip_memory2.s1' /&gt;&lt;slave name='nios2_gen2_0.debug_mem_slave' start='0x40800' end='0x41000' type='altera_nios2_gen2.debug_mem_slave' /&gt;&lt;slave name='jtag_uart_nios2.avalon_jtag_slave' start='0x41000' end='0x41008' type='altera_avalon_jtag_uart.avalon_jtag_slave' /&gt;&lt;slave name='i2c_opencores_0.avalon_slave_0' start='0x400000' end='0x400020' type='i2c_opencores.avalon_slave_0' /&gt;&lt;/address-map&gt;</td>
+        <td class="parametervalue">&lt;address-map&gt;&lt;slave name='timer_0_nios2.s1' start='0x0' end='0x20' type='altera_avalon_timer.s1' /&gt;&lt;slave name='spi_0.spi_control_port' start='0x20' end='0x40' type='altera_avalon_spi.spi_control_port' /&gt;&lt;slave name='Garfield_lighting.s1' start='0x60' end='0x70' type='altera_avalon_pio.s1' /&gt;&lt;slave name='Garfield_GPIO.s1' start='0x70' end='0x80' type='altera_avalon_pio.s1' /&gt;&lt;slave name='Drive_PWM.avalon_slave_0' start='0x80' end='0x88' type='PWM_Generator.avalon_slave_0' /&gt;&lt;slave name='Steering_PWM.avalon_slave_0' start='0x90' end='0x98' type='PWM_Generator.avalon_slave_0' /&gt;&lt;slave name='Rotary_Encoder_0.avalon_slave_0' start='0xA0' end='0xA8' type='Rotary_Encoder.avalon_slave_0' /&gt;&lt;slave name='mailbox_arm2nios_0.avmm_msg_receiver' start='0xC0' end='0xD0' type='altera_avalon_mailbox_simple.avmm_msg_receiver' /&gt;&lt;slave name='shared_memory_master_nios_0.s1' start='0x1000' end='0x1800' type='altera_avalon_onchip_memory2.s1' /&gt;&lt;slave name='shared_memory_master_hps_0.s1' start='0x1800' end='0x2000' type='altera_avalon_onchip_memory2.s1' /&gt;&lt;slave name='i2c_opencores_0.avalon_slave_0' start='0x8000' end='0x8020' type='i2c_opencores.avalon_slave_0' /&gt;&lt;slave name='sysid_fpga.control_slave' start='0x10000' end='0x10008' type='altera_avalon_sysid_qsys.control_slave' /&gt;&lt;slave name='shared_memory_mutex_master_hps_0.s1' start='0x10020' end='0x10028' type='altera_avalon_mutex.s1' /&gt;&lt;slave name='mailbox_nios2arm_0.avmm_msg_sender' start='0x10030' end='0x10040' type='altera_avalon_mailbox_simple.avmm_msg_sender' /&gt;&lt;slave name='shared_memory_mutex_master_nios_0.s1' start='0x10040' end='0x10048' type='altera_avalon_mutex.s1' /&gt;&lt;slave name='Onboard_LED.s1' start='0x10050' end='0x10060' type='altera_avalon_pio.s1' /&gt;&lt;slave name='Onboard_DipSW.s1' start='0x10080' end='0x10090' type='altera_avalon_pio.s1' /&gt;&lt;slave name='Onboard_Button.s1' start='0x100C0' end='0x100D0' type='altera_avalon_pio.s1' /&gt;&lt;slave name='onchip_memory2_nios2.s1' start='0x20000' end='0x40000' type='altera_avalon_onchip_memory2.s1' /&gt;&lt;slave name='nios2_gen2_0.debug_mem_slave' start='0x40800' end='0x41000' type='altera_nios2_gen2.debug_mem_slave' /&gt;&lt;slave name='jtag_uart_nios2.avalon_jtag_slave' start='0x41000' end='0x41008' type='altera_avalon_jtag_uart.avalon_jtag_slave' /&gt;&lt;/address-map&gt;</td>
        </tr>
        <tr>
         <td class="parametername">tightlyCoupledDataMaster0MapParam</td>
@@ -32584,7 +32584,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">DATA_ADDR_WIDTH</td>
-        <td class="parametervalue">23</td>
+        <td class="parametervalue">19</td>
        </tr>
        <tr>
         <td class="parametername">DCACHE_BYPASS_MASK</td>
@@ -33277,22 +33277,6 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
       <td></td>
       <td class="from">outclk0&#160;&#160;</td>
       <td class="neighbor" rowspan="2">
-       <a href="#module_i2c_opencores_0">i2c_opencores_0</a>
-      </td>
-     </tr>
-     <tr>
-      <td></td>
-      <td></td>
-      <td class="to">&#160;&#160;clock</td>
-     </tr>
-     <tr style="height:6px">
-      <td></td>
-     </tr>
-     <tr>
-      <td></td>
-      <td></td>
-      <td class="from">outclk0&#160;&#160;</td>
-      <td class="neighbor" rowspan="2">
        <a href="#module_Drive_PWM">Drive_PWM</a>
       </td>
      </tr>
@@ -33326,6 +33310,22 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
       <td class="from">outclk0&#160;&#160;</td>
       <td class="neighbor" rowspan="2">
        <a href="#module_Rotary_Encoder_0">Rotary_Encoder_0</a>
+      </td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="to">&#160;&#160;clock</td>
+     </tr>
+     <tr style="height:6px">
+      <td></td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="from">outclk0&#160;&#160;</td>
+      <td class="neighbor" rowspan="2">
+       <a href="#module_i2c_opencores_0">i2c_opencores_0</a>
       </td>
      </tr>
      <tr>
@@ -36371,11 +36371,11 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
       <table>
        <tr>
         <td class="parametername">id</td>
-        <td class="parametervalue">570564631</td>
+        <td class="parametervalue">50536471</td>
        </tr>
        <tr>
         <td class="parametername">timestamp</td>
-        <td class="parametervalue">1487797006</td>
+        <td class="parametervalue">1488531845</td>
        </tr>
        <tr>
         <td class="parametername">deviceFamily</td>
@@ -36396,11 +36396,11 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
       <table>
        <tr>
         <td class="parametername">ID</td>
-        <td class="parametervalue">570564631</td>
+        <td class="parametervalue">50536471</td>
        </tr>
        <tr>
         <td class="parametername">TIMESTAMP</td>
-        <td class="parametervalue">1487797006</td>
+        <td class="parametervalue">1488531845</td>
        </tr>
       </table>
      </td>
@@ -36603,8 +36603,8 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
   </div>
   <table class="blueBar">
    <tr>
-    <td class="l">generation took 0.07 seconds</td>
-    <td class="r">rendering took 2.27 seconds</td>
+    <td class="l">generation took 1.06 seconds</td>
+    <td class="r">rendering took 1.00 seconds</td>
    </tr>
   </table>
  </body>
