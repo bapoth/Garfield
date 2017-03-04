@@ -70,7 +70,7 @@
  * @param[in] value - This is the value to convert to the destination intervall
  * @return the converted value is returned
  */
-int norm_value(int in_min, int in_max, int out_min, int out_max, int value);
+int norm_value(int in_min, int in_max, int out_min, int out_max, short value);
 
 class Settings;
 
@@ -186,14 +186,14 @@ class Garfield_control : public QMainWindow {
         uint8_t _speed;
         /// direction which is sent over socket (0: forward, 1: backwards)
         int _direction;
-        /// steering angle (0-180°)
+        /// steering angle (-90-90°)
         int _angle;
         /// true: light is on, false: else
         bool _light = false;
         /// acceleration of the car which is received on the socket
         int _acceleration;
         /// transverse acceleration of the car which is received on the socket
-        int _lateral_acceleration;
+        short _lateral_acceleration;
 
         /// true: connected with socket, false: else
         bool _connected;

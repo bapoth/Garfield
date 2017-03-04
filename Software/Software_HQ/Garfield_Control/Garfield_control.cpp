@@ -15,7 +15,7 @@
 
 #define ANGLE_MAX_VAL 90
 #define ANGLE_MIN_VAL -90
-#define SPEED_MAX_VAL 100
+#define SPEED_MAX_VAL 255
 #define SPEED_MIN_VAL 0
 #define ACC_MAX_VAL 100
 #define ACC_MIN_VAL -100
@@ -26,8 +26,8 @@
 
 #define SEND_REC_INTERVAL_MS 20
 
-int norm_value(int in_min, int in_max, int out_min, int out_max, int value) {
-    return (((out_max-out_min)*(value-in_min))/(in_max-in_min))+out_min;
+int norm_value(int in_min, int in_max, int out_min, int out_max, short value) {
+    return ((int)(((out_max-out_min)*(value-in_min))/(in_max-in_min))+out_min);
 }
 
 Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
@@ -38,7 +38,7 @@ Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
     //Set initial values
     _speed = 0;
     _direction = 0;
-    _angle = 90;
+    _angle = 0;
     _light = false;
 
     //Load Settings
@@ -209,7 +209,7 @@ void Garfield_control::command_forward() {
 }
 
 void Garfield_control::command_back() {
-    ui->DebugSlider_speed->setValue(ui->DebugSlider_speed->maximum());
+    ui->DebugSlider_speed->setValue(ui->DebugSlider_speed->minimum());
     _speed = SPEED_MAX_VAL;
     _direction = 1;
 }
@@ -235,7 +235,7 @@ void Garfield_control::command_right() {
 void Garfield_control::command_leftright_rel() {
     ui->DebugSlider_Dir->setValue(ui->DebugSlider_Dir->maximum()-((ui->DebugSlider_Dir->maximum()-ui->DebugSlider_Dir->minimum())/2));
     ui->angle_lineEdit->setText(QString::number((ANGLE_MAX_VAL-std::abs(ANGLE_MIN_VAL))/2));
-    _angle = (ANGLE_MAX_VAL-ANGLE_MIN_VAL)/2;
+    _angle = (ANGLE_MAX_VAL-std::abs(ANGLE_MIN_VAL))/2;
 }
 
 void Garfield_control::command_setForwardSpeed(double value) {
@@ -254,9 +254,9 @@ void Garfield_control::command_setBackSpeed(double value) {
 
 void Garfield_control::command_setDirection(double value) {
     qDebug() << "Direction: "<<value;
-    ui->DebugSlider_Dir->setValue(value);
     ui->angle_lineEdit->setText(QString::number((int)value));
     _angle = (int)(value);
+    ui->DebugSlider_Dir->setValue(_angle+90); //weird behavior of Slider (variable has correct value, but slider is in wrong position)
 }
 
 void Garfield_control::command_toggleLights(int state) {
