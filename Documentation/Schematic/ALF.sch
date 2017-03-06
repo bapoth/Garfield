@@ -29,7 +29,7 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:ALF-cache
-EELAYER 27 0
+EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -645,7 +645,7 @@ Text GLabel 8400 4300 1    60   Input ~ 0
 AKKU+
 Connection ~ 8400 4350
 Text GLabel 8400 5450 0    60   Input ~ 0
-VCC_5
+AKKU+
 Text GLabel 8400 5850 0    60   Input ~ 0
 MOTOR_PWM_5V
 Text GLabel 8400 5950 0    60   Input ~ 0
