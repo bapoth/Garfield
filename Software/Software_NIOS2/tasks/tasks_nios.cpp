@@ -12,6 +12,7 @@
 
 //set FreeRTOS tick to 5ms
 
+static const float pulses_to_meter 1.0;
 
 static const alt_u8 max_steering_angle = 60;
 
@@ -67,8 +68,8 @@ void readUltraSonic ( void* p )
 
 	 UltraSonicDevice us_front_left(UltraSonicAddress::DEVICE_00);
 	 UltraSonicDevice us_front_right(UltraSonicAddress::DEVICE_01);
-	 UltraSonicDevice us_rear_left(UltraSonicAddress::DEVICE_02);
-	 UltraSonicDevice us_rear_right(UltraSonicAddress::DEVICE_03);
+	 UltraSonicDevice us_rear_left(UltraSonicAddress::DEVICE_03);
+	 UltraSonicDevice us_rear_right(UltraSonicAddress::DEVICE_02);
 
 
 	 while(1)
@@ -94,10 +95,16 @@ void readRotary ( void* p )
 
 	 while(1)
 	 {
+         TickType_t old_value = xLastWakeTime;
 		 // Wait for the next cycle ( every 50ms )
 		 vTaskDelayUntil( &xLastWakeTime, xFrequency );
 
-		 global_rotary_data = ROT_ENC_GetRotations(ROTARY_ENCODER_0_BASE);
+		 //global_rotary_data = ROT_ENC_GetRotations(ROTARY_ENCODER_0_BASE);
+         
+         //Calculation of current speed
+         alt_u32 curr_value = ROT_ENC_GetRotations(ROTARY_ENCODER_0_BASE);
+         ROT_ENC_ClearCounter();
+         alt_u8 speed = (curr_value * pulses_to_meter) / ((xLastWakeTime-old_value)*(1/configTICK_RATE_HZ));
 	 }
 }
 
