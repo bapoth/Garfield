@@ -19,7 +19,7 @@ public:
     
 private:
     const static alt_u8 mot_dir_pin;
-    const static speed_prescaler;
+    const static alt_u8 speed_prescaler;
 };
 
 #endif
