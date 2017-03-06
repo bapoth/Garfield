@@ -5,6 +5,7 @@
 #include "mpu6050.hpp"
 #include "ultrasonic.hpp"
 #include "Steering.hpp"
+#include "Drive.hpp"
 #include "Rotary_Encoder.h"
 
 #include "FreeRTOS.h"
@@ -17,6 +18,10 @@ static const float pulses_to_meter 1.0;
 static const alt_u8 max_steering_angle = 60;
 
 static alt_u8 dummy_communication_steering_variable = 42;
+
+static alt_u8 dummy_communication_speed_variable = 0;
+
+static alt_u8 dummy_communication_direction_variable = 0;
 
 
 /*
@@ -125,6 +130,8 @@ void setMotor_and_Steering ( void* p )
 		 vTaskDelayUntil( &xLastWakeTime, xFrequency );
 
 		 Steering::Set(dummy_communication_steering_variable);
-		 //set motor speed
+		 
+         //set motor speed
+         Drive::SetDriveSpeed(dummy_communication_direction_variable, dummy_communication_speed_variable);
 	 }
 }
