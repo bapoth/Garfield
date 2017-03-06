@@ -13,7 +13,7 @@
 
 //set FreeRTOS tick to 5ms
 
-static const float pulses_to_meter = 1.0;
+static const float pulses_to_meter 1.0;
 
 static const alt_u8 max_steering_angle = 60;
 
@@ -42,7 +42,7 @@ static alt_u32 global_rotary_data = 0;
 void readMPU( void* p)
 {
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 55;
+	const TickType_t xFrequency = 10;
 
 	/* mpu */
 	mpu6050 mpu(MPU6050_Addresses::DEVICE_0);
@@ -66,7 +66,7 @@ void readMPU( void* p)
 void readUltraSonic ( void* p )
 {
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 70;
+	const TickType_t xFrequency = 13;
 
 	 // Initialise the xLastWakeTime variable with the current time.
 	 xLastWakeTime = xTaskGetTickCount();
@@ -93,7 +93,7 @@ void readUltraSonic ( void* p )
 void readRotary ( void* p )
 {
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 55;
+	const TickType_t xFrequency = 10;
 
 	 // Initialise the xLastWakeTime variable with the current time.
 	 xLastWakeTime = xTaskGetTickCount();
@@ -116,7 +116,7 @@ void readRotary ( void* p )
 void setMotor_and_Steering ( void* p )
 {
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 25;
+	const TickType_t xFrequency = 4;
 
 
 	Steering::Init(max_steering_angle);
