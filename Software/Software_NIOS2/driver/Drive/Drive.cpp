@@ -7,7 +7,7 @@
 #include "Rotary_Encoder.h"
 
 const alt_u8 Drive::mot_dir_pin = 0;
-const alt_u8 Drive::speed_prescaler = 2;
+alt_u8 Drive::max_speed_percent = 50;
 
 void Drive::SetDriveSpeed(alt_u8 direction, alt_u8 speed) {
 
@@ -21,7 +21,15 @@ void Drive::SetDriveSpeed(alt_u8 direction, alt_u8 speed) {
 		i &= ~(1 << mot_dir_pin);
 		IOWR(GARFIELD_GPIO_BASE, 0, i);
 	}
-	PWMGen_Set_DutyCycle(DRIVE_PWM_BASE, speed/speed_prescaler);
+
+	PWMGen_Set_DutyCycle(DRIVE_PWM_BASE, ((float)max_speed_percent/100)*speed);
+}
+
+void Drive::SetMaxSpeed(alt_u8 max_percent_speed) {
+	if(max_percent_speed >= 100) {
+		max_percent_speed = 100;
+	}
+	max_speed_percent = max_percent_speed;
 }
 
 
