@@ -17,18 +17,14 @@
 #define ANGLE_MIN_VAL -90
 #define SPEED_MAX_VAL 255
 #define SPEED_MIN_VAL 0
-#define ACC_MAX_VAL 100
-#define ACC_MIN_VAL -100
+#define ACC_MAX_VAL 2.0
+#define ACC_MIN_VAL -2.0
 
 #define POLLING_GAMEPAD_INTERVAL_MS 1
 
 #define ACC_MAP_UPDATE_MS 20
 
 #define SEND_REC_INTERVAL_MS 20
-
-int norm_value(int in_min, int in_max, int out_min, int out_max, short value) {
-    return ((int)(((out_max-out_min)*(value-in_min))/(in_max-in_min))+out_min);
-}
 
 Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
     ui(new Ui::Garfield_control)
@@ -131,14 +127,14 @@ void Garfield_control::poll_gamepad() {
 
             //Backwards
             if(event.number == GAMEPAD_AXIS_L2) {
-                command_setBackSpeed(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, SPEED_MIN_VAL, SPEED_MAX_VAL, event.value));
+                command_setBackSpeed(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, SPEED_MIN_VAL, SPEED_MAX_VAL, static_cast<int>(event.value)));
             }
             //Forwards
             else if(event.number == GAMEPAD_AXIS_R2) {
-                command_setForwardSpeed(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, SPEED_MIN_VAL, SPEED_MAX_VAL, event.value));
+                command_setForwardSpeed(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, SPEED_MIN_VAL, SPEED_MAX_VAL, static_cast<int>(event.value)));
             }
             if(event.number == GAMEPAD_AXIS_ANALOG_LEFT_LR) {
-                command_setDirection(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, ANGLE_MIN_VAL, ANGLE_MAX_VAL, event.value));
+                command_setDirection(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, ANGLE_MIN_VAL, ANGLE_MAX_VAL, static_cast<int>(event.value)));
             }
         }
     }
@@ -147,10 +143,10 @@ void Garfield_control::poll_gamepad() {
 void Garfield_control::update_acceleration() {
 
     //Take origin position, subtract current x_shift and add new x_shift
-    int x_pos = ui->GridPoint_label->pos().rx() - (ui->GridPoint_label->pos().rx() - GridPointPos.rx()) + norm_value(ACC_MIN_VAL, ACC_MAX_VAL, -60, 60, _lateral_acceleration);
+    int x_pos = ui->GridPoint_label->pos().rx() - (ui->GridPoint_label->pos().rx() - GridPointPos.rx()) + static_cast<int>(norm_value(ACC_MIN_VAL, ACC_MAX_VAL, -60.0, 60.0, _lateral_acceleration));
 
     //Take origin position, subtract old x_shift and add new x_shift (negative value shifts up)
-    int y_pos = ui->GridPoint_label->pos().ry() - (ui->GridPoint_label->pos().ry() - GridPointPos.ry()) - norm_value(ACC_MIN_VAL, ACC_MAX_VAL, -60, 60, _acceleration);
+    int y_pos = ui->GridPoint_label->pos().ry() - (ui->GridPoint_label->pos().ry() - GridPointPos.ry()) - static_cast<int>(norm_value(ACC_MIN_VAL, ACC_MAX_VAL, -60.0, 60.0, _acceleration));
 
     ui->GridPoint_label->move(x_pos, y_pos);
 }
@@ -388,14 +384,12 @@ void Garfield_control::sendThread() {
 
     while(!_disconnect) {
 
-        Alf_Drive_Command command;
+        global_drive_command.speed = _speed;
+        global_drive_command.direction = _direction;
+        global_drive_command.angle = _angle;
+        global_drive_command.light = _light;
 
-        command.speed = _speed;
-        command.direction = _direction;
-        command.angle = _angle;
-        command.light = _light;
-
-        ClientComm.Write(command);
+        ClientComm.Write(global_drive_command);
 
         QThread::msleep(SEND_REC_INTERVAL_MS);
     }
@@ -412,17 +406,17 @@ void Garfield_control::recThread() {
         ClientComm.Read(readBuffer, msgType);
 
         //qDebug()<<"Speed rec: "<<Alf_Drive_Info::speed;
-        ui->speed_lineEdit->setText(QString::number(Alf_Drive_Info::speed));
+        ui->speed_lineEdit->setText(QString::number(global_drive_info.speed));
         //qDebug()<<"Acc rec: "<<Alf_Drive_Info::acceleration;
-        _acceleration = Alf_Drive_Info::acceleration;
+        _acceleration = global_drive_info.acceleration;
         //qDebug()<<"Lateral acc rec: "<<Alf_Drive_Info::lateral_acceleration;
-        _lateral_acceleration = Alf_Drive_Info::lateral_acceleration;
+        _lateral_acceleration = global_drive_info.lateral_acceleration;
 
-        ui->Gyro_X_lineEdit->setText(QString::number(Alf_Drive_Info::Gyroscope_X));
-        ui->Gyro_Y_lineEdit->setText(QString::number(Alf_Drive_Info::Gyroscope_Y));
-        ui->Gyro_Z_lineEdit->setText(QString::number(Alf_Drive_Info::Gyroscope_Z));
+        ui->Gyro_X_lineEdit->setText(QString::number(global_drive_info.Gyroscope_X));
+        ui->Gyro_Y_lineEdit->setText(QString::number(global_drive_info.Gyroscope_Y));
+        ui->Gyro_Z_lineEdit->setText(QString::number(global_drive_info.Gyroscope_Z));
 
-        ui->temperatur_lineEdit->setText(QString::number(Alf_Drive_Info::temperature));
+        ui->temperatur_lineEdit->setText(QString::number(global_drive_info.temperature));
 
         QThread::msleep(SEND_REC_INTERVAL_MS);
     }

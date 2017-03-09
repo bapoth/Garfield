@@ -150,4 +150,8 @@ public:
 	uint32_t getMaxSize(void) const;
 };
 
+/// global variables
+extern Alf_Drive_Info global_drive_info;
+extern Alf_Drive_Command global_drive_command;
+
 #endif 
