@@ -127,6 +127,10 @@ void itochptr(int n, char s[]);
  */
 class Display {
 public:
+    /*!
+     * Delete the default constructor
+     */
+    Display() = delete;
 
 	/*!
 	 * Constructor for Display class

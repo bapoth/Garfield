@@ -9,7 +9,11 @@
  */
 class Drive {
 public:
-
+    /*!
+     * Delete the default constructor
+     */
+    Drive() = delete;
+    
 	/*!
 	*Method SetDriveSpeed for setting the speed and direction to the motor. The speed value gets rescaled by the maximum percent speed given by SetMaxSpeed(alt_u8 max_percent_speed)
 	*@param[in] direction: 1: backwards, 0: forward

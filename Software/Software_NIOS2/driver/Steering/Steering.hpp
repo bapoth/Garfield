@@ -15,6 +15,10 @@
  */
 class Steering {
 public:
+    /*!
+     * Delete the default constructor
+     */
+    Steering() = delete;
 	/*!
 	* Init Function for initializing the Steering with the maximum steering angle
 	* @param max_angle: This is the maximum steering angle in one direction (e.g. 50 deg). If the Set(alt_8 angle) is called with a bigger angle, it is set to max_angle_delta
