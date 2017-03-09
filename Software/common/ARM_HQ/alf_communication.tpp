@@ -255,28 +255,28 @@ alf_error Alf_Communication<_comType>::Read(Alf_Urg_Measurements_Buffer& readBuf
                         switch(idx++)
                         {
                             case 1:
-                                Alf_Drive_Info::speed = std::stoi(match.str());
+                                global_drive_info.speed = std::stoi(match.str());
                                 break;
                             case 2:
-                                Alf_Drive_Info::acceleration = std::stoi(match.str());
+                                global_drive_info.acceleration = std::stoi(match.str());
                                 break;
                             case 3:
-                                Alf_Drive_Info::lateral_acceleration = std::stoi(match.str());
+                                global_drive_info.lateral_acceleration = std::stoi(match.str());
                                 break;
                             case 4:
-                                Alf_Drive_Info::z_acceleration = std::stoi(match.str());
+                                global_drive_info.z_acceleration = std::stoi(match.str());
                                 break;
                             case 5:
-                                Alf_Drive_Info::Gyroscope_X = std::stoi(match.str());
+                                global_drive_info.Gyroscope_X = std::stoi(match.str());
                                 break;
                             case 6:
-                                Alf_Drive_Info::Gyroscope_Y = std::stoi(match.str());
+                                global_drive_info.Gyroscope_Y = std::stoi(match.str());
                                 break;
                             case 7:
-                                Alf_Drive_Info::Gyroscope_Z = std::stoi(match.str());
+                                global_drive_info.Gyroscope_Z = std::stoi(match.str());
                                 break;
                             case 8:
-                                Alf_Drive_Info::temperature = std::stof(match.str());
+                                global_drive_info.temperature = std::stof(match.str());
                                 break;
                         }
                     }
@@ -285,16 +285,16 @@ alf_error Alf_Communication<_comType>::Read(Alf_Urg_Measurements_Buffer& readBuf
                         switch(idx++)
                         {
                             case 1:
-                                Alf_Drive_Command::speed = std::stoi(match.str());
+                                global_drive_command.speed = std::stoi(match.str());
                                 break;
                             case 2:
-                                Alf_Drive_Command::direction = std::stoi(match.str());
+                                global_drive_command.direction = std::stoi(match.str());
                                 break;
                             case 3:
-                                Alf_Drive_Command::angle = std::stoi(match.str());
+                                global_drive_command.angle = std::stoi(match.str());
                                 break;
                             case 4:
-                                Alf_Drive_Command::light = std::stoi(match.str());
+                                global_drive_command.light = std::stoi(match.str());
                             break;
                         }
                     }

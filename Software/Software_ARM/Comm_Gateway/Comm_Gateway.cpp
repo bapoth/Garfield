@@ -41,10 +41,10 @@ void readData(void) {
 
 		ServerComm.Read(readBuffer, msgType);
 
-		rec = "Speed: " + std::to_string(Alf_Drive_Command::speed);
-		rec += ", Direction: " + std::to_string(Alf_Drive_Command::direction);
-		rec += ", Angle: " + std::to_string(Alf_Drive_Command::angle);
-		rec += ", Light: " + std::to_string(Alf_Drive_Command::light);
+		rec = "Speed: " + std::to_string(global_drive_command.speed);
+		rec += ", Direction: " + std::to_string(global_drive_command.direction);
+		rec += ", Angle: " + std::to_string(global_drive_command.angle);
+		rec += ", Light: " + std::to_string(global_drive_command.light);
 
 		log.alf_log_write(rec, log_info);
 
@@ -56,14 +56,14 @@ int main()
 {
 	log.alf_log_init("Melmac.log", log_debug, true);
 
-	Alf_Drive_Info::speed = 42;
-	Alf_Drive_Info::acceleration = 43;
-	Alf_Drive_Info::lateral_acceleration = 44;
-	Alf_Drive_Info::z_acceleration = 45;
-	Alf_Drive_Info::Gyroscope_X = 1;
-	Alf_Drive_Info::Gyroscope_Y = 1;
-	Alf_Drive_Info::Gyroscope_Z = 1;
-	Alf_Drive_Info::temperature = 13;
+	global_drive_info.speed = 42;
+	global_drive_info.acceleration = 43;
+	global_drive_info.lateral_acceleration = 44;
+	global_drive_info.z_acceleration = 45;
+	global_drive_info.Gyroscope_X = 1;
+	global_drive_info.Gyroscope_Y = 1;
+	global_drive_info.Gyroscope_Z = 1;
+	global_drive_info.temperature = 13;
 
 	if(ServerComm.Init(COMPORT)) {
 		std::thread sendThread(writeData);

@@ -73,33 +73,33 @@ public:
 class Alf_Drive_Info {
 public:
     /// This is the current speed
-    static uint8_t speed;
+    uint8_t speed;
     /// This is the acceleration of the car
-    static int16_t acceleration;
+    float acceleration;
     /// This is the lateral acceleration of the car
-    static int16_t lateral_acceleration;
+    float lateral_acceleration;
     /// This is the acceleration in Z direction
-    static int16_t z_acceleration;
+    float z_acceleration;
     /// This is the Gyroscope value x axis
-    static int16_t Gyroscope_X;
+    float Gyroscope_X;
     /// This is the Gyroscope value y axis
-    static int16_t Gyroscope_Y;
+    float Gyroscope_Y;
     /// This is the Gyroscope value z axis
-    static int16_t Gyroscope_Z;
+    float Gyroscope_Z;
     /// This is the temperature
-    static float temperature;
+    float temperature;
 };
 
 class Alf_Drive_Command {
 public:
     /// This variable holds the current speed (0 - 100%)
-    static uint8_t speed;
+    uint8_t speed;
     /// This is the direction to drive (0: forward, 1: backward)
-    static uint8_t direction;
+    uint8_t direction;
     /// This is the currents steering angle (-90 - 90°)
-    static int8_t angle;
+    int8_t angle;
     /// This holds the state of the light
-    static bool light;
+    bool light;
 };
 
 /*!
