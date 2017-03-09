@@ -164,7 +164,7 @@ alt_u8 mpu6050::ReadTemperature(temp& temp_data)
 	I2C_start(I2C_OPENCORES_0_BASE, static_cast<alt_u32>(__deviceAddress), 1);
 	temp_data_tmp |= I2C_read(I2C_OPENCORES_0_BASE, 1);
 
-	temp_data = static_cast<alt_16>(temp_data_tmp) / 340 + 36.53;
+	temp_data = (temp_data_tmp / 340) + 36.53;
 
 	return result;
 }

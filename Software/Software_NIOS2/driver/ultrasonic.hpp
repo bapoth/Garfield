@@ -138,6 +138,7 @@ public:
 	 * @brief function to check if the device does currently a ranging
 	 * @param[out] check: will be set to true if ranging is currently ongoing otherwise set to false
 	 * @return result (status) of this operation
+	 * @warning do not use this function with the RTOS,
 	 * */
 	alt_u8 checkUltraSonicState(bool& check) const;
 

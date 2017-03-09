@@ -40,14 +40,14 @@ enum class MPU6050_Register : alt_u8 {
 	WHO_AM_I			= 0x75,
 };
 /*!
- * @brief
+ * @brief defines the two possible default i2c addresses (hardware setting)
  * */
 enum class MPU6050_Addresses : alt_u8 {
 	DEVICE_0 = 0xD0,
 	DEVICE_1 = 0xD2,
 };
 /*!
- * @brief
+ * @brief defines the possible accelerometer register settings
  * */
 enum class AccelerometerSettings : alt_u8 {
 	RANGE_2G  = 0x00,
@@ -56,7 +56,7 @@ enum class AccelerometerSettings : alt_u8 {
 	RANGE_16G = 0x18,
 };
 /*!
- * @brief
+ * @brief defines the possible gyroscope register settings
  * */
 enum class GyroscopeSettings : alt_u8 {
 	RANGE_250_DEG  = 0x00,
@@ -65,77 +65,90 @@ enum class GyroscopeSettings : alt_u8 {
 	RANGE_2000_DEG = 0x18,
 };
 
+/*!
+ * @brief represents the mpu6050 hardware device
+ * */
 class mpu6050
 {
 public:
 	/*!
-	 * @brief
+	 * @brief AccelerometerData
 	 * */
 	struct AccelerometerData {
-		alt_16 acc_x;
-		alt_16 acc_y;
-		alt_16 acc_z;
+		float acc_x;
+		float acc_y;
+		float acc_z;
 	};
 	/*!
-	 * @brief
+	 * @brief GyroscopeData
 	 * */
 	struct GyroscopeData {
-		alt_16 gyro_x;
-		alt_16 gyro_y;
-		alt_16 gyro_z;
+		float gyro_x;
+		float gyro_y;
+		float gyro_z;
 	};
 	/*!
-	 * @brief
+	 * @brief typedef for the temperature value
 	 * */
 	using temp = float;
 
 	/*!
-	 * @brief
+	 * @brief constructs a mpu6050 object with the given address
+	 * @param[in] deviceAddress: the used iic address for communication
 	 * */
 	mpu6050(const MPU6050_Addresses deviceAddress);
 	/*!
-	 * @brief
+	 * @brief initializes the mpu with the given settings
+	 * @param[in] acc_sens: the sensitivity for the accelerometer (between 2G and 16G)
+	 * @param[in] gyro_sens: the sensitivity for the gyroscope (between 250° and 2000°)
+	 * @return currently return always 1; the idea was if the iic device acks the address set result to 0, but this mechanism is currently disabled
 	 * */
 	alt_u8 InitMPU6050(const AccelerometerSettings acc_sens, const GyroscopeSettings gyro_sens);
 	/*!
-	 * @brief
+	 * @brief reads the current acc data
+	 * @param[out] acc_data provides the memory buffer for the data
+	 * @return s.a.
 	 * */
 	alt_u8 ReadAccelerometer(AccelerometerData& acc_data);
 	/*!
-	 * @brief
+	 * @brief reads the current gyro data
+	 * @param[out] gyro_data provides the memory buffer for the data
+	 * @return s.a.
 	 * */
 	alt_u8 ReadGyroscope(GyroscopeData& gyro_data);
 	/*!
-	 * @brief
+	 * @brief reads the current temperature
+	 * @param[out] temp_data provides the memory buffer for the data
+	 * @return s.a.
 	 * */
 	alt_u8 ReadTemperature(temp& temp_data);
 
 private:
 	/*!
-	 * @brief
+	 * @brief disables the default cstr
 	 * */
 	mpu6050() = delete;
 	/*!
-	 * @brief
+	 * @brief the iic address for the device
 	 * */
 	MPU6050_Addresses __deviceAddress;
 	/*!
-	 * @brief
+	 * @brief the factor for multiplying the results with
 	 * */
 	float gyro_sens_factor;
 	/*!
-	 * @brief
+	 * @brief the factor for multiplying the results with
 	 * */
 	float acc_sens_factor;
 	/*!
-	 * @brief
+	 * @brief the possible values for the different accelerometer settings
 	 * */
 	static constexpr float accelerometer_sensitivity_2g = 1.0 / 0x4000;
 	static constexpr float accelerometer_sensitivity_4g = 1.0 / 0x2000;
 	static constexpr float accelerometer_sensitivity_8g = 1.0 / 0x1000;
 	static constexpr float accelerometer_sensitivity_16g = 1.0 / 0x0800;
 	/*!
-	 * @brief
+	 * @brief the possible values for the different gyroscope settings
 	 * */
 	static constexpr float gyroscope_sensitivity_250_degree = 1 / 131.0;
 	static constexpr float gyroscope_sensitivity_500_degree = 1 / 65.5;
