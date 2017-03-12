@@ -23,7 +23,8 @@ enum ALF_ERROR_CODES{
 	ALF_CANNOT_SEND_MESSAGE,
 	ALF_CANNOT_READ_SOCKET,
 	//insert new error codes here
-
+	ALF_NO_WELL_FPGABridge_MAPPING,
+	ALF_LOCK_MEMORY_FAILED,
 	//no changes downto here
 	ALF_UNKNOWN_ERROR = -1,
 	/// alright, there was no error in the functionality
