@@ -26,10 +26,25 @@ public:
 	*@param[in] max_percent_speed is the maximum percentage speed value.
 	*/
 	static void SetMaxSpeed(alt_u8 max_percent_speed);
+
+	/*!
+	 * @brief set/get Methods for variables
+	 * */
+	static void SetBlock_Rear(const bool val);
+	static void setBlock_Front(const bool val);
+	static bool GetBlock_Front(void);
+	static bool GetBlock_Rear(void);
+	static alt_u8 GetCurrent_speed(void);
+	static alt_u8 GetCurrent_direction(void);
+	static alt_u8 GetMax_Speed_Percent(void);
     
 private:
     const static alt_u8 mot_dir_pin;
     static alt_u8 max_speed_percent;
+    static bool block_rear_dir;
+    static bool block_front_dir;
+    static alt_u8 current_speed;
+    static alt_u8 current_direction;
 };
 
 #endif

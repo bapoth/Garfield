@@ -6,16 +6,18 @@
 #include "ultrasonic.hpp"
 #include "Steering.hpp"
 #include "Drive.hpp"
+#include "alf_data_info.hpp"
 #include "Rotary_Encoder.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
 
-//set FreeRTOS tick to 5ms
 
 static const float pulses_to_meter = 1.0;
-
 static const alt_u8 max_steering_angle = 60;
+static const alt_u8 emergency_stop_distance = 12;
+static const alt_u8 close_range_distance = 25;
+static const alt_u8 close_range_speed = 20;
 
 static alt_u8 dummy_communication_steering_variable = 42;
 
@@ -35,8 +37,6 @@ static alt_u16 global_us_front_left_data = 0;
 static alt_u16 global_us_front_right_data = 0;
 static alt_u16 global_us_rear_left_data = 0;
 static alt_u16 global_us_rear_right_data = 0;
-
-static alt_u32 global_rotary_data = 0;
 
 
 void readMPU( void* p)
@@ -60,6 +60,13 @@ void readMPU( void* p)
 		mpu.ReadGyroscope(global_gyro_data);
 		mpu.ReadTemperature(global_temp_data);
 
+		global_drive_info.acceleration = global_acc_data.acc_x;
+		global_drive_info.lateral_acceleration = global_acc_data.acc_y;
+		global_drive_info.z_acceleration = global_acc_data.acc_z;
+		global_drive_info.Gyroscope_X = global_gyro_data.gyro_x;
+		global_drive_info.Gyroscope_Y = global_gyro_data.gyro_y;
+		global_drive_info.Gyroscope_Z = global_gyro_data.gyro_z;
+		global_drive_info.temperature = global_temp_data;
 	}
 }
 
@@ -75,7 +82,7 @@ void readUltraSonic ( void* p )
 	 UltraSonicDevice us_front_right(UltraSonicAddress::DEVICE_01);
 	 UltraSonicDevice us_rear_left(UltraSonicAddress::DEVICE_03);
 	 UltraSonicDevice us_rear_right(UltraSonicAddress::DEVICE_02);
-
+	 alt_u8 previous_max_speed = Drive::GetCurrent_speed();
 
 	 while(1)
 	 {
@@ -87,6 +94,39 @@ void readUltraSonic ( void* p )
 		 us_rear_right.readRegister(UltraSonicRegisterRead::ECHO_0x01, global_us_front_right_data);
 		 us_rear_left.readRegister(UltraSonicRegisterRead::ECHO_0x01, global_us_rear_left_data);
 		 us_rear_right.readRegister(UltraSonicRegisterRead::ECHO_0x01, global_us_rear_right_data);
+
+		 // check front
+		 if(global_us_front_left_data < emergency_stop_distance || global_us_front_right_data < emergency_stop_distance)
+		 { // emergency stop front
+			 Drive::setBlock_Front(true);
+		 }
+		 else if (global_us_front_left_data < close_range_distance || global_us_front_right_data < close_range_distance)
+		 { // close range, careful
+			 previous_max_speed = Drive::GetCurrent_speed();
+			 Drive::SetMaxSpeed(close_range_speed);
+		 }
+		 else
+		 { // nothing in sight -> full throttle
+			 Drive::SetMaxSpeed(previous_max_speed);
+			 Drive::setBlock_Front(false);
+		 }
+
+		 // check rear
+		 if(global_us_rear_left_data < emergency_stop_distance || global_us_rear_right_data < emergency_stop_distance)
+		 { // emergency stop back
+			 Drive::SetBlock_Rear(true);
+		 }
+		 else if (global_us_rear_left_data < close_range_distance || global_us_rear_right_data < emergency_stop_distance)
+		 { // close range, careful
+			 previous_max_speed = Drive::GetCurrent_speed();
+			 Drive::SetMaxSpeed(close_range_speed);
+		 }
+		 else
+		 { // nothing in sight -> full throttle
+			 Drive::SetMaxSpeed(previous_max_speed);
+			 Drive::SetBlock_Rear(false);
+		 }
+
 	 }
 }
 
@@ -103,13 +143,12 @@ void readRotary ( void* p )
          TickType_t old_value = xLastWakeTime;
 		 // Wait for the next cycle ( every 50ms )
 		 vTaskDelayUntil( &xLastWakeTime, xFrequency );
-
-		 //global_rotary_data = ROT_ENC_GetRotations(ROTARY_ENCODER_0_BASE);
          
          //Calculation of current speed
          alt_u32 curr_value = ROT_ENC_GetRotations(ROTARY_ENCODER_0_BASE);
          ROT_ENC_ClearCounter();
-         alt_u8 speed = (curr_value * pulses_to_meter) / ((xLastWakeTime-old_value)*(1/configTICK_RATE_HZ));
+         alt_u8 speed = (curr_value * pulses_to_meter) / ((xLastWakeTime-old_value)*(1.0/configTICK_RATE_HZ));
+         global_drive_info.speed = speed;
 	 }
 }
 
@@ -121,17 +160,28 @@ void setMotor_and_Steering ( void* p )
 
 	Steering::Init(max_steering_angle);
 
-	 // Initialise the xLastWakeTime variable with the current time.
-	 xLastWakeTime = xTaskGetTickCount();
+	// Initialise the xLastWakeTime variable with the current time.
+	xLastWakeTime = xTaskGetTickCount();
+	alt_u8 real_speed = dummy_communication_speed_variable;
+	alt_u8 real_direction = dummy_communication_direction_variable;
 
-	 while(1)
-	 {
-		 // Wait for the next cycle ( every 20ms )
-		 vTaskDelayUntil( &xLastWakeTime, xFrequency );
+	while(1)
+	{
+		// Wait for the next cycle ( every 20ms )
+		vTaskDelayUntil( &xLastWakeTime, xFrequency );
 
-		 Steering::Set(dummy_communication_steering_variable);
-		 
-         //set motor speed
-         Drive::SetDriveSpeed(dummy_communication_direction_variable, dummy_communication_speed_variable);
-	 }
+		Steering::Set(dummy_communication_steering_variable);
+
+		if(Drive::GetBlock_Front() == true && dummy_communication_direction_variable == 0)
+		{ //drive forward -> stop motor
+			real_speed = 0;
+			real_direction = 0;
+		}
+		if(Drive::GetBlock_Rear() == true && dummy_communication_direction_variable == 1)
+		{
+			real_speed = 0;
+			real_direction = 1;
+		}
+		Drive::SetDriveSpeed(real_direction, real_speed);
+	}
 }

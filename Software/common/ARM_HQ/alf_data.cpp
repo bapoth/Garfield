@@ -19,8 +19,6 @@ uint32_t Alf_Data::urg_range_max = 0;
  * global variables
  */
 
-Alf_Drive_Info global_drive_info{};
-Alf_Drive_Command global_drive_command{};
 
 /*
  * functions
