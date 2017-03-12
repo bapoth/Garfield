@@ -391,6 +391,7 @@ begin
     ARDUINO_IO(4) <= spi_0_cs_n(1);    -- sd card chipselect
     -- pwm's and rotary of garfield
     GPIO_1(4) <= garfield_drive_pwm;
+	GPIO_1(6) <= garfield_gpio(0);
     GPIO_1(9) <= garfield_steering_pwm;
     speed_rotary <= GPIO_1(11);
 
