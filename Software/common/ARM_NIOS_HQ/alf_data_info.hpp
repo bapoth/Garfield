@@ -1,7 +1,4 @@
-#include "alt_types.h"
-
-typedef alt_u8 uint8_t;
-typedef alt_8 int8_t;
+#include "stdint.h"
 
 /*!
  * @brief The Alf_Drive_Info class holds the Infos for steering the Alf
