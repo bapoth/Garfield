@@ -16,6 +16,7 @@
 #include <regex>
 
 #include "alf_data.hpp"
+#include "alf_data_info.hpp"
 #include "alf_log.hpp"
 #include "alf_erno.h"
 #include "alf_message_types.hpp"

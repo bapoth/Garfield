@@ -1,6 +1,7 @@
 #include "QSettings"
 
 #include "alf_data.hpp"
+#include "alf_data_info.hpp"
 
 #include "joystick.h"
 #include "Garfield_control.h"

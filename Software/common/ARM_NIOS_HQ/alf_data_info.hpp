@@ -1,3 +1,5 @@
+#ifndef ALF_DATA_INFO
+#define ALF_DATA_INFO
 #include "stdint.h"
 
 /*!
@@ -38,3 +40,5 @@ public:
 /// global variables
 extern Alf_Drive_Info global_drive_info;
 extern Alf_Drive_Command global_drive_command;
+
+#endif
