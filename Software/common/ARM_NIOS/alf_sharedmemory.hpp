@@ -143,15 +143,6 @@ private:
      * @brief Resets the reset register of the write mutex, write 1 to the reset register(meaning clearing the register) and releases the mutex register which is locks the mutex during boot up for the #_cpu_id
      */
 	void ResetWriteMutex();
-    /**
-     * @brief Disables the interrupt on receiving messages
-     */
-	void DisableMailboxInterrupt();
-
-    /**
-     * @brief Enables all interrupts of the mailbox (at this moment: only on receiving messages)
-     */
-	void EnableMailboxInterrupt();
 
 	template <typename t>
     /**
@@ -224,6 +215,15 @@ public:
      * @example using_shared_memory_example.cpp This is an example how to proper use the class and in special this function!
      */
 	void ReadInterruptHandler(void);
+    /**
+     * @brief Disables the interrupt on receiving messages
+     */
+	void DisableMailboxInterrupt();
+
+    /**
+     * @brief Enables all interrupts of the mailbox (at this moment: only on receiving messages)
+     */
+	void EnableMailboxInterrupt();
 };
 
 

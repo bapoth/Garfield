@@ -13,18 +13,14 @@
 #include "task.h"
 
 
+Alf_SharedMemoryComm sharedMem{};
+
+
 static const float pulses_to_meter = 1.0;
 static const alt_u8 max_steering_angle = 60;
 static const alt_u8 emergency_stop_distance = 12;
 static const alt_u8 close_range_distance = 25;
 static const alt_u8 close_range_speed = 20;
-
-static alt_u8 dummy_communication_steering_variable = 42;
-
-static alt_u8 dummy_communication_speed_variable = 0;
-
-static alt_u8 dummy_communication_direction_variable = 0;
-
 
 /*
  * Task communication over static variables
@@ -82,7 +78,6 @@ void readUltraSonic ( void* p )
 	 UltraSonicDevice us_front_right(UltraSonicAddress::DEVICE_01);
 	 UltraSonicDevice us_rear_left(UltraSonicAddress::DEVICE_03);
 	 UltraSonicDevice us_rear_right(UltraSonicAddress::DEVICE_02);
-	 alt_u8 previous_max_speed = Drive::GetCurrent_speed();
 
 	 while(1)
 	 {
@@ -102,12 +97,11 @@ void readUltraSonic ( void* p )
 		 }
 		 else if (global_us_front_left_data < close_range_distance || global_us_front_right_data < close_range_distance)
 		 { // close range, careful
-			 previous_max_speed = Drive::GetCurrent_speed();
 			 Drive::SetMaxSpeed(close_range_speed);
 		 }
 		 else
 		 { // nothing in sight -> full throttle
-			 Drive::SetMaxSpeed(previous_max_speed);
+			 Drive::SetMaxSpeed(Drive::GetMax_Speed_Percent());
 			 Drive::setBlock_Front(false);
 		 }
 
@@ -118,12 +112,11 @@ void readUltraSonic ( void* p )
 		 }
 		 else if (global_us_rear_left_data < close_range_distance || global_us_rear_right_data < emergency_stop_distance)
 		 { // close range, careful
-			 previous_max_speed = Drive::GetCurrent_speed();
 			 Drive::SetMaxSpeed(close_range_speed);
 		 }
 		 else
 		 { // nothing in sight -> full throttle
-			 Drive::SetMaxSpeed(previous_max_speed);
+			 Drive::SetMaxSpeed(Drive::GetMax_Speed_Percent());
 			 Drive::SetBlock_Rear(false);
 		 }
 
@@ -162,26 +155,44 @@ void setMotor_and_Steering ( void* p )
 
 	// Initialise the xLastWakeTime variable with the current time.
 	xLastWakeTime = xTaskGetTickCount();
-	alt_u8 real_speed = dummy_communication_speed_variable;
-	alt_u8 real_direction = dummy_communication_direction_variable;
+
+	Alf_Drive_Command drive{};
+
+	alt_u8 real_speed = 0;
+	alt_u8 real_direction = 0;
 
 	while(1)
 	{
 		// Wait for the next cycle ( every 20ms )
 		vTaskDelayUntil( &xLastWakeTime, xFrequency );
 
-		Steering::Set(dummy_communication_steering_variable);
+		vTaskSuspendAll();
+		sharedMem.Read(drive);
+		xTaskResumeAll();
 
-		if(Drive::GetBlock_Front() == true && dummy_communication_direction_variable == 0)
+		real_speed = drive.speed;
+		real_direction = drive.direction;
+
+		Steering::Set(drive.angle);
+
+		if(Drive::GetBlock_Front() == true && real_direction == 0)
 		{ //drive forward -> stop motor
 			real_speed = 0;
 			real_direction = 0;
 		}
-		if(Drive::GetBlock_Rear() == true && dummy_communication_direction_variable == 1)
-		{
+		if(Drive::GetBlock_Rear() == true && real_direction == 1)
+		{ //drive backward -> stop motor
 			real_speed = 0;
 			real_direction = 1;
 		}
 		Drive::SetDriveSpeed(real_direction, real_speed);
 	}
+}
+
+void Mailbox_isr(void* ptr, alt_u32 a)
+{
+	alt_u32 h = alt_irq_disable_all();
+	sharedMem.ReadInterruptHandler();
+	IORD(MAILBOX_ARM2NIOS_0_BASE, 0);
+	alt_irq_enable_all(h);
 }
