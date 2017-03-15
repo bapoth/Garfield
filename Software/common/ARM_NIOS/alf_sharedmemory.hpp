@@ -215,7 +215,8 @@ public:
      * @example using_shared_memory_example.cpp This is an example how to proper use the class and in special this function!
      */
 	void ReadInterruptHandler(void);
-    /**
+	
+	/**
      * @brief Disables the interrupt on receiving messages
      */
 	void DisableMailboxInterrupt();

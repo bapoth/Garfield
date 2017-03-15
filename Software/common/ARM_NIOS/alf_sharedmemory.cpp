@@ -49,7 +49,7 @@ bool Alf_SharedMemoryComm::Init(uint32_t sh_mem_wr_addr, uint32_t wr_mut_addr, u
 
 	Alf_Log::alf_log_write("Initializing Hardware Communication...", log_info);
 
-	if((fd = open("/dev/mem", (O_RDWR))) == -1){
+	if((fd = open("/dev/mem", (O_RDWR | O_SYNC))) == -1){
 		Alf_Log::alf_log_write("Cannot open /dev/mem. Do you have permissions to do this?", log_error);
 	}else{
 		// this mapping only work with correct address alignment. Linux can only use mmap with multiple of 0x1000
@@ -133,7 +133,13 @@ void Alf_SharedMemoryComm::WaitForLock(void *addr){
 }
 
 void Alf_SharedMemoryComm::ReleaseLock(void *addr){
-	RW_REGISTER(addr) = ((uint32_t(_cpu_id) << 16) | 0x00);	//writing a 0 with the right cpu id means that we release the lock
+	uint32_t cpu_to_write = uint32_t(_cpu_id) << 16;
+#ifdef __linux__
+	RW_REGISTER(addr) = cpu_to_write;
+#else
+	// stores the cpu_to_write to the addr (%1) with byte offset 0
+	__asm__ __volatile__("stwio %0,0(%1)"::"r"(cpu_to_write),"r"(addr):);	//gcc makes only a "stw" which is not cache-safe. Because of that this ugly must be here -.-
+#endif
 }
 
 bool Alf_SharedMemoryComm::WriteAndCommitMailbox(const void *addr, const uint32_t top_address, const uint32_t &message_id){
