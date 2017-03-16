@@ -17,10 +17,10 @@ Alf_SharedMemoryComm sharedMem{};
 
 
 static const float pulses_to_meter = 1.0;
-static const alt_u8 max_steering_angle = 60;
+static const alt_u8 max_steering_angle = 40;
 static const alt_u8 emergency_stop_distance = 12;
 static const alt_u8 close_range_distance = 25;
-static const alt_u8 close_range_speed = 20;
+static const alt_u8 close_range_speed = 15;
 
 /*
  * Task communication over static variables
@@ -69,7 +69,7 @@ void readMPU( void* p)
 void readUltraSonic ( void* p )
 {
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 70;
+	const TickType_t xFrequency = 75;
 
 	 // Initialise the xLastWakeTime variable with the current time.
 	 xLastWakeTime = xTaskGetTickCount();
@@ -78,6 +78,9 @@ void readUltraSonic ( void* p )
 	 UltraSonicDevice us_front_right(UltraSonicAddress::DEVICE_01);
 	 UltraSonicDevice us_rear_left(UltraSonicAddress::DEVICE_03);
 	 UltraSonicDevice us_rear_right(UltraSonicAddress::DEVICE_02);
+
+	 const alt_u8 maxSpeed = Drive::GetMax_Speed_Percent();
+	 bool close_range = false;
 
 	 while(1)
 	 {
@@ -94,30 +97,42 @@ void readUltraSonic ( void* p )
 		 if(global_us_front_left_data < emergency_stop_distance || global_us_front_right_data < emergency_stop_distance)
 		 { // emergency stop front
 			 Drive::setBlock_Front(true);
+			 close_range = true;
 		 }
 		 else if (global_us_front_left_data < close_range_distance || global_us_front_right_data < close_range_distance)
 		 { // close range, careful
 			 Drive::SetMaxSpeed(close_range_speed);
+			 close_range = true;
 		 }
 		 else
 		 { // nothing in sight -> full throttle
-			 Drive::SetMaxSpeed(Drive::GetMax_Speed_Percent());
+			 if(close_range)
+				 Drive::SetMaxSpeed(close_range_speed);
+			 else
+				 Drive::SetMaxSpeed(maxSpeed);
 			 Drive::setBlock_Front(false);
+			 close_range = false;
 		 }
 
 		 // check rear
 		 if(global_us_rear_left_data < emergency_stop_distance || global_us_rear_right_data < emergency_stop_distance)
 		 { // emergency stop back
 			 Drive::SetBlock_Rear(true);
+			 close_range = true;
 		 }
 		 else if (global_us_rear_left_data < close_range_distance || global_us_rear_right_data < emergency_stop_distance)
 		 { // close range, careful
 			 Drive::SetMaxSpeed(close_range_speed);
+			 close_range = true;
 		 }
 		 else
 		 { // nothing in sight -> full throttle
-			 Drive::SetMaxSpeed(Drive::GetMax_Speed_Percent());
+			 if(close_range)
+				 Drive::SetMaxSpeed(close_range_speed);
+			 else
+				 Drive::SetMaxSpeed(maxSpeed);
 			 Drive::SetBlock_Rear(false);
+			 close_range = false;
 		 }
 
 	 }
@@ -166,9 +181,9 @@ void setMotor_and_Steering ( void* p )
 		// Wait for the next cycle ( every 20ms )
 		vTaskDelayUntil( &xLastWakeTime, xFrequency );
 
-		vTaskSuspendAll();
+		//vTaskSuspendAll();
 		sharedMem.Read(drive);
-		xTaskResumeAll();
+		//xTaskResumeAll();
 
 		real_speed = drive.speed;
 		real_direction = drive.direction;

@@ -8,7 +8,7 @@
 #define MAX_STEERING_ANGLE 120
 
 //Value at wich servo takes neutral position
-#define NEUTRAL_POS_VALUE 48
+#define NEUTRAL_POS_VALUE 51
 
 /*!
  *class Steering for controlling the steering servo. No object is needed because of static functions

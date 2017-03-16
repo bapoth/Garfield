@@ -23,8 +23,6 @@ void Steering::Set(alt_8 angle) {
 	else if(angle < max_angle_delta * -1) {
 		angle = max_angle_delta * -1;
 	}
-	else {
-        static const float val_per_deg = 19/60;
-        PWMGen_Set_DutyCycle(STEERING_PWM_BASE, NEUTRAL_POS_VALUE - (val_per_deg*angle));
-	}
+	static const float val_per_deg = 19.0/60.0;
+	PWMGen_Set_DutyCycle(STEERING_PWM_BASE, NEUTRAL_POS_VALUE - (val_per_deg*angle));
 }
