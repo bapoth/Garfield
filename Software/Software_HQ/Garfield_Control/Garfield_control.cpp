@@ -350,6 +350,9 @@ void Garfield_control::getLight(bool &light) {
 }
 
 void Garfield_control::open_close_connection() {
+    static QFuture<void> f1;
+    static QFuture<void> f2;
+
     if(_connected==false) {
         bool ret = ClientComm.Init(_IP.toUtf8().constData(), _Port.toInt());
 
@@ -359,10 +362,8 @@ void Garfield_control::open_close_connection() {
             ui->connstate_label->setStyleSheet("QLabel {color : green;}");
             ui->connect_pushButton->setText("disconnect");
 
-            QFuture<void> f1 = QtConcurrent::run(this, &Garfield_control::sendThread);
-            QFuture<void> f2 = QtConcurrent::run(this, &Garfield_control::recThread);
-            //f1.waitForFinished();
-            //f2.waitForFinished();
+            f1 = QtConcurrent::run(this, &Garfield_control::sendThread);
+            f2 = QtConcurrent::run(this, &Garfield_control::recThread);
         }
         else {
             ui->connstate_label->setText("not connected");
@@ -374,6 +375,7 @@ void Garfield_control::open_close_connection() {
     }
     else {
         _disconnect = true;
+
         ClientComm.EndCommunication();
         ui->connstate_label->hide();
         ui->connect_pushButton->setText("connect");
@@ -385,6 +387,8 @@ void Garfield_control::sendThread() {
 
     while(!_disconnect) {
 
+        Alf_Drive_Command command;
+
         global_drive_command.speed = _speed;
         global_drive_command.direction = _direction;
         global_drive_command.angle = _angle;
@@ -394,6 +398,8 @@ void Garfield_control::sendThread() {
 
         QThread::msleep(SEND_REC_INTERVAL_MS);
     }
+
+    return;
 }
 
 void Garfield_control::recThread() {
@@ -405,6 +411,11 @@ void Garfield_control::recThread() {
         qDebug()<<"Rec Thread";
 
         ClientComm.Read(readBuffer, msgType);
+
+        if(msgType == ALF_END_ID) {
+            qDebug()<<"End";
+            _disconnect = true;
+        }
 
         //qDebug()<<"Speed rec: "<<Alf_Drive_Info::speed;
         ui->speed_lineEdit->setText(QString::number(global_drive_info.speed));
@@ -421,4 +432,7 @@ void Garfield_control::recThread() {
 
         QThread::msleep(SEND_REC_INTERVAL_MS);
     }
+
+    open_close_connection();
+    return;
 }
