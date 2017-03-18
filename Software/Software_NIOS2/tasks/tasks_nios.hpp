@@ -12,6 +12,7 @@ void readUltraSonic( void* p);
 void readMPU ( void* p );
 void readRotary( void* p );
 void setMotor_and_Steering( void* p);
+void setDriveInfo(void* p);
 
 /*
  * @brief the interrupt routine for the mailbox communication

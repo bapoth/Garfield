@@ -27,10 +27,13 @@ int main()
 	sharedMem.EnableMailboxInterrupt();
 	Drive::SetDriveSpeed(0,0);
 
-	xTaskCreate(readUltraSonic, "1", 512, NULL, 2, NULL);
-	xTaskCreate(readMPU, "2",512,NULL,2,NULL);
+
+	/* set up of all needed NIOS tasks which will run periodically */
+	xTaskCreate(readUltraSonic, "1", 512, NULL, 3, NULL);
+	xTaskCreate(readMPU, "2", 512, NULL, 2, NULL);
 	xTaskCreate(readRotary, "3", 512, NULL, 2, NULL);
-	xTaskCreate(setMotor_and_Steering, "4",512,NULL,2,NULL);
+	xTaskCreate(setMotor_and_Steering, "4", 512, NULL, 3, NULL);
+	xTaskCreate(setDriveInfo, "5", 256, NULL, 1, NULL);
 
 	vTaskStartScheduler();
 	return 0;

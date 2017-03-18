@@ -13,9 +13,10 @@
 #include "task.h"
 
 
+/* global section */
 Alf_SharedMemoryComm sharedMem{};
 
-
+/* local section, configuration parameters for driving */
 static const float pulses_to_meter = 1.0;
 static const alt_u8 max_steering_angle = 40;
 static const alt_u8 emergency_stop_distance = 12;
@@ -80,7 +81,8 @@ void readUltraSonic ( void* p )
 	 UltraSonicDevice us_rear_right(UltraSonicAddress::DEVICE_02);
 
 	 const alt_u8 maxSpeed = Drive::GetMax_Speed_Percent();
-	 bool close_range = false;
+	 bool close_range_front = false;
+	 bool close_range_rear = false;
 
 	 while(1)
 	 {
@@ -97,44 +99,41 @@ void readUltraSonic ( void* p )
 		 if(global_us_front_left_data < emergency_stop_distance || global_us_front_right_data < emergency_stop_distance)
 		 { // emergency stop front
 			 Drive::setBlock_Front(true);
-			 close_range = true;
+			 close_range_front = true;
 		 }
 		 else if (global_us_front_left_data < close_range_distance || global_us_front_right_data < close_range_distance)
 		 { // close range, careful
-			 Drive::SetMaxSpeed(close_range_speed);
-			 close_range = true;
+			 close_range_front = true;
 		 }
 		 else
 		 { // nothing in sight -> full throttle
-			 if(close_range)
-				 Drive::SetMaxSpeed(close_range_speed);
-			 else
-				 Drive::SetMaxSpeed(maxSpeed);
+			 Drive::SetMaxSpeed(maxSpeed);
 			 Drive::setBlock_Front(false);
-			 close_range = false;
+			 close_range_front = false;
 		 }
 
 		 // check rear
 		 if(global_us_rear_left_data < emergency_stop_distance || global_us_rear_right_data < emergency_stop_distance)
 		 { // emergency stop back
 			 Drive::SetBlock_Rear(true);
-			 close_range = true;
+			 close_range_rear = true;
 		 }
 		 else if (global_us_rear_left_data < close_range_distance || global_us_rear_right_data < emergency_stop_distance)
 		 { // close range, careful
-			 Drive::SetMaxSpeed(close_range_speed);
-			 close_range = true;
+			 close_range_rear = true;
 		 }
 		 else
 		 { // nothing in sight -> full throttle
-			 if(close_range)
-				 Drive::SetMaxSpeed(close_range_speed);
-			 else
-				 Drive::SetMaxSpeed(maxSpeed);
+			 Drive::SetMaxSpeed(maxSpeed);
 			 Drive::SetBlock_Rear(false);
-			 close_range = false;
+			 close_range_rear = false;
 		 }
 
+		 // evaluate close range results
+		 if(close_range_front || close_range_rear)
+			 Drive::SetMaxSpeed(close_range_speed);
+		 else
+			 Drive::SetMaxSpeed(maxSpeed);
 	 }
 }
 
@@ -181,12 +180,13 @@ void setMotor_and_Steering ( void* p )
 		// Wait for the next cycle ( every 20ms )
 		vTaskDelayUntil( &xLastWakeTime, xFrequency );
 
-		//vTaskSuspendAll();
 		sharedMem.Read(drive);
-		//xTaskResumeAll();
 
 		real_speed = drive.speed;
 		real_direction = drive.direction;
+
+		//timeout mechanism: 255 = 2⁸ -> 8* MotorTaskExecution max until complete stop //needs testing (if this results in too bumpy driving)
+		drive.speed /= 2;
 
 		Steering::Set(drive.angle);
 
@@ -201,6 +201,24 @@ void setMotor_and_Steering ( void* p )
 			real_direction = 1;
 		}
 		Drive::SetDriveSpeed(real_direction, real_speed);
+	}
+}
+
+void setDriveInfo(void* p)
+{
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 200;
+
+	// Initialise the xLastWakeTime variable with the current time.
+	xLastWakeTime = xTaskGetTickCount();
+
+	while(1)
+	{
+		// Wait for the next cycle ( every 20ms )
+		vTaskDelayUntil( &xLastWakeTime, xFrequency );
+
+		// write the current drive info into the shared memory
+		sharedMem.Write(global_drive_info);
 	}
 }
 

@@ -4,8 +4,8 @@
 #ifndef STEERING
 #define STEERING
 
-//maximum possible steering angle
-#define MAX_STEERING_ANGLE 120
+//maximum possible steering angle in one direction
+#define MAX_STEERING_ANGLE 60
 
 //Value at wich servo takes neutral position
 #define NEUTRAL_POS_VALUE 51
@@ -25,12 +25,13 @@ public:
 	*/
 	static void Init(alt_u8 max_angle);
 	/*!
-	* Set Function for setinga given angle to the servo
+	* Set Function for setting given angle to the servo
 	* @param angle: This is the angle to set the servo (between -max_angle_delta and max_angle_delta)
 	*/
 	static void Set(alt_8 angle);
 private:
-	static alt_u8 max_angle_delta; /*!<Stores the maximum anghle of the servo to prevent it from to wide angles */
+	static alt_u8 max_angle_delta; /*! Stores the maximum angle of the servo to prevent it from to wide angles */
+	static float val_per_deg;
 };
 
 #endif
