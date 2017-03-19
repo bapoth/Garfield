@@ -39,7 +39,7 @@ static alt_u16 global_us_rear_right_data = 0;
 void readMPU( void* p)
 {
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 55;
+	const TickType_t xFrequency = 50;
 
 	/* mpu */
 	mpu6050 mpu(MPU6050_Addresses::DEVICE_0);
@@ -140,7 +140,7 @@ void readUltraSonic ( void* p )
 void readRotary ( void* p )
 {
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 55;
+	const TickType_t xFrequency = 50;
 
 	 // Initialise the xLastWakeTime variable with the current time.
 	 xLastWakeTime = xTaskGetTickCount();
@@ -162,8 +162,7 @@ void readRotary ( void* p )
 void setMotor_and_Steering ( void* p )
 {
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 25;
-
+	const TickType_t xFrequency = 20;
 
 	Steering::Init(max_steering_angle);
 
@@ -214,7 +213,7 @@ void setDriveInfo(void* p)
 
 	while(1)
 	{
-		// Wait for the next cycle ( every 20ms )
+		// Wait for the next cycle ( every 200ms )
 		vTaskDelayUntil( &xLastWakeTime, xFrequency );
 
 		// write the current drive info into the shared memory

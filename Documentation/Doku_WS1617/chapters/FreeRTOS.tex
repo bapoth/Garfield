@@ -1,13 +1,62 @@
  \chapter{Operating System - FreeRTOS}
- Dieses Kapitel beschreibt die Benutzung des verwendeten Betriebssystemes, das FreeRTOS. 
+ Dieses Kapitel beschreibt wie das verwendete Echtzeitbetriebsystem zu benutzen ist. Ein FreeRTOS Port für den NIOS2 in der Version 9.0.0 wird derzeit eingesetzt. Dabei wurden nur minimale Änderungen an der Standardkonfiguration vorgenommen, die allerdings jederzeit erweiterbar ist, sofern das durch die Applikation nötig ist. Die Website von FreeRTOS mit Download und kompletter Spezifikation ist unter http://www.freertos.org/ zu finden. 
  \section{Tasks}
+ Die verwendeten Tasks auf der NIOS2 Plattform sind unter /Software/Software\_NIOS2/tasks/ in den tasks\_nios Dateien zu finden. Folgende Tasks sind dabei im Moment vorhanden:
  \begin{itemize}
-  \item Scheduler
-  \item Erzeugung
-  \item Zyklisch aufrufen
+  \item readUltraSonic: Dieser Task ist dafür zuständig die vier verwendeten und über IIC angeschlossenen (vorne zwei, hinten zwei) SRF08 Ultraschallsensoren auszulesen. Im Moment werden nur wenige der Ultraschalldaten verwendet, die dann dafür sorgen, dass im setMotor\_and\_Steering Task langsamer (wenn im Nahbereich eines Hindernisses) bzw. komplett (wenn direkt vor dem Hinderniss) gefahren wird.
+  \item readMPU: Dieser Task hat die Aufgabe den mpu6050 Sensor auszulesen. Dabei werden die ausgelesenen Werte im Moment nur grafisch angezeigt. An anderer Stelle werden diese Informationen nicht benutzt.
+  \item readRotary: Dieser Task liest den RotaryEncoder aus, der auf dem Fahrzeug mit drauf ist. Auch diese Daten werden im Moment nur für die grafische Oberfläche benutzt.
+  \item setMotor\_and\_Steering: Dieser Task ist für das Setzen des Lenkwinkels und des Motor PWM Signals zuständig. Dabei werden die Informationen aus den Ultraschallmodulen verwendet, um auf Hindernisse reagieren zu können. Ansonsten werden ganz normal die Daten, die aus dem HQ auf den ARM und damit in den Shared Memory Bereich kommen ausgelesen und als Geschwindigkeit und Lenkwinkel gesetzt. Dabei wird auch ein Timeout Mechanismus verwendet, der dafür sorgt, falls keine neuen Daten mehr kommen, weil die z. B. die Verbindung zwischen HQ und Fahrzeug abgebrochen ist, das Fahrzeug langsamer wird und schlussendlich auch stehen bleibt.
+  \item setDriveInfo: Dieser Task schreibt alle gesammelten Fahrinfos (mpu6050 Daten + Geschwindigkeit) in den Shared Memory Bereich zwischen ARM und NIOS, die dann vom ARM Linux System ausgelesen werden können.
  \end{itemize}
+ Die komplette Taskkonfiguration ist in Tabelle \ref{tab:taskconfig} zu sehen. Dabei ist die Priorität im FreeRTOS von 0 zur höchsten (konfigurierbaren) Priorität festgelegt. Das bedeutet das 0 die kleinste Priorität, die z. B. auch der Idle Task vom FreeRTOS Kernel besitzt, der aufgerufen wird, wenn kein anderer Task im ready Status ist. Die Zykluszeit gibt an, nach wie vielen 1/1000 Sekunden der Task wieder aufgerufen wird. Dabei ist das ganze nur mit geringer Abweichung fest konfigurierbar. Das heißt ein eingestellter Wert von 20ms wird meist nie genau getroffen - diese geringen Abweichungen stellen im Moment allerdings kein Problem dar. Die verwendeten Variablen geben an auf welche in der tasks\_nios.cpp definierten Variablen der Task schreibend und lesend zugreift. Die komplette Task Kommunikation, die sich auf ein Minimum beschränkt wird aktuell über lokale bzw. teilweise über globale Variablen erledigt. 
+\begin{table}
+\caption{Taskkonfiguration}\label{tab:taskconfig}
+\centering%
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textit{Taskname} & \textit{Priorität} & \textit{Zykluszeit} & \textit{verwendete Variablen}\\
+\hline
+readUltraSonic & 3 & 75 ms & \parbox[t]{7cm}{write: global\_us\_front\_left\_data\\write: global\_us\_front\_right\_data\\write: global\_us\_rear\_left\_data\\write: global\_us\_rear\_right\_data}\\
+\hline
+readMPU & 2 & 50 ms & \parbox[t]{7cm}{write: global\_acc\_data\\write: global\_gyro\_data\\write: global\_temp\_data\\write: global\_drive\_info}\\
+\hline
+readRotary & 2 & 50 ms & \parbox[t]{7cm}{write: global\_drive\_info}\\
+\hline
+setMotor\_and\_Steering & 3 & 20 ms & \parbox[t]{7cm}{read: sharedMem(Alf\_Drive\_Command)}\\
+\hline
+setDriveInfo & 1 & 200 ms & \parbox[t]{7cm}{write: sharedMem(global\_drive\_info)}\\
+\hline
+\end{tabular}
+\end{table}
+Die Ultraschallmodule können in der Standardeinstellung ( 6 Meter Reichweite) alle 65ms ein neues Ergebnis liefern. Da allerdings die Genauigkeit des FreeRTOS Zyklus nicht so genau war, wurde hier ein leicht größerer Wert gewählt. Würde ein geringeren Wert gewählt müssen zuerst die Ultraschallsensoren abgefragt werden, ob diese bereits mit der Messung fertig sind. Da dieses Abfragen auf keinen Fall passieren soll, der IIC sollte so wenig wie möglich am Stück benutzt werden, da nur ein IIC Modul vorhanden ist und auch der mpu6050 über den selben Bus angeschlossen ist. Somit könnten verschiedene IIC Transmissionen kollidieren, wenn ein Task länger auf den Bus zugreift.
+
+
+Ein Task kann mittels xTaskCreate() erzeugt werden. Der Scheduler wird dann mit dem Befehl vTaskStartScheduler() gestartet. Von diesem Zeitpunkt an werden alle vorher erzeugten Task zyklich aufgerufen. Eine genauere Dokumentation zu den jeweiligen APIs des FreeRTOS ist im Repository unter /Datasheets im Reference Manual zu finden. Das zyklische Aufrufen eines Tasks ist mit verschiedenen Methoden möglich. Die in diesem Projekt verwendete Methode wird nun kurz in \ref{lst:zyklus} aufgezeigt.
+
+\begin{lstlisting}[caption={Taskzyklus erzeugen}, label=lst:zyklus]
+  TickType_t xLastWakeTime;
+  // bestimmt die Zyklusfrequenz des Tasks in
+  const TickType_t xFrequency = 20;  
+  
+  while(1)
+  {
+    // hier wird gewartet bis der Zyklus vollstaendig ist
+    vTaskDelayUntil( &xLastWakeTime, xFrequency );
+    // alle Taskoperationen koennen hier ausgefuehrt werden
+  }
+\end{lstlisting}
+
+
+%  \item Scheduler
+%  \item Erzeugung
+%  \item Zyklisch aufrufen
 
  \section{RTOS Config}
- Hier wird die genaue RTOS Konfiguration beschrieben, die benutzt wurde für das OS auf dem NIOS2.
- \section{benutzte Tasks}
- Hier werden dann die tatsächlich benutzten Task erläutert, die auf dem NIOS2 laufen und für alle wichtigen Aufgaben zuständig sind.
+Hier wird die genaue RTOS Konfiguration beschrieben, die für das OS auf dem NIOS2 benutzt wurde. Die Konfiguration ist in /Software/Software\_NIOS2/os/ in der FreeRTOSConfig.h zu finden. Die einzelnen Parameter werden im Reference Manual genauer erläutert. Hier werden nur die wichtigsten verwendeten Parameter erklärt.
+\begin{itemize}
+ \item configUSE\_PREEMPTION: wenn auf 1 gesetzt, ermöglicht das dem Scheduler das unterbrechen der Tasks wenn zu einem FreeRTOS Tick ein höherpriorer Task als ready markiert ist, als der aktuelle. Wenn auf 0 gesetzt kann der Task nur durch sich selbst beendet/unterbochen werden (z.B. ein Zyklus fertig, warten auf den nächsten ready Status). Da das Fahren und der Ultraschall jeweils sehr wichtig sind, wurde dieses Verfahren gewählt.
+ \item configTICK\_RATE\_HZ: definiert die FreeRTOS Tick Rate. Ein Wert von 200Hz bedeutet das 200mal in der Sekunde ein FreeRTOS Tick auftritt an denen der Scheduler aktiv wird und einen Kontextwechsel einleitet bzw. den nächsten Task aufruft, der bereit ist.
+ \item configCPU\_CLOCK\_HZ: Hier wird die Rate angegeben, mit der der interne Systemtimer (aktuell: TIMER\_0\_NIOS2\_BASE) arbeitet den das FreeRTOS benutzt. Muss nicht der CPU Frequenz entsprechen.
+ \item configIDLE\_SHOULD\_YIELD: wenn auf 1, wird der Idle Task, den das FreeRTOS automatisch implementiert sofort wieder durch den Scheduler unterbrochen und der nächste Task, der ready ist kann sofort aufgerufen werden. Andernfalls bleibt der Idle Task mindestens einen kompletten FreeRTOS Tick lang aktiv, was dazu führt das alle Tasks insgesamt eine gerechtere Aktivzeit erhalten. Da dies in unserem Fall nicht nötig ist, wurde dieser Parameter auf 1 gesetzt.
+\end{itemize}
