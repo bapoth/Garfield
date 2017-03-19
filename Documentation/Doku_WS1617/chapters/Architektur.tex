@@ -1,2 +1,12 @@
 \chapter{Architektur}
 Hier wird die Architektur beschrieben, die dem ganzen Projekt zugrunde liegt.
+\section{Hardware}
+Hier kommt einiges zur Hardware 
+\section{Software}
+Die Software unterteilt sich insgesamt in 3 Teile.
+\begin{itemize}
+ \item Headquarter (HQ): Linux System das mit dem Fahrzeug über WLAN kommuniziert
+ \item ARM: Linux ARM System, dass die Netzwerkaufgaben, sprich Kommunikation, mit dem HQ übernimmt
+ \item NIOS: VHDL Core, der sonstige Periphere anspricht auf dem ein Echtzeitbestriebsystem (FreeRTOS) läuft. Die Software hiervon setzt sich zusammen aus /Software/common/ARM\_NIOS\_HQ/ und Software/Software\_NIOS2/*.
+\end{itemize}
+

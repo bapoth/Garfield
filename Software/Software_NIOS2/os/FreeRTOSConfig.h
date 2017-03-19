@@ -70,13 +70,6 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-/* 
- * The following #error directive is to remind users that a batch file must be
- * executed prior to this project being built.  The batch file *cannot* be 
- * executed from within the IDE!  Once it has been executed, re-open or refresh 
- * the Eclipse project and remove the #error line below.
- */
-
 #include "system.h"
 
 /*-----------------------------------------------------------
@@ -99,7 +92,6 @@
 #define configISR_STACK_SIZE			configMINIMAL_STACK_SIZE
 #define configTOTAL_HEAP_SIZE			( ( size_t ) 16384 )
 #define configMAX_TASK_NAME_LEN			( 8 )
-#define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				0
@@ -112,6 +104,13 @@
 #define configTIMER_TASK_STACK_DEPTH	( 256 )
 #define configTIMER_QUEUE_LENGTH		( 5 )
 
+
+extern volatile unsigned long TimerTicks;
+#define configGENERATE_RUN_TIME_STATS 1
+#define configUSE_STATS_FORMATTING_FUNCTIONS 1
+#define configUSE_TRACE_FACILITY		1
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() (TimerTicks = 0)
+#define portGET_RUN_TIME_COUNTER_VALUE() (TIMER_0_NIOS2_BASE)//timer register (but use faster timer)
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0

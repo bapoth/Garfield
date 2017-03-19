@@ -12,6 +12,12 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#define COLLECT_RUNTIME_INFO
+
+#ifdef COLLECT_RUNTIME_INFO
+char RunTimeStats_Buffer[2048];
+volatile unsigned long TimerTicks = 0;
+#endif
 
 /* global section */
 Alf_SharedMemoryComm sharedMem{};
@@ -218,6 +224,15 @@ void setDriveInfo(void* p)
 
 		// write the current drive info into the shared memory
 		sharedMem.Write(global_drive_info);
+
+#ifdef COLLECT_RUNTIME_INFO
+		if( xTaskGetTickCount() > 60000)
+		{
+			vTaskSuspendAll();
+			vTaskGetRunTimeStats(RunTimeStats_Buffer);
+			while(1);
+		}
+#endif
 	}
 }
 
