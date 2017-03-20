@@ -143,6 +143,22 @@ void Garfield_control::poll_gamepad() {
 
 void Garfield_control::update_acceleration() {
 
+    if(_lateral_acceleration > ACC_MAX_VAL) {
+        _lateral_acceleration = ACC_MAX_VAL;
+    }
+    else if(_lateral_acceleration < ACC_MIN_VAL) {
+        _lateral_acceleration = ACC_MIN_VAL;
+    }
+
+    if(_acceleration > ACC_MAX_VAL) {
+        _acceleration = ACC_MAX_VAL;
+    }
+    else if(_acceleration < ACC_MIN_VAL) {
+        _acceleration = ACC_MIN_VAL;
+    }
+
+    //qDebug()<<static_cast<int>(norm_value(ACC_MIN_VAL, ACC_MAX_VAL, -60.0, 60.0, _lateral_acceleration));
+
     //Take origin position, subtract current x_shift and add new x_shift
     int x_pos = ui->GridPoint_label->pos().rx() - (ui->GridPoint_label->pos().rx() - GridPointPos.rx()) + static_cast<int>(norm_value(ACC_MIN_VAL, ACC_MAX_VAL, -60.0, 60.0, _lateral_acceleration));
 
@@ -270,10 +286,12 @@ void Garfield_control::command_toggleLights(int state) {
 
 void Garfield_control::debug_settings(bool state) {
     if (state == true) {
+        debug = true;
         ui->DebugSlider_Dir->setVisible(true);
         ui->DebugSlider_speed->setVisible(true);
     }
     else {
+        debug = false;
         ui->DebugSlider_Dir->setVisible(false);
         ui->DebugSlider_speed->setVisible(false);
     }
@@ -358,6 +376,7 @@ void Garfield_control::open_close_connection() {
 
         if(ret) {
             _connected = true;
+            _disconnect = false;
             ui->connstate_label->setText("connected");
             ui->connstate_label->setStyleSheet("QLabel {color : green;}");
             ui->connect_pushButton->setText("disconnect");
@@ -374,7 +393,11 @@ void Garfield_control::open_close_connection() {
         ui->connstate_label->show();
     }
     else {
+        _connected = false;
         _disconnect = true;
+
+        f1.cancel();
+        f2.cancel();
 
         ClientComm.EndCommunication();
         ui->connstate_label->hide();
@@ -387,8 +410,6 @@ void Garfield_control::sendThread() {
 
     while(!_disconnect) {
 
-        Alf_Drive_Command command;
-
         global_drive_command.speed = _speed;
         global_drive_command.direction = _direction;
         global_drive_command.angle = _angle;
@@ -398,7 +419,6 @@ void Garfield_control::sendThread() {
 
         QThread::msleep(SEND_REC_INTERVAL_MS);
     }
-
     return;
 }
 
@@ -408,8 +428,6 @@ void Garfield_control::recThread() {
 
     while(!_disconnect) {
 
-        qDebug()<<"Rec Thread";
-
         ClientComm.Read(readBuffer, msgType);
 
         if(msgType == ALF_END_ID) {
@@ -417,12 +435,10 @@ void Garfield_control::recThread() {
             _disconnect = true;
         }
 
-        //qDebug()<<"Speed rec: "<<Alf_Drive_Info::speed;
         ui->speed_lineEdit->setText(QString::number(global_drive_info.speed));
-        //qDebug()<<"Acc rec: "<<Alf_Drive_Info::acceleration;
         _acceleration = global_drive_info.acceleration;
-        //qDebug()<<"Lateral acc rec: "<<Alf_Drive_Info::lateral_acceleration;
         _lateral_acceleration = global_drive_info.lateral_acceleration;
+
 
         ui->Gyro_X_lineEdit->setText(QString::number(global_drive_info.Gyroscope_X));
         ui->Gyro_Y_lineEdit->setText(QString::number(global_drive_info.Gyroscope_Y));
@@ -432,7 +448,6 @@ void Garfield_control::recThread() {
 
         QThread::msleep(SEND_REC_INTERVAL_MS);
     }
-
     open_close_connection();
     return;
 }
