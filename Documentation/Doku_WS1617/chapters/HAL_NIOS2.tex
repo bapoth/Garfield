@@ -7,7 +7,7 @@ Die Klasse Drive ist für die Ansteuerung des Motors zuständig. Dabei ist es m�
 \section{Lenkung}
 Die Lenkung wird mittels der Klasse Steering ermöglicht. Eine Init() Funktion setzt denn maximalen Lenkwinkel, der für die Lenkung benutzt wird. Eine weitere Funktion Set() setzt dann den tatsächlichen Winkel.
 \section{MPU6050}
-Das mpu6050 Modul ist über den IIC Bus angeschlossen und kann die 3 Beschleunigungsachsen, 3 Drehachsen und die Temperatur auslesen.
+Das mpu6050 Modul ist über den IIC Bus angeschlossen und kann die 3 Beschleunigungsachsen, 3 Drehachsen und die Temperatur auslesen. Das Modul muss vor der Verwendung einmalig initalisiert werden. Dabei ist zu beachten, dass der AD0 Pin die IIC Adresse des mpu6050 Bausteines hardwaremäßig verändert. 
 \section{Ultraschall}
-Die vier zur Verfügung stehenden Ultraschallsensoren sind über den gleichen IIC Bus, wie das MPU6050 Modul angebunden.  
+Die vier zur Verfügung stehenden Ultraschallsensoren sind über den gleichen IIC Bus, wie das MPU6050 Modul angebunden. Diese Geräte benötigen keine Initialisierung, d.h. sind sofort nach dem Anschließen an den Bus einsatzbereit. Allerdings ist zu beachten, dass nur Geräte an den Bus angeschlossen werden, die unterschiedliche IIC Adressen haben (Funktion zur Änderung der IIC Adresse ist vorhanden), da es sonst zu undefiniertem Verhalten auf dem Bus kommt. Für das ändern der Address sollte nur ein Gerät angeschlossen sein.
 
