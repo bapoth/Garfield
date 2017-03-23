@@ -101,9 +101,9 @@ bool Garfield_control::connect_gamepad() {
     _joystick = new Joystick(input);
 
     if(_joystick->isFound()) {
-        QTimer *timer = new QTimer(this);
-        connect(timer, SIGNAL(timeout()), this, SLOT(poll_gamepad()));
-        timer->start(1/1000*POLLING_GAMEPAD_INTERVAL_MS);
+        GamepadTimer = new QTimer(this);
+        connect(GamepadTimer, SIGNAL(timeout()), this, SLOT(poll_gamepad()));
+        GamepadTimer->start(1/1000*POLLING_GAMEPAD_INTERVAL_MS);
 
         return true;
     }
@@ -114,30 +114,38 @@ bool Garfield_control::connect_gamepad() {
 }
 
 void Garfield_control::poll_gamepad() {
-    JoystickEvent event;
-    if (_joystick->sample(&event))
-    {
-        if (event.isButton())
+    static JoystickEvent event;
+    if(_joystick->isFound()) { //Joystick is present
+        if (_joystick->sample(&event))
         {
-            if(event.number == GAMEPAD_BUTTON_TRIANGLE && event.value == GAMEPAD_BUTTON_DOWN) {
-                ui->checkBox_light->toggle();
+            if (event.isButton())
+            {
+                if(event.number == GAMEPAD_BUTTON_TRIANGLE && event.value == GAMEPAD_BUTTON_DOWN) {
+                    ui->checkBox_light->toggle();
+                }
             }
-        }
-        else if (event.isAxis())
-        {
+            else if (event.isAxis())
+            {
 
-            //Backwards
-            if(event.number == GAMEPAD_AXIS_L2) {
-                command_setBackSpeed(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, SPEED_MIN_VAL, SPEED_MAX_VAL, static_cast<int>(event.value)));
-            }
-            //Forwards
-            else if(event.number == GAMEPAD_AXIS_R2) {
-                command_setForwardSpeed(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, SPEED_MIN_VAL, SPEED_MAX_VAL, static_cast<int>(event.value)));
-            }
-            if(event.number == GAMEPAD_AXIS_ANALOG_LEFT_LR) {
-                command_setDirection(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, ANGLE_MIN_VAL, ANGLE_MAX_VAL, static_cast<int>(event.value)));
+                //Backwards
+                if(event.number == GAMEPAD_AXIS_L2) {
+                    command_setBackSpeed(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, SPEED_MIN_VAL, SPEED_MAX_VAL, static_cast<int>(event.value)));
+                }
+                //Forwards
+                else if(event.number == GAMEPAD_AXIS_R2) {
+                    command_setForwardSpeed(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, SPEED_MIN_VAL, SPEED_MAX_VAL, static_cast<int>(event.value)));
+                }
+                if(event.number == GAMEPAD_AXIS_ANALOG_LEFT_LR) {
+                    command_setDirection(norm_value(GAMEPAD_AXIS_UP, GAMEPAD_AXIS_DOWN, ANGLE_MIN_VAL, ANGLE_MAX_VAL, static_cast<int>(event.value)));
+                }
             }
         }
+    }
+    else { //No joystick anymore set speed and direction to 0 and stop timer
+        command_setForwardSpeed(0.0);
+        command_setDirection(0.0);
+        GamepadTimer->stop();
+        ui->statusBar->showMessage("Gamepad lost connection, will stop vehicle!", 5000);
     }
 }
 

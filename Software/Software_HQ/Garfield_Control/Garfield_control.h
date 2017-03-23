@@ -162,6 +162,8 @@ class Garfield_control : public QMainWindow {
     private:
         /// Joystick object for getting all data  of the gamepad
         Joystick *_joystick;
+        /// Timer for polling gamepad. (Polling function is called when timer is exceeded)
+        QTimer *GamepadTimer;
         /// user interface object for setting data in the gui
         Ui::Garfield_control *ui;
         /// Position of GridPoint
