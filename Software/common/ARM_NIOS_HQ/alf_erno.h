@@ -25,6 +25,7 @@ enum ALF_ERROR_CODES{
 	//insert new error codes here
 	ALF_NO_WELL_FPGABridge_MAPPING,
 	ALF_LOCK_MEMORY_FAILED,
+	ALF_WRITE_SHARED_MEMORY_DISABLED,
 	//no changes downto here
 	ALF_UNKNOWN_ERROR = -1,
 	/// alright, there was no error in the functionality

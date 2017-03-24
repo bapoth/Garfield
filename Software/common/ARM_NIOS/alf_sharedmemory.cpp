@@ -20,7 +20,7 @@
 #include <iostream>
 #include <unistd.h>
 #else
-
+#include "io.h"
 #endif
 
 #define RW_REGISTER(reg) *(volatile uint32_t*)(reg)
@@ -105,6 +105,8 @@ bool Alf_SharedMemoryComm::Init(uint32_t sh_mem_wr_addr, uint32_t wr_mut_addr, u
 	read_mapped = true;
 #endif
 
+	ReadInterfaceStatus = true;
+	WriteInterfaceStatus = false;
 	_all_write_addr_mapped = write_mapped;
 	_all_read_addr_mapped = read_mapped;
 	return (_all_write_addr_mapped and _all_read_addr_mapped);
@@ -138,7 +140,7 @@ void Alf_SharedMemoryComm::ReleaseLock(void *addr){
 	RW_REGISTER(addr) = cpu_to_write;
 #else
 	// stores the cpu_to_write to the addr (%1) with byte offset 0
-	__asm__ __volatile__("stwio %0,0(%1)"::"r"(cpu_to_write),"r"(addr):);	//gcc makes only a "stw" which is not cache-safe. Because of that this ugly must be here -.-
+	IOWR(addr,0,cpu_to_write);
 #endif
 }
 
@@ -151,24 +153,27 @@ bool Alf_SharedMemoryComm::WriteAndCommitMailbox(const void *addr, const uint32_
 template <typename t>
 alf_error Alf_SharedMemoryComm::HardwareWrite(const t &obj, const uint32_t &message_id, const uint32_t &size){
 	alf_error ret_var = ALF_NO_ERROR;
-	uint32_t message_start = _wr_memory_pos;
-	uint32_t new_pos = ((size/RAW_NEXT_REG)*RAW_NEXT_REG) + ((size%RAW_NEXT_REG) > 0 ? RAW_NEXT_REG : 0);
-	if(_all_write_addr_mapped){
-		if(TryLock(_wr_mutex)){
-			if(_wr_memory_pos + new_pos > _shared_memory_size)
-				_wr_memory_pos = 0;	//starting writing from 0 if the storage is full
-			/// then copying the whole object to the memory
-			std::memcpy(_shared_memory_wr + _wr_memory_pos, (void*)&obj, size);
-			_wr_memory_pos += new_pos;
-			ReleaseLock(_wr_mutex);
-			WriteAndCommitMailbox(_wr_mailbox, _shared_memory_wr_addr - _wr_memory_addr_offset + message_start, message_id);
-		}else{
-			ret_var = ALF_LOCK_MEMORY_FAILED;
-		}
+	if(not WriteInterfaceStatus){
+		ret_var = ALF_WRITE_SHARED_MEMORY_DISABLED;
 	}else{
-		ret_var = ALF_NO_WELL_FPGABridge_MAPPING;
+		uint32_t message_start = _wr_memory_pos;
+		uint32_t new_pos = ((size/RAW_NEXT_REG)*RAW_NEXT_REG) + ((size%RAW_NEXT_REG) > 0 ? RAW_NEXT_REG : 0);
+		if(_all_write_addr_mapped){
+			if(TryLock(_wr_mutex)){
+				if(_wr_memory_pos + new_pos > _shared_memory_size)
+					_wr_memory_pos = 0;	//starting writing from 0 if the storage is full
+				/// then copying the whole object to the memory
+				std::memcpy(_shared_memory_wr + _wr_memory_pos, (void*)&obj, size);
+				_wr_memory_pos += new_pos;
+				ReleaseLock(_wr_mutex);
+				WriteAndCommitMailbox(_wr_mailbox, _shared_memory_wr_addr - _wr_memory_addr_offset + message_start, message_id);
+			}else{
+				ret_var = ALF_LOCK_MEMORY_FAILED;
+			}
+		}else{
+			ret_var = ALF_NO_WELL_FPGABridge_MAPPING;
+		}
 	}
-
 	return ret_var;
 }
 
@@ -194,6 +199,10 @@ alf_error Alf_SharedMemoryComm::Write(const Alf_Drive_Info &drive){
 	return HardwareWrite(drive, ALF_DRIVE_INFO_ID, sizeof(drive));
 }
 
+alf_error Alf_SharedMemoryComm::Write(uint32_t &num){
+	return HardwareWrite(num, num, sizeof(num));
+}
+
 void Alf_SharedMemoryComm::ResetWriteMutex(){
 	RW_REGISTER(_wr_mutex + 0x04) = 0x1;		// first write a 1 to the reset register which set this register to 0
 	RW_REGISTER(_wr_mutex) = (uint32_t(_cpu_id) << 16 ) | 0x0;	// then give the mutex free by writing the cpu id(thats also the default value) and 0 to the register
@@ -203,12 +212,16 @@ void Alf_SharedMemoryComm::ReadInterruptHandler(void){
 	mailbox_s act_var;
 	act_var.reg = RW_REGISTER(_rd_mailbox + RAW_NEXT_REG);	//first read the address register
 	uint32_t message_id = RW_REGISTER(_rd_mailbox); 	// then read the message id which is communicated and implies to the sender that we read the message completely
-		switch (message_id) {
+	if(message_id != ALF_END_ID) WriteInterfaceStatus = true;
+	switch (message_id) {
 			case ALF_DRIVE_INFO_ID:
 				_buffer_drive_info.push(act_var);
 				break;
 			case ALF_DRIVE_COMMAND_ID:
 				_buffer_drive_command.push(act_var);
+				break;
+			case ALF_END_ID:
+				WriteInterfaceStatus = false;
 				break;
 			default:
 				break;

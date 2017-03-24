@@ -166,6 +166,9 @@ private:
 	alf_error HardwareRead(t &obj, const uint32_t &size, const uint32_t &addr);
 
 public:
+
+	bool ReadInterfaceStatus;
+	bool WriteInterfaceStatus;
     /**
      * @brief Initialize the hardware communication with the shared memory
      * @param  sh_mem_wr_addr The base address of the shared memory where the instance of this class should write its data
@@ -194,6 +197,8 @@ public:
 	 * @return       One of #ALF_ERROR_CODES
 	 */
 	alf_error Write(const Alf_Drive_Command &drive);
+
+	alf_error Write(uint32_t &num);
 
 	/**
 	 * @brief Reads one #Alf_Drive_Command from the shared memory, if there is one to read. This function changes memory of the given object!
