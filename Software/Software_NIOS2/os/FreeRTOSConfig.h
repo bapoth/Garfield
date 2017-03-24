@@ -71,6 +71,8 @@
 #define FREERTOS_CONFIG_H
 
 #include "system.h"
+#include "altera_avalon_timer.h"
+
 
 /*-----------------------------------------------------------
  * Application specific definitions.
@@ -106,11 +108,11 @@
 
 
 extern volatile unsigned long TimerTicks;
-#define configGENERATE_RUN_TIME_STATS 1
-#define configUSE_STATS_FORMATTING_FUNCTIONS 1
-#define configUSE_TRACE_FACILITY		1
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() (TimerTicks = 0)
-#define portGET_RUN_TIME_COUNTER_VALUE() (TIMER_0_NIOS2_BASE)//timer register (but use faster timer)
+//#define configGENERATE_RUN_TIME_STATS 1
+//#define configUSE_STATS_FORMATTING_FUNCTIONS 1
+//#define configUSE_TRACE_FACILITY		1
+//#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() (ALTERA_AVALON_TIMER_INIT ( TIMER_1_NIOS2, timer_1_nios2); TimerTicks = 0;)
+//#define portGET_RUN_TIME_COUNTER_VALUE() (IORD_ALTERA_AVALON_TIMER_CONTROL (TIMER_1_NIOS2, timer_1_nios2); )
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0
@@ -119,14 +121,15 @@ extern volatile unsigned long TimerTicks;
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
 
-#define INCLUDE_vTaskPrioritySet			0
+#define INCLUDE_vTaskPrioritySet				0
 #define INCLUDE_uxTaskPriorityGet			0
 #define INCLUDE_vTaskDelete					0
 #define INCLUDE_vTaskCleanUpResources		0
-#define INCLUDE_vTaskSuspend				1
+#define INCLUDE_vTaskSuspend					1
 #define INCLUDE_vTaskDelayUntil				1
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	0
+#define INCLUDE_xTaskResumeFromISR			0
 
 /* The priority at which the tick interrupt runs.  This should probably be
 kept at 1. */

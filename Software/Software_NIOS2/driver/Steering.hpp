@@ -4,7 +4,7 @@
 #ifndef STEERING
 #define STEERING
 
-//maximum possible steering angle in one direction
+//maximum possible steering angle in one direction set by the init  function
 #define MAX_STEERING_ANGLE 60
 
 //Value at wich servo takes neutral position
@@ -32,6 +32,8 @@ public:
 private:
 	static alt_u8 max_angle_delta; /*! Stores the maximum angle of the servo to prevent it from to wide angles */
 	static float val_per_deg;
+	/*! the highest possible/allowed value that comes from the HQ/ARM system, needed for rescaling the steering values if an lower max steering angle is set */
+	static const alt_u8 max_steering_value = 90;
 };
 
 #endif

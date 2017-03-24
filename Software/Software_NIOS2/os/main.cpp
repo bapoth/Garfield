@@ -3,7 +3,6 @@
 #include "system.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "Display.hpp"
 #include "alf_sharedmemory.hpp"
 #include "Drive.hpp"
 
@@ -27,13 +26,12 @@ int main()
 	sharedMem.EnableMailboxInterrupt();
 	Drive::SetDriveSpeed(0,0);
 
-
 	/* set up of all needed NIOS tasks which will run periodically */
 	xTaskCreate(readUltraSonic, "1", 512, NULL, 3, NULL);
 	xTaskCreate(readMPU, "2", 512, NULL, 2, NULL);
 	xTaskCreate(readRotary, "3", 512, NULL, 2, NULL);
 	xTaskCreate(setMotor_and_Steering, "4", 512, NULL, 3, NULL);
-	xTaskCreate(setDriveInfo, "5", 256, NULL, 1, NULL);
+	xTaskCreate(setDriveInfo, "5", 256, NULL, 1, &writeTask);
 
 	vTaskStartScheduler();
 	return 0;

@@ -12,7 +12,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#define COLLECT_RUNTIME_INFO
+//#define COLLECT_RUNTIME_INFO
 
 #ifdef COLLECT_RUNTIME_INFO
 char RunTimeStats_Buffer[2048];
@@ -21,13 +21,17 @@ volatile unsigned long TimerTicks = 0;
 
 /* global section */
 Alf_SharedMemoryComm sharedMem{};
+TaskHandle_t writeTask; // currently not used
 
 /* local section, configuration parameters for driving */
 static const float pulses_to_meter = 1.0;
 static const alt_u8 max_steering_angle = 40;
+static const alt_u8 max_drive_speed = 35;
 static const alt_u8 emergency_stop_distance = 12;
 static const alt_u8 close_range_distance = 25;
-static const alt_u8 close_range_speed = 15;
+static const alt_u8 close_range_speed = 20;
+
+static volatile alt_u8 timeout = 20;
 
 /*
  * Task communication over static variables
@@ -86,7 +90,7 @@ void readUltraSonic ( void* p )
 	 UltraSonicDevice us_rear_left(UltraSonicAddress::DEVICE_03);
 	 UltraSonicDevice us_rear_right(UltraSonicAddress::DEVICE_02);
 
-	 const alt_u8 maxSpeed = Drive::GetMax_Speed_Percent();
+	 const alt_u8 maxSpeed = max_drive_speed;
 	 bool close_range_front = false;
 	 bool close_range_rear = false;
 
@@ -110,6 +114,7 @@ void readUltraSonic ( void* p )
 		 else if (global_us_front_left_data < close_range_distance || global_us_front_right_data < close_range_distance)
 		 { // close range, careful
 			 close_range_front = true;
+			 Drive::setBlock_Front(false);
 		 }
 		 else
 		 { // nothing in sight -> full throttle
@@ -127,6 +132,7 @@ void readUltraSonic ( void* p )
 		 else if (global_us_rear_left_data < close_range_distance || global_us_rear_right_data < emergency_stop_distance)
 		 { // close range, careful
 			 close_range_rear = true;
+			 Drive::SetBlock_Rear(false);
 		 }
 		 else
 		 { // nothing in sight -> full throttle
@@ -171,6 +177,7 @@ void setMotor_and_Steering ( void* p )
 	const TickType_t xFrequency = 20;
 
 	Steering::Init(max_steering_angle);
+	Drive::SetMaxSpeed(max_drive_speed);
 
 	// Initialise the xLastWakeTime variable with the current time.
 	xLastWakeTime = xTaskGetTickCount();
@@ -190,9 +197,6 @@ void setMotor_and_Steering ( void* p )
 		real_speed = drive.speed;
 		real_direction = drive.direction;
 
-		//timeout mechanism: 255 = 2⁸ -> 8* MotorTaskExecution max until complete stop //needs testing (if this results in too bumpy driving)
-		drive.speed /= 2;
-
 		Steering::Set(drive.angle);
 
 		if(Drive::GetBlock_Front() == true && real_direction == 0)
@@ -205,7 +209,16 @@ void setMotor_and_Steering ( void* p )
 			real_speed = 0;
 			real_direction = 1;
 		}
-		Drive::SetDriveSpeed(real_direction, real_speed);
+		// timeout happened, meaning no interrupt occurred and therefore no new data was received
+		if(timeout == 0)
+		{
+			Drive::SetDriveSpeed(real_direction, 0);
+		}
+		else
+		{
+			--timeout;
+			Drive::SetDriveSpeed(real_direction, real_speed);
+		}
 	}
 }
 
@@ -221,7 +234,6 @@ void setDriveInfo(void* p)
 	{
 		// Wait for the next cycle ( every 200ms )
 		vTaskDelayUntil( &xLastWakeTime, xFrequency );
-
 		// write the current drive info into the shared memory
 		sharedMem.Write(global_drive_info);
 
@@ -241,5 +253,6 @@ void Mailbox_isr(void* ptr, alt_u32 a)
 	alt_u32 h = alt_irq_disable_all();
 	sharedMem.ReadInterruptHandler();
 	IORD(MAILBOX_ARM2NIOS_0_BASE, 0);
+	timeout = 20;
 	alt_irq_enable_all(h);
 }

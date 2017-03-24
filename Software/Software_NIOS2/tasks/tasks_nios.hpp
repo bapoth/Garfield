@@ -4,6 +4,9 @@
 #include "alt_types.h"
 #include "alf_sharedmemory.hpp"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 /*
  * define here the prototypes for all tasks
  * */
@@ -38,6 +41,6 @@ void Mailbox_isr(void* ptr, alt_u32 a);
  * @brief global sharedMem variable
  * */
 extern Alf_SharedMemoryComm sharedMem;
-
+extern TaskHandle_t writeTask;
 
 #endif /* TASKS_NIOS_HPP_ */
