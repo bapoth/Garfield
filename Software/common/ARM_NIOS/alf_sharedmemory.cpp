@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief
+ * @brief Implementation of class to handle communication over hardware shared memory in the garfield fpga project.
  * alf_sharedmemory.cpp
  *
  *  Created on: 02.03.2017
@@ -24,6 +24,7 @@
 #endif
 
 #define RW_REGISTER(reg) *(volatile uint32_t*)(reg)
+/// Used to calculate the next register within a 32-bit addressed system. Works only AND only on 32-bit systems!
 #define RAW_NEXT_REG 0x04
 
 using namespace std;
@@ -44,7 +45,7 @@ bool Alf_SharedMemoryComm::Init(uint32_t sh_mem_wr_addr, uint32_t wr_mut_addr, u
 	_rd_mailbox_addr = rd_mb_addr + addr_offset;
 	_wr_memory_addr_offset = addr_offset;
 
-#ifdef __linux__	// using the shared memory within linux
+#ifdef __linux__	// there must be difference between using the instance in linux environment or bare metal (nios2)
 	int fd;
 
 	Alf_Log::alf_log_write("Initializing Hardware Communication...", log_info);
@@ -90,6 +91,7 @@ bool Alf_SharedMemoryComm::Init(uint32_t sh_mem_wr_addr, uint32_t wr_mut_addr, u
 		}
 	}
 	close(fd);
+	WriteInterfaceStatus = true;
 
 #else
 	_shared_memory_wr = (void*)_shared_memory_wr_addr;
@@ -103,10 +105,10 @@ bool Alf_SharedMemoryComm::Init(uint32_t sh_mem_wr_addr, uint32_t wr_mut_addr, u
 	DisableMailboxInterrupt();
 	write_mapped = true;
 	read_mapped = true;
+	WriteInterfaceStatus = false;	//must be disabled by default. Reason: The NIOS must wait until the first message from linux was received, otherwise it will hang up!
 #endif
 
 	ReadInterfaceStatus = true;
-	WriteInterfaceStatus = false;
 	_all_write_addr_mapped = write_mapped;
 	_all_read_addr_mapped = read_mapped;
 	return (_all_write_addr_mapped and _all_read_addr_mapped);
@@ -114,7 +116,7 @@ bool Alf_SharedMemoryComm::Init(uint32_t sh_mem_wr_addr, uint32_t wr_mut_addr, u
 
 bool Alf_SharedMemoryComm::TryLock(void *addr){
 	bool success = false;
-	uint32_t register_write = ((uint32_t(_cpu_id) << 16) | 0x1);	//trying to write the cpu id and a 1 to the register
+	uint32_t register_write = ((uint32_t(_cpu_id) << 16) | 0x1);	//trying to write the cpu id and a 1 to the register. The 1 could be any other 16-bit value, it shows that the mutex is owned by a cpu.
 	RW_REGISTER(addr) = register_write;
 	if(RW_REGISTER(addr) == register_write){	//checking if what we write is the same like what we now read
 		success = true;	//if its the same, it works to get the lock, otherwise we have no lock on the shared memory
@@ -156,17 +158,18 @@ alf_error Alf_SharedMemoryComm::HardwareWrite(const t &obj, const uint32_t &mess
 	if(not WriteInterfaceStatus){
 		ret_var = ALF_WRITE_SHARED_MEMORY_DISABLED;
 	}else{
-		uint32_t message_start = _wr_memory_pos;
-		uint32_t new_pos = ((size/RAW_NEXT_REG)*RAW_NEXT_REG) + ((size%RAW_NEXT_REG) > 0 ? RAW_NEXT_REG : 0);
+		uint32_t message_start;
+		uint32_t new_pos = ((size/RAW_NEXT_REG)*RAW_NEXT_REG) + ((size%RAW_NEXT_REG) > 0 ? RAW_NEXT_REG : 0);	//calculating size of the message
 		if(_all_write_addr_mapped){
 			if(TryLock(_wr_mutex)){
 				if(_wr_memory_pos + new_pos > _shared_memory_size)
 					_wr_memory_pos = 0;	//starting writing from 0 if the storage is full
 				/// then copying the whole object to the memory
 				std::memcpy(_shared_memory_wr + _wr_memory_pos, (void*)&obj, size);
+				message_start = _wr_memory_pos;
 				_wr_memory_pos += new_pos;
 				ReleaseLock(_wr_mutex);
-				WriteAndCommitMailbox(_wr_mailbox, _shared_memory_wr_addr - _wr_memory_addr_offset + message_start, message_id);
+				WriteAndCommitMailbox(_wr_mailbox, message_start, message_id);
 			}else{
 				ret_var = ALF_LOCK_MEMORY_FAILED;
 			}
@@ -232,7 +235,7 @@ alf_error Alf_SharedMemoryComm::Read(Alf_Drive_Info &drive){
 	if(not _buffer_drive_info.empty()){
 		mailbox_s top = _buffer_drive_info.top();
 		_buffer_drive_info.pop();	//"remove" the top object
-		return HardwareRead(drive, sizeof(drive), top.reg + _wr_memory_addr_offset);
+		return HardwareRead(drive, sizeof(drive), uint32_t(top.reg + _shared_memory_rd));
 	}else
 		return ALF_NOTHING_IN_BUFFER;
 }
@@ -241,7 +244,7 @@ alf_error Alf_SharedMemoryComm::Read(Alf_Drive_Command &drive){
 	if(not _buffer_drive_command.empty()){
 		mailbox_s top = _buffer_drive_command.top();
 		_buffer_drive_command.pop();
-		return HardwareRead(drive, sizeof(drive), top.reg + _wr_memory_addr_offset);
+		return HardwareRead(drive, sizeof(drive), uint32_t(top.reg + _shared_memory_rd));
 	}else
 		return ALF_NOTHING_IN_BUFFER;
 }

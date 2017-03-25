@@ -1,4 +1,6 @@
-/*
+/**
+ * @file
+ * @brief Header file of abstraction class for hardware communication on the hardware shared memory (with mutex and mailbox) in the garfield project.
  * alf_sharedmemory.hpp
  *
  *  Created on: 02.03.2017
@@ -19,9 +21,19 @@
 template <class obj, uint32_t size>
 class Garifield_RingBuffer {
 public:
+	/**
+	 * @brief      returns the top element on the ring buffer (is the actualst)
+	 *
+	 * @return     the top element, could be of any datatype
+	 * @attention  a call to #pop() is necessary if the element should removed from the ring buffer
+	 */
 	obj top(){
 		return _stack[_top_element];
 	}
+
+	/**
+	 * @brief      Removes the top element of the ringbuffer. This element is the actualst element, next top element ist n-1.
+	 */
 	void pop(){
 		if(not _empty){
 			if(_top_element == _first_element) _empty = true;
@@ -31,9 +43,19 @@ public:
 			}
 		}
 	}
+	/**
+	 * @brief      Is the ring buffer empty?
+	 *
+	 * @return     true = empty, false = elements in the ring buffer
+	 */
 	bool empty(){
 		return _empty;
 	}
+	/**
+	 * @brief      Pushs a element to the ring buffer. If the ring buffer is full, the oldest element in there will be overwritten.
+	 *
+	 * @param[in]  a     The element to push into.
+	 */
 	void push(const obj &a){
 		if(not _empty){
 			_top_element = (_top_element + 1)%_max_size;
@@ -55,7 +77,7 @@ private:
 };
 
 /**
- * @brief Implementation for communcatiing via a shared memory sectino on the fpga
+ * @brief Implementation for communcatiing via a shared memory section on the fpga. Abstraction for the mailbox, the hardware mutex and the shared memory in both directions.
  */
 class Alf_SharedMemoryComm{
 private:
@@ -167,7 +189,15 @@ private:
 
 public:
 
+	/**
+	 * @brief Flag to disable (=false) or enable (=true) the read interface.
+	 * @attention Actual not used, just for completness
+	 */
 	bool ReadInterfaceStatus;
+
+	/**
+	 * @brief Enables (=true) or disables (=false) the write operations to hardware. If set to false, all write operations #Write will return the error #ALF_WRITE_SHARED_MEMORY_DISABLED.
+	 */
 	bool WriteInterfaceStatus;
     /**
      * @brief Initialize the hardware communication with the shared memory
