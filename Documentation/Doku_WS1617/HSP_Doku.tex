@@ -27,6 +27,8 @@
 \usepackage{lscape}
 \usepackage{rotating}
 \usepackage{afterpage}
+\usepackage{graphicx}
+\usepackage{longtable}
 \usepackage[automark]{scrlayer-scrpage}
 \pagestyle{headings}
 \counterwithout{footnote}{chapter}
@@ -91,6 +93,7 @@
 \date{\today}
 \author{Philipp Eidenschink, Florian Laufenböck, Tobias Schwindl\\Matrikelnummern : 3080919, 2894759, 3080498}
 \title{HSP Projektbericht}
+\def \Projectname{Garfield}
 % ===========================================================
 % Dokument Anfang
 % ===========================================================
@@ -130,14 +133,15 @@
 % ===========================================================
 % Bericht Teile - Anpassen je nach Notwendigkeit
 % ===========================================================
+\listoftodos
 
 \include{chapters/Einleitung}
+\include{chapters/Tools}
 \include{chapters/Architektur}
 \include{chapters/FreeRTOS}
 \include{chapters/IDE_Besonderheiten}
 \include{chapters/HAL_NIOS2}
 \include{chapters/Fazit}
-\include{Inhalt/Hardware}
 
 % ===========================================================
 % Abbildungsverzeichnis
