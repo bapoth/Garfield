@@ -2,6 +2,7 @@
 Die Beschreibung des \ac{FPGA} wird, soweit möglich, mit dem Systemintegrationstool QSYS, das Teil der Quartus Toolchain ist, durchgeführt. Das Mapping zwischen QSYS-System und Pins wird klassisch in VHDL beschrieben. Das Top-Level-File des Systems ist Garfield.vhdl. \todo{Pfade?} Dort wird das von QSYS erzeugt System und einige kleine \ac{IP}-Cores zusammengeführt und auf definierte Aus-/Eingänge geführt. Diese Ein-/Ausgänge werden dann über den \textit{Pin-Planner} auf die physikalischen Pins geführt. Im folgenden werden die alle Systemkomponenten, die für das \Projectname-Projekt erzeugt wurden, beschrieben.
 
 \subsubsection{\ac{IP}-Cores}
+\label{IP-Cores}
 
 \begin{figure}
 	\includegraphics[angle=90, height=0.9\textheight]{Abb/Garfield_FPGA_Design_only_FPGA.pdf}
