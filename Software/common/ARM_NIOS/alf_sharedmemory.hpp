@@ -228,6 +228,13 @@ public:
 	 */
 	alf_error Write(const Alf_Drive_Command &drive);
 
+	/**
+	 * @brief      Writes a simple number into the mailbox. This number will be used within the mailbox comannd register and in the shared memory!
+	 *
+	 * @param      num   The number
+	 *
+	 * @return     One of #ALF_ERROR_CODES
+	 */
 	alf_error Write(uint32_t &num);
 
 	/**
