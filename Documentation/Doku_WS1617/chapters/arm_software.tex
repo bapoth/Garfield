@@ -34,7 +34,7 @@ Eine sehr gute und übersichtliche Beschreibung des Bootvorgangs der A9 Kerne is
 
 \paragraph{Als Bootloader} kommt der beliebte U-Boot \footnote{\href{https://www.denx.de/wiki/U-Boot}{https://www.denx.de/wiki/U-Boot}} in einer leicht angepassten Variante zum Einsatz. Wie im Tutorial beschrieben werden einige Startvariablen(unter anderem das zu ladende Linux Device Tree Binary) hinzugefügt um von der SD Karte zu booten. U-Boot lädt nach dem Start dann automatisch zunächst den
 
-\paragraph{Linux Device Tree} Der Linux Device Tree ist ein Bestandteil des Linux Kernels um eine Abstraktionsschicht zwischen Hardware (Pinouts, Speicher, Interrupts) und dem Linux Kernel zu schaffen. Durch Einsatz des Device Tree kann ein gleiches Kernel Binary auf verschiedenen Hardwareversionen und sogar komplett verschiedenen Boards benutzt werden. Der Device Tree ist eine textuelle Beschreibung der Hardware die kompiliert wird und dem Kernel beim Startvorgang übergeben wird. Ein Auszug aus einem solchen Device Tree zeigt der Code \ref{Software:DeviceTree}.
+\paragraph{Linux Device Tree} Der Linux Device Tree ist ein Bestandteil des Linux Kernels um eine Abstraktionsschicht zwischen Hardware (Pinouts, Speicher, Interrupts) und dem Linux Kernel zu schaffen. Durch Einsatz des Device Tree kann ein gleiches Kernel Binary auf verschiedenen Hardwareversionen und sogar komplett verschiedenen Boards benutzt werden. Der Device Tree ist eine textuelle Beschreibung der Hardware die kompiliert wird und dem Kernel beim Startvorgang übergeben wird. Ein Auszug aus einem solchen Device Tree zeigt der Code \ref{Software:DeviceTree}. Die Spezifikation des Device Trees kann man unter \href{http://www.devicetree.org/specifications/}{http://www.devicetree.org/specifications/} einsehen.
 
 \begin{lstlisting}[caption={[Auszug aus socfpga.dtsi]Auszug aus socfpga.dtsi \cite[Version~4.7, \texttt{arch/arm/boot/dts/socfpga.dtsi}]{Linux_Kernel}}, label=Software:DeviceTree]
 cpus {
@@ -112,6 +112,7 @@ Als Distribution kommt eine minimale Version von Ubuntu zum Einsatz (Alternativ 
 
 \paragraph{Comm-Gateway} gestartet werden.
 \todo[inline]{Beschreibung vom Comm Gateway}
+\todo{auch über interrupts im kernelspace schreiben}
 
 \subsubsection{Empfohlener Buildvorgang und Abweichungen zum Tutorial}
 Der schnellste und unkomplizierteste Weg zu einem funktionierenden Linux Image auf SD-Karte ist folgender
@@ -120,11 +121,11 @@ Der schnellste und unkomplizierteste Weg zu einem funktionierenden Linux Image a
 	\item Den Linux Devcie Tree Patchen. Dazu in einem Linux-Terminal
 \lstset{language=bash}
 	\begin{lstlisting}[breaklines=true]
-patch socfpga-kernel-dev/KERNEL/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts socfpga_cyclone5_de0_sockit.dts.patch #dieses Verzeichnis ist nach dem Tutorial verfuegbar
+patch socfpga-kernel-dev/KERNEL/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts socfpga_cyclone5_de0_sockit_garfield.patch #dieses Verzeichnis ist nach dem Tutorial verfuegbar
 	\end{lstlisting}
 	\item Das Linux Konfigurationsfile patchen
 	\begin{lstlisting}[breaklines=true]
-patch socfpga-kernel-dev/KERNEL/.config Linux_config.patch)
+patch socfpga-kernel-dev/KERNEL/.config Garfield_Kernel.patch)
 	\end{lstlisting}
 	\item Anschließend über das Skript \texttt{socfpga-kernel-dev/tools/rebuild.sh} (oder manuell über den entsprechenden make-Befehl) den Kernel inkl. Device Tree neu kompilieren
 	\item Den Linux Kernel und die Device Trees wie im Tutorial (die Punkte \texttt{Copy Kernel Image} und \texttt{Copy Kernel Device Tree Binaries}) auf die SD Karte kopieren.
@@ -134,7 +135,7 @@ Anschließend kann man die SD-Karte wieder entnehmen und das \ac{FPGA} wieder ei
 \todo{Listing einfügen, module uio und enable bridge enable}
 
 \subsubsection{\ac{FPGA} Programmierung}
-Die Programmierung des \ac{FPGA} Subsystems erfolgt unmittelbar während des Systemstarts und ist aktuell vom Softwarestart abgekoppelt. Das Image für das \ac{FPGA} wird dabei aus dem auf dem Board integrierten Flash-Speicher geladen. Die möglichen alternativen Konfigurationen sind übersichtlich im User-Manual zu dem \texttt{DE0-Nano} Board aufgelistet. Das Manual dazu findet man auf der System CD, die unter \href{http://www.terasic.com/downloads/cd-rom/de0-nano-soc/}{http://www.terasic.com/downloads/cd-rom/de0-nano-soc/} verfügbar ist.\\
+Die Programmierung des \ac{FPGA} Subsystems erfolgt unmittelbar während des Systemstarts und ist aktuell vom Softwarestart abgekoppelt. Das Image für das \ac{FPGA} wird dabei aus dem auf dem Board integrierten Flash-Speicher geladen. Die möglichen alternativen Konfigurationen sind übersichtlich im User-Manual zu dem \texttt{DE0-Nano} Board aufgelistet. Das Manual dazu findet man auf der System CD, die unter \href{http://www.terasic.com/downloads/cd-rom/de0-nano-soc/}{Link} verfügbar ist.\\
 
 Auf dem Flash befindet sich sowohl das Image für das \ac{FPGA} als auch das executable für den nach dem flashen im \ac{FPGA} verfügbaren NIOS2. \todo{Kopie?}
 \subsubsection{Applikationsstart}
