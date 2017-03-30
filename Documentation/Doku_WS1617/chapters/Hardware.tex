@@ -69,3 +69,126 @@ Es folgt eine Beschreibung der \ac{IP}-Cores, die für die Kommunikation gebrauc
 \end{figure}
 
 Abbildung \ref{FPGA:AddrMap} zeigt die Addressen die im System benutzt werden und den zugehörigen Addressbereich der verfügbar ist. Diese Addressmap ist auch im QSYS-Projekt des Projektes verfügbar.
+
+\subsubsection{Eigenentwickelte \ac{IP}-Cores}
+
+\paragraph{Der PWM-Generator} generiert ein PWM Signal auf die Ausgabeleitung. Der Registerzugriff ist in Tabelle \ref{hw:pwm} dargestellt
+
+\begin{table}
+\begin{longtable}[]{@{}c|l|c|c|l@{}}
+	\textbf{Bit} & \textbf{Name} & \textbf{Access} & \textbf{Reset Value} &
+	\textbf{Description}\tabularnewline
+
+	\endhead
+	\texttt{7\ ...\ 0} & control & RW & 0 & sets the dutycylce of the PWM
+	signal generator\tabularnewline
+	\texttt{31\ ...\ 7} & - & R & 0 & not used\tabularnewline
+
+\end{longtable} 
+\caption{Registermap des PWM Cores}
+\label{hw:pwm}
+\end{table}
+
+\paragraph{Der Rotary Encoder} \ac{IP}-Core kann steigende Flanken von einer externen Flanke zählen, hat ein auslesbares Ergebnisregister (siehe \ref{hw:rotary:result})und ein Controlregister (siehe \ref{hw:rotary:control}).
+
+\begin{table}
+\begin{longtable}[]{@{}clccl@{}}
+	\begin{minipage}[b]{0.13\columnwidth}\centering\strut
+		\textbf{Bit}\strut
+		\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\raggedright\strut
+		\textbf{Name}\strut
+		\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+		\textbf{Access}\strut
+		\end{minipage} & \begin{minipage}[b]{0.17\columnwidth}\centering\strut
+		\textbf{Reset Value}\strut
+		\end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\raggedright\strut
+		\textbf{Description}\strut
+		\end{minipage}\tabularnewline
+		\endhead
+		\begin{minipage}[t]{0.13\columnwidth}\centering\strut
+			\texttt{0}\strut
+			\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+			enable\strut
+			\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+			RW\strut
+			\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+			0\strut
+			\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
+			Enable bit for the core\strut
+			\end{minipage}\tabularnewline
+			\begin{minipage}[t]{0.13\columnwidth}\centering\strut
+				\texttt{1}\strut
+				\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+				clear\strut
+				\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+				W\strut
+				\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+				0\strut
+				\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
+				Clear bit. clears the result register and set it to 0; Must not be
+				manually set to 0 after clearing. With the next rising edge of the clock
+				it goes down on itself.\strut
+				\end{minipage}\tabularnewline
+				\begin{minipage}[t]{0.13\columnwidth}\centering\strut
+					\texttt{2}\strut
+					\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+					reset\strut
+					\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+					W\strut
+					\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+					0\strut
+					\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
+					Resets the whole core and set all values to default. At a read
+					operation, it is always 0\strut
+					\end{minipage}\tabularnewline
+					\begin{minipage}[t]{0.13\columnwidth}\centering\strut
+						\texttt{15\ ...\ 3}\strut
+						\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+						not accessable\strut
+						\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+						-\strut
+						\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+						0\strut
+						\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
+						-\strut
+						\end{minipage}\tabularnewline
+						\begin{minipage}[t]{0.13\columnwidth}\centering\strut
+							\texttt{16}\strut
+							\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+							error\strut
+							\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+							R\strut
+							\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+							0\strut
+							\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
+							Indicates an error within the counting process. You should reset the
+							core!\strut
+							\end{minipage}\tabularnewline
+							\begin{minipage}[t]{0.13\columnwidth}\centering\strut
+								\texttt{31\ ...\ 17}\strut
+								\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+								not accessable\strut
+								\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+								-\strut
+								\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+								0\strut
+								\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
+								-\strut
+								\end{minipage}\tabularnewline
+
+\end{longtable}
+\caption{Registermap des Controlregisters des Rotary Encoder}
+\label{hw:rotary:control}
+\end{table}
+
+\begin{table}
+	\begin{longtable}[]{@{}clccl@{}}
+		\textbf{Bit} & \textbf{Name} & \textbf{Access} & \textbf{Reset Value} &
+		\textbf{Description}\tabularnewline
+		\endhead
+		\texttt{31\ ...\ 0} & result & R & 0 & Result of the counting
+		process\tabularnewline
+	\end{longtable}
+	\caption{Registermap des Ergebnisregisters des Rotary Encoder}
+	\label{hw:rotary:result}
+\end{table}

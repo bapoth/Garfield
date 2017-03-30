@@ -59,28 +59,28 @@ cpus {
 
 \begin{lstlisting}[caption={[Änderungen am Device Tree]Notwendige Änderungen am Device Tree}, label=Software:DevTreeGarfield]
 &fpga_bridge0 {
-bridge-enable = <1>;
+	bridge-enable = <1>;
 };
 
 &fpga_bridge1 {
-bridge-enable = <1>;
+	bridge-enable = <1>;
 };
 
 &fpga_bridge2 {
-bridge-enable = <1>;
+	bridge-enable = <1>;
 };
 
 /* we are extending the soc device with a specific interrupt! */
 /{
-soc {
-mbox_rx: mailbox@0x00070000 {
-compatible = "altr,mailbox-1.0";
-reg = <0x70000 0x8>;
-interrupt-parent = < &intc >;
-interrupts = <GIC_SPI 60 4>;
-#mbox-cells = <1>;
-};
-};
+	soc {
+		mbox_rx: mailbox@0x00070000 {
+			compatible = "altr,mailbox-1.0";
+			reg = <0x70000 0x8>;
+			interrupt-parent = < &intc >;
+			interrupts = <GIC_SPI 60 4>;
+			#mbox-cells = <1>;
+		};
+	};
 
 };
 
