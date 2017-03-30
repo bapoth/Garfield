@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:ALF-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -296,9 +297,9 @@ Text GLabel 1150 2650 0    60   BiDi ~ 0
 GPIO_0_D32
 Text GLabel 1150 2750 0    60   BiDi ~ 0
 GPIO_0_D34
-Text GLabel 4850 850  0    60   BiDi ~ 0
+Text GLabel 5300 850  0    60   BiDi ~ 0
 SDA
-Text GLabel 4850 950  0    60   BiDi ~ 0
+Text GLabel 5300 950  0    60   BiDi ~ 0
 SCL
 Text GLabel 5300 1050 0    60   BiDi ~ 0
 MOTOR_PWM_33
@@ -334,14 +335,8 @@ Text GLabel 5300 2650 0    60   BiDi ~ 0
 GPIO_1_D32
 Text GLabel 5300 2750 0    60   BiDi ~ 0
 GPIO_1_D34
-Text GLabel 5800 850  2    60   BiDi ~ 0
-LED_HL_IN
-Text GLabel 5800 950  2    60   BiDi ~ 0
-LED_HR_IN
-Text GLabel 5800 1050 2    60   BiDi ~ 0
-LED_VL_IN
 Text GLabel 5800 1150 2    60   BiDi ~ 0
-LED_VR_IN
+LIGHTING
 Text GLabel 5800 1350 2    60   BiDi ~ 0
 GND
 Text GLabel 5800 1550 2    60   BiDi ~ 0
@@ -403,7 +398,7 @@ Wire Notes Line
 Text Notes 6200 5250 0    60   ~ 0
 MPU 6050
 Text Notes 5750 6600 0    60   ~ 0
-Drehzahlsensor
+Drehzahlsensor (defekt)
 Wire Notes Line
 	6100 6450 6100 5150
 Wire Notes Line
@@ -413,7 +408,7 @@ Display
 Text GLabel 8050 1000 1    60   Input ~ 0
 GND
 $Comp
-L GND #PWR1
+L GND-RESCUE-ALF #PWR1
 U 1 1 5818C15E
 P 8050 1100
 F 0 "#PWR1" H 8050 850 50  0001 C CNN
@@ -479,15 +474,12 @@ F4 "SDA" B R 10600 1550 60
 F5 "SCL" I R 10600 1700 60 
 $EndSheet
 $Sheet
-S 9600 2600 1150 1000
+S 9500 2600 1150 1000
 U 58207938
 F0 "Beleuchtung" 60
 F1 "Beleuchtung.sch" 60
-F2 "GND" I R 10750 3150 60 
-F3 "LED_VR" I L 9600 3500 60 
-F4 "LED_VL" I L 9600 3300 60 
-F5 "LED_HR" I L 9600 2900 60 
-F6 "LED_HL" I L 9600 2700 60 
+F2 "LED" I L 9500 3050 60 
+F3 "5V" I R 10650 3050 60 
 $EndSheet
 $Comp
 L CONN_01X02 P7
@@ -590,41 +582,41 @@ Wire Wire Line
 $Comp
 L CONN_01X04 P4
 U 1 1 58230541
-P 6800 7200
-F 0 "P4" H 6800 7450 50  0000 C CNN
-F 1 "CONN_01X04" V 6900 7200 50  0000 C CNN
-F 2 "" H 6800 7200 50  0000 C CNN
-F 3 "" H 6800 7200 50  0000 C CNN
-	1    6800 7200
+P 6750 7200
+F 0 "P4" H 6750 7450 50  0000 C CNN
+F 1 "CONN_01X04" V 6850 7200 50  0000 C CNN
+F 2 "" H 6750 7200 50  0000 C CNN
+F 3 "" H 6750 7200 50  0000 C CNN
+	1    6750 7200
 	1    0    0    -1  
 $EndComp
-Text GLabel 6200 7050 0    60   Input ~ 0
+Text GLabel 6150 7050 0    60   Input ~ 0
 GND
 Wire Wire Line
-	6200 7050 6600 7050
+	6150 7050 6550 7050
 Wire Wire Line
-	6600 7250 6500 7250
-Text GLabel 6200 7150 0    60   Input ~ 0
+	6550 7250 6450 7250
+Text GLabel 6150 7150 0    60   Input ~ 0
 VCC_33
-Text GLabel 6200 7350 0    60   Output ~ 0
+Text GLabel 6150 7350 0    60   Output ~ 0
 ROT_OUT
 Wire Wire Line
-	6550 7350 6600 7350
+	6500 7350 6550 7350
 Wire Wire Line
-	6600 7150 6200 7150
+	6550 7150 6150 7150
 $Comp
-L R R3
+L R-RESCUE-ALF R3
 U 1 1 58231B4F
-P 6400 7350
-F 0 "R3" V 6480 7350 50  0000 C CNN
-F 1 "120" V 6400 7350 50  0000 C CNN
-F 2 "" V 6330 7350 50  0000 C CNN
-F 3 "" H 6400 7350 50  0000 C CNN
-	1    6400 7350
+P 6350 7350
+F 0 "R3" V 6430 7350 50  0000 C CNN
+F 1 "120" V 6350 7350 50  0000 C CNN
+F 2 "" V 6280 7350 50  0000 C CNN
+F 3 "" H 6350 7350 50  0000 C CNN
+	1    6350 7350
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	6250 7350 6200 7350
+	6200 7350 6150 7350
 $Sheet
 S 8600 5400 1600 800 
 U 58232BD1
@@ -695,8 +687,6 @@ VCC_5
 Wire Wire Line
 	3150 5450 2950 5450
 Wire Notes Line
-	550  4300 4000 4300
-Wire Notes Line
 	500  4300 500  7750
 Wire Notes Line
 	4250 7750 4250 4300
@@ -705,7 +695,7 @@ Wire Notes Line
 Wire Notes Line
 	5700 7750 5700 6500
 Wire Notes Line
-	7000 7750 7000 6500
+	6900 7750 6900 6500
 Wire Notes Line
 	6100 6450 4300 6450
 $Sheet
@@ -721,58 +711,12 @@ F6 "D4_SD_CS" I R 5300 6200 60
 F7 "D10_TFT_CS" I R 5300 5700 60 
 F8 "D9_TFT_DC" I R 5300 5800 60 
 $EndSheet
-Text GLabel 9500 2700 0    60   Input ~ 0
-LED_HL_OUT
-Text GLabel 9500 2900 0    60   Input ~ 0
-LED_HR_OUT
-Text GLabel 9500 3300 0    60   Input ~ 0
-LED_VL_OUT
-Text GLabel 9500 3500 0    60   Input ~ 0
-LED_VR_OUT
-Wire Wire Line
-	9500 2700 9600 2700
-Wire Wire Line
-	9500 2900 9600 2900
-Wire Wire Line
-	9500 3300 9600 3300
-Wire Wire Line
-	9500 3500 9600 3500
-Text GLabel 10800 3150 2    60   Input ~ 0
-GND
-Wire Wire Line
-	10800 3150 10750 3150
-Text GLabel 3150 4700 2    60   Input ~ 0
-LED_HR_OUT
-Text GLabel 3150 4600 2    60   Input ~ 0
-LED_HL_OUT
-Text GLabel 3150 4800 2    60   Input ~ 0
-LED_VL_OUT
-Text GLabel 3150 4900 2    60   Input ~ 0
-LED_VR_OUT
 Wire Wire Line
 	3150 4600 2950 4600
-Wire Wire Line
-	3150 4700 2950 4700
-Wire Wire Line
-	3150 4800 2950 4800
-Wire Wire Line
-	3150 4900 2950 4900
 Text GLabel 1450 4600 0    60   Input ~ 0
-LED_HL_IN
-Text GLabel 1450 4700 0    60   Input ~ 0
-LED_HR_IN
-Text GLabel 1450 4800 0    60   Input ~ 0
-LED_VL_IN
-Text GLabel 1450 4900 0    60   Input ~ 0
-LED_VR_IN
+LIGHTING
 Wire Wire Line
 	1450 4600 1650 4600
-Wire Wire Line
-	1450 4700 1650 4700
-Wire Wire Line
-	1450 4800 1650 4800
-Wire Wire Line
-	1450 4900 1650 4900
 Text GLabel 10700 1550 2    60   Input ~ 0
 SDA_5V
 Text GLabel 10700 1700 2    60   Input ~ 0
@@ -833,7 +777,7 @@ Wire Notes Line
 	4300 4300 4300 5100
 Wire Notes Line
 	6500 5100 6500 4300
-Text Notes 6550 3900 0    60   ~ 0
+Text Notes 6550 4000 0    60   ~ 0
 Spannungsversorgung\nFPGA
 Text GLabel 3150 5950 2    60   Input ~ 0
 MOTOR_PWM_5V
@@ -855,30 +799,6 @@ Wire Notes Line
 	6150 5150 7550 5150
 Wire Notes Line
 	7500 6450 6150 6450
-Text GLabel 4850 550  0    60   Input ~ 0
-VCC3P3
-$Comp
-L R R2
-U 1 1 5828C7A0
-P 5200 800
-F 0 "R2" V 5280 800 50  0000 C CNN
-F 1 "82k" V 5200 800 50  0000 C CNN
-F 2 "" V 5130 800 50  0000 C CNN
-F 3 "" H 5200 800 50  0000 C CNN
-	1    5200 800 
-	1    0    0    -1  
-$EndComp
-$Comp
-L R R1
-U 1 1 5828CA79
-P 5000 700
-F 0 "R1" V 5080 700 50  0000 C CNN
-F 1 "82k" V 5000 700 50  0000 C CNN
-F 2 "" V 4930 700 50  0000 C CNN
-F 3 "" H 5000 700 50  0000 C CNN
-	1    5000 700 
-	1    0    0    -1  
-$EndComp
 Wire Notes Line
 	7550 5100 7550 3800
 Text Notes 4350 4400 0    60   ~ 0
@@ -985,15 +905,6 @@ F58 "B37" B R 2950 7150 60
 F59 "B38" B R 2950 7250 60 
 $EndSheet
 Wire Wire Line
-	5300 850  4850 850 
-Wire Wire Line
-	5300 950  4850 950 
-Wire Wire Line
-	4850 550  5200 550 
-Wire Wire Line
-	5200 550  5200 650 
-Connection ~ 5000 550 
-Wire Wire Line
 	1450 6150 1650 6150
 Wire Wire Line
 	1450 6250 1650 6250
@@ -1066,18 +977,14 @@ Wire Wire Line
 Wire Wire Line
 	3150 7150 2950 7150
 Wire Wire Line
-	6500 7250 6500 7050
-Connection ~ 6500 7050
-Wire Notes Line
-	7000 6500 5700 6500
-Wire Notes Line
-	5700 7750 7000 7750
+	6450 7250 6450 7050
+Connection ~ 6450 7050
 Wire Notes Line
 	5650 6500 5650 7750
 Text Notes 4300 6600 0    60   ~ 0
 Spannungsversorgung Router
 $Comp
-L USB_A P2
+L USB_A-RESCUE-ALF P2
 U 1 1 58338FBE
 P 4900 6900
 F 0 "P2" H 5100 6700 50  0000 C CNN
@@ -1100,8 +1007,6 @@ Wire Wire Line
 Wire Wire Line
 	5200 7250 5000 7250
 Connection ~ 5000 7250
-Wire Bus Line
-	4000 4300 4250 4300
 Wire Notes Line
 	5650 7750 4300 7750
 Wire Notes Line
@@ -1114,4 +1019,29 @@ Wire Notes Line
 	6550 3800 6550 5100
 Wire Notes Line
 	6500 4300 4300 4300
+Text GLabel 10700 3050 2    60   Input ~ 0
+VCC_5
+Text GLabel 9450 3050 0    60   Input ~ 0
+LIGHTING_5V
+Text GLabel 3150 4600 2    60   Input ~ 0
+LIGHTING_5V
+Text GLabel 5800 1050 2    60   Input ~ 0
+GPIO_1_D5
+Text GLabel 5800 950  2    60   Input ~ 0
+GPIO_1_D3
+Text GLabel 5800 850  2    60   Input ~ 0
+GPIO_1_D1
+Wire Notes Line
+	4250 4300 500  4300
+Wire Notes Line
+	6900 6500 5700 6500
+Wire Notes Line
+	5700 7750 6900 7750
+NoConn ~ 3050 6550
+NoConn ~ 1550 6550
+NoConn ~ 5750 1450
+Wire Wire Line
+	9450 3050 9500 3050
+Wire Wire Line
+	10650 3050 10700 3050
 $EndSCHEMATC
