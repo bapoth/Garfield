@@ -111,8 +111,18 @@ Die Änderungen werden direkt in die Datei arch/arm/boot/dts/socfpga\_cyclone5\_
 Als Distribution kommt eine minimale Version von Ubuntu zum Einsatz (Alternativ kann auch Debian verwendet werden). Diese Distribution wurde gewählt um einen kleine Footprint (im Leerlauf insgesammt nur ca. 35MB Arbeitsspeicherverbrauch) mit dem Komfort einer \textquotedblleft normalen\textquotedblright Linux Distribution inklusiver einem Softwarerepository zur einfachen Installation von Software zu verbinden. Sobald Linux gestartet ist kann die (hier) entscheidene Applikation
 
 \paragraph{Comm-Gateway} gestartet werden.
-\todo[inline]{Beschreibung vom Comm Gateway}
-\todo{auch über interrupts im kernelspace schreiben}
+Das Kommunikationsgateway ist die Schnittstelle um zwischen einem Host-PC und dem NIOS2 kommunizieren zu können. Die Sourcedateien befinden sich unter \texttt{Software/Software\_ARM/Gateway}. Dieses Programm wird später auch ausgeführt um Daten austauschen zu können. Neben der Initialisierung der Hardware, dem Öffnen eines Serverports, um sich mit dem Client zu verbinden und Daten auszutauschen, besteht dieses Programm aus insgesamt drei Threads:
+\begin{itemize}
+	\item \lstinline|readData| - Dieser Thread behandelt den Nachrichtenaustausch in Richtung Host PC $\rightarrow$ NIOS2. Der Thread wartet auf eingehenden Nachrichten (im Moment nur Fahrkommandos), parst und castet diese in das entsprechende Objekt und schreibt das Objekt dann über die Klasse \todo{KLass} in den Shared Memory mit dem NIOS2. Dieser Kommunikationsweg ist auch in Abbildung \ref{SW:Komm:HOSTNIOS} dargestellt.
+	\item \lstinline|writeData| - 
+	\item \lstinline|HardwareReadHandler| - 
+\end{itemize}
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{Abb/Komm_Host_NIOS.png}
+	\caption{Kommunikationsablauf zwischen Host PC und NIOS}
+	\label{SW:Komm:HOSTNIOS}
+\end{figure}
 
 \subsubsection{Empfohlener Buildvorgang und Abweichungen zum Tutorial}
 Der schnellste und unkomplizierteste Weg zu einem funktionierenden Linux Image auf SD-Karte ist folgender
@@ -139,5 +149,25 @@ Die Programmierung des \ac{FPGA} Subsystems erfolgt unmittelbar während des Sys
 
 Auf dem Flash befindet sich sowohl das Image für das \ac{FPGA} als auch das executable für den nach dem flashen im \ac{FPGA} verfügbaren NIOS2. \todo{Kopie?}
 \subsubsection{Applikationsstart}
-Um das Kommunikationsgateway zu starten sind nach dem Login im Linux (ssh oder serielle Konsole) noch einige Schritte zu tun.
-\todo[inline]{Laden der Module, starten des Servers, anschließend Verbinden zum Kommunizieren}
+Für die Kommunikation zwischen Host PC und NIOS2 ist das starten des Kommunikationsgateway erforderlich. Dies befindet sich unter \texttt{HPS/bin/Comm\_Gateway} und ist das Kompilat des oben beschriebenen \todo{Name}. Damit das Programm Ordnungsgemäß funktionieren kann müssen noch einige Schritte durchgeführt werden, die hier kurz erklärt werden.
+
+\lstset{language=bash}
+\begin{lstlisting}[caption=Listing, label={StartApp}]
+	sudo -s # superuserrechte erlangen, Passwort = temppwd
+	rmmod uio_pdrv_genirq
+	rmmod uio
+	modprobe 
+	ls /dev/
+	bin/Comm_Gateway
+\end{lstlisting}
+
+Der Codeausschnit \ref{StartApp} zeigt alle durchzuführenden Schritte, die notwendig sind um das Kommunikationsgatway ordnungsgemäß zu starten. Die ersten beide Befehle entfernen evtl. geladenene Module, die beim startup mit falschen Parametern geladen werden. Der dritte Befehl lädt das Linux-Modul um mit Interrupts im User-Space umgehen zu können und erstellt dafür ein Gerät mit dem Namen \texttt{HSP\_boot/dev/uio0}, dass im Kommunikationsgatway verwendet werden. Hier ist auch der Name, der im Linux Device Tree angegeben wurde, von Bedeutung, da über diesen das richtige Interrupt ausgewählt wird. Mit dem vierten Befehl sollte vor Ausführung des Gateways überprüft werden ob das Gerät \texttt{HSP\_boot/dev/uio0} auch wirklich verfügbar ist. Ist dies der Fall, kann die Applikation mit Superuserrechten gestartet werden. Die Reihenfolge ist dabei
+\begin{enumerate}
+	\item Starten des FreeRTOS auf dem NIOS2 (wird i.d.R. automatisch bei Systemstart durch Laden aus dem externen Flash durchgeführt).
+	\item Konfigurieren des Linux und starten der Applikation (eine Serververbindung wird angeboten).
+	\item Anschließendes Verbinden der Applikation auf dem Host-PC mit dem Server. Daten werden ab diesem Zeitpunkt ausgetauscht.
+\end{enumerate}
+
+\subsubsection{Beenden der Applikation}
+Aktuell ist keinerlei Fehlerbehandlung für das Beenden der Client-Server Verbindung (Host-PC $\leftrightarrow$ \ac{HPS}) vorhanden. Beendet der Client die Kommunikation hängt sich das gesamte System auf (Grund: Interrupts werden nicht mehr angenommen und der interne Bus wird durch die Mailbox blockiert!). Es ist also unbedingt notwendig die Applikation auf dem laufenden Linux mittels eines \lstinline|SIGINT| (STRG+C) zu beenden. Alternativ kann man dem Programm auch auf der Kommandozeile oder durch z.B. htop das Signal schicken. Mit dem Signal sendet Linux einen speziellen Befehl an den NIOS2 wodurch dieser die Kommunikation auch beendet. Werden wieder Befehle geschickt, wird die Kommunikation von beiden Seiten wieder aufgenommen.
+ 

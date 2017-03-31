@@ -1,5 +1,15 @@
 \subsection{\ac{FPGA} Design}
-Die Beschreibung des \ac{FPGA} wird, soweit möglich, mit dem Systemintegrationstool QSYS, das Teil der Quartus Toolchain ist, durchgeführt. Das Mapping zwischen QSYS-System und Pins wird klassisch in VHDL beschrieben. Das Top-Level-File des Systems ist Garfield.vhdl. \todo{Pfade?} Dort wird das von QSYS erzeugt System und einige kleine \ac{IP}-Cores zusammengeführt und auf definierte Aus-/Eingänge geführt. Diese Ein-/Ausgänge werden dann über den \textit{Pin-Planner} auf die physikalischen Pins geführt. Im folgenden werden die alle Systemkomponenten, die für das \Projectname-Projekt erzeugt wurden, beschrieben.
+Die Beschreibung des \ac{FPGA} wird, soweit möglich, mit dem Systemintegrationstool QSYS, das Teil der Quartus Toolchain ist, durchgeführt. Das Mapping zwischen QSYS-System und Pins wird klassisch in VHDL beschrieben. Das Top-Level-File des Systems ist \\ \texttt{FPGA\_Design/Garfield\_Design/Garfield.vhdl}. Dort wird das von QSYS erzeugt System und einige kleine \ac{IP}-Cores zusammengeführt und auf definierte Aus-/Eingänge geführt. Diese Ein-/Ausgänge werden dann über den \textit{Pin-Planner} auf die physikalischen Pins geführt.\\
+Im Projektverzeichnis befinden sich alle Dateien, die für den \ac{FPGA} Teil relevant sind, unter \texttt{FPGA\_Design}. Die Struktur ab diesem Ordner ist wie folgt aufgebaut:
+\begin{itemize}
+	\item \texttt{Datasheets} - Einie Datenblätter und Application Notes zu dem \ac{FPGA} Teilprojekt
+	\item \texttt{Garfield\_Design} - In diesem Ordner befinden sich die Quartus Projektdateien, Konfigurationsdateien und das QSYS Projekt.
+	\item \texttt{ip\_extern} - Eine Sammlung von externen \ac{IP}-Cores, die im Projekt verwendet wurden. Es befinden sich dort nur die \ac{IP}-Cores, die nicht von Altera stammen oder nicht direkt in QSYS verfügbar sind.
+	\item \texttt{ip\_intern} - Alle \ac{IP}-Cores, die für dieses Projekt entwickelt wurden.
+	\item \texttt{output\_files} - In jedem Unterordner innerhalb dieses Ordners befinden sich \ac{FPGA} Images und die entsprechenden Konfigurationsdateien um ein Softwareprojekt dafür zu bauen.
+\end{itemize}
+
+Im folgenden werden die alle Systemkomponenten, die für das \Projectname-Projekt erzeugt wurden, beschrieben.
 
 \subsubsection{\ac{IP}-Cores}
 \label{IP-Cores}
