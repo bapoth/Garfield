@@ -1,0 +1,33 @@
+\chapter{Offene Probleme und zukünftige Arbeitspakete}
+
+\section{Offene Probleme}
+Zum Zeitpunkt der Ab-/Übergabe des Garfield Projekts bestehen noch einige kleine und umfangreichere Probleme. Manche dieser Probleme sollten mit einer hohen Priorität behandelt werden, andere Probleme stören nur die Bedienbarkeit und haben deswegen eine niedrigere Priorität.
+
+\subsection{Spannungs- und Stromversorgung}
+\label{Problem:Spannung}
+Dies ist ein Problem, dass mit höherer Prioriät, bevorzugt am Anfang des nächsten Projekts, behandelt werden sollte. Im wesentlichen gibt es zwei größere Probleme:
+\begin{itemize}
+	\item Immer wieder kehrende Spannungseinbrüche nach Starten des Motors. 
+	\item Eine nicht ausreichende Spannungsversorgung durch kleine RC-Akkus mit einer Sollspannung von $7,2$ Volt.
+\end{itemize}
+
+Für die Spannungseinbrüche konnte bis jetzt wieder eine sinnvolle Erklärung noch ein Lösungsvorschlag erreicht werden. Die Einbrüche treten sowohl an der Versorgung durch ein Labornetzteil auf(wobei nicht jedes Labornetzteil die gleichen Symptome zeigt) als auch bei Speisung durch einen großen RC Akku mit 12V Sollspannung auf. An einem Labornetzteil treten die Einbrüche zwar wesentlich weniger oft auf, aber auch dort treten sie nicht-deterministisch auf. Die Fehler treten auch wesentlich öfter auf als dies im Vorgängerprojekt mit einem Rasperry Pi der Fall war. Die aktuelle Lösung braucht zwar etwas mehr Leistung (zwischen $0.5$ und $1$ Watt), aber sowohl der RC Akku als auch ein Labornetzteil können normalerweise mit solchen Problemen umgehen\\
+
+Das Problem mit den kleinen RC Akkus (für die sich eine Akkuhalterung auf dem Auto befindet) kann sich ebenfalls nicht erklärt werden. Die $7,2V$ werden nur zur Versorung des Motors benötigt, ansonsten sind nur 5V und $3.3V$ notwendig. Diese beiden Spannungen werden aber über Konstantspannungskonverter erzeugt, die beide relativ unempfindlich gegen höhere, auch schwankende Spannungen sind.\\
+
+Als erster Ansatzpunkt kann nur ein Hinweise/Lösungsstrategie empfohlen werden: Die Platine, die immer wieder wechselnden Bedürfnissen angepasst wurde, sollte überprüft werden. Hier ist die Unvoreingenommenheit einer anderen Bearbeitungsgruppe mit Sicherheit von großem Vorteil. Die Nachfolgegruppe kann alle Verbindungen überprüfen und, obwohl ein Schaltplan vorhanden ist, über jede Verbindung nachdenken und überprüfen ob die Beschaltung so Sinn machen wie sie aktuell gelöst sind. An diesem Punkt kann man auch nochmal über Stützkondensatoren an relevanten Stellen nachdenken. Unter Umständen ist es dann auch hilfreich eine neue Platine zu erstellen.
+
+\subsection{Motortreiber}
+\todo{Foto einfügen}
+Der Motortreiber hat während der Tests immer wieder sporadische Aussetzer gehabt und funktionierte nach einem Neustart manchmal nicht richtig. Als Übergangslösung wurde an dem Motortreiber ein Reset-Button angebracht, der, sollte der Motortreiber nicht mehr funktionieren, gedrückt werden kann und alle Fehlerzustände des Motortreibers löscht und ihn wieder funktionieren lässt.
+Die Ursache für diese Fehler ist nicht offensichtlich, aber eventuell ist ein Zusammenhang mit den in \ref{Problem:Spannung} beschriebenen Fehlern zu beobachten.\\
+Eine mögliche Lösung wäre die Fehlersignale und das Resetsignal mit dem \ac{FPGA} zu verbinden und im NIOS2 zu verarbeiten. Dann kann eine saubere Fehlerbehandlung eine Resetauslösung durch einen $\mu$Controller erfolgen.
+
+\subsection{MPU6050}
+\todo{Tobi: Probleme beschreiben}
+
+\subsection{Sporadische Fehler in der Nachrichtenübertragung}
+In der Nachrichtenübertragung zwischen Host-PC und NIOS2 (mit dem Nachrichtenweg wie in Abbildung \todo{irgendwie Nachrichtenweg noch herzaubern?}) treten sporadische Fehler auf. Diese äußern sich in Nachrichtenpaketen (einzelne Werte, i.d.R. sind nicht alle Werte falsch), die den jeweiligen Maximalwert annehmen(z.B. \lstinline|uint8\_t x = 255| anstatt \lstinline|uint8\_t x = 0|). Für diesen Fehlerfall konnten noch keine weiteren Beobachtungen gemacht werden, insbesondere nicht woher die falschen Nachrichten kommen (Entweder vom Host PC als Initiator der Nachricht oder vom Kommunikationsgateway das für das kopieren von Nachrichten in den Speicher verantwortlich ist). Die falschen Werte treten in sehr unregelmäßigen Abständen auf, es ist auch möglich das über mehrere Sitzungen hinweg kein einziger solcher Fehler auftritt. An anderen Tagen tritt dieser Fehler wiederrum regelmäßig im 10-Sekundentakt auf.
+
+\section{Mögliche Arbeitspakete}
+Die nächsten Schritte
