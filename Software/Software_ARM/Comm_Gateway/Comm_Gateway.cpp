@@ -1,4 +1,8 @@
 #include "Comm_Gateway.hpp"
+#include "hps_fpga_addresses.h"
+#include <stdint.h>
+#include <poll.h>
+#include <fcntl.h>
 
 ///Port on which socket is created
 #define COMPORT 6666
@@ -6,20 +10,12 @@
 ///Send/Receive Frequence in Hz
 #define COMFREQ 50
 
-///Mailbox defines
-#define HPS_OFFSET 0xff200000
-#define SHARED_MEMORY_MASTER_HPS_0_BASE 		0x60000
-#define SHARED_MEMORY_MUTEX_MASTER_HPS_0_BASE 	0x50000
-#define SHARED_MEMORY_MUTEX_MASTER_NIOS_0_BASE	0x80000
-#define SHARED_MEMORY_MASTER_NIOS_0_BASE		0x90000
-#define MAILBOX_ARM2NIOS_0_BASE					0x20000
-#define MAILBOX_NIOS2ARM_0_BASE					0x70000
-
 ///Alf Communication Server object
 Alf_Communication<Server> ServerComm;
 
 /// variable to let sleep the main thread
 std::condition_variable Run_Main_Task_cond;
+std::condition_variable Run_ServerWrite_Task;
 
 /// mutex to for the main thread
 std::mutex Run_Main_Task_mut;
@@ -32,6 +28,9 @@ Alf_SharedMemoryComm shared_mem;
 
 ///Run or close threads
 bool run_threads = true;
+bool notify_ServerWrite_Task = false;
+
+int fd;
 
 
 void Stop_Program(int sig) {
@@ -39,17 +38,69 @@ void Stop_Program(int sig) {
 	Run_Main_Task_cond.notify_all();
 }
 
-void writeData(void) {
+/**
+ * @brief This function is for interrupt handling in user mode. It should run in its own thread
+ */
+void HardwareReadHandler(void){
+	Alf_Log::alf_log_write("Started HardwareReadHandler thread", log_info);
+	Alf_Drive_Info drive_info_local_copy;
+	uint32_t irq_info;
+	int ret;
+	ssize_t nb;
+    struct pollfd fds = {
+        .fd = fd,
+        .events = POLLIN,
+    };
+	while(run_threads){
+	    irq_info = 1; /* unmask */
 
-	while(run_threads) {
-		ServerComm.Write(global_drive_info);
+	    nb = write(fd, &irq_info, sizeof(irq_info));
+	    if (nb < sizeof(irq_info)){
+	    	Alf_Log::alf_log_write("Cannot write to fd", log_error);
+	    	run_threads = false;
+	    	break;
+	    }
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(1/COMFREQ*1000));
+		ret = poll(&fds, 1, -1);	//waiting until interrupt was coming
+        if (ret >= 1) {
+            nb = read(fd, &irq_info, sizeof(irq_info));
+            if (nb == sizeof(irq_info)) {
+            	shared_mem.ReadInterruptHandler();
+            	notify_ServerWrite_Task = true;
+            	Run_ServerWrite_Task.notify_one();
+            }
+        } else {
+            Alf_Log::alf_log_write("Error while handling interrupt in user mode!", log_error);
+            run_threads = false;
+        }
 	}
+	uint32_t end = ALF_END_ID;
+	shared_mem.Write(end);
+	Alf_Log::alf_log_write("Ended HardwareReadHandler thread", log_info);
+}
+
+void writeData(void) {
+	Alf_Log::alf_log_write("Started writeData thread", log_info);
+
+	Alf_Drive_Info drive_info_local_copy;
+	std::mutex mux;
+	std::unique_lock<std::mutex> lock(mux);
+	while(run_threads) {
+		while(not notify_ServerWrite_Task){
+			Run_ServerWrite_Task.wait(lock);
+		}
+		if(shared_mem.Read(drive_info_local_copy) == ALF_NO_ERROR){
+			std::cout << "temp" << drive_info_local_copy.temperature << std::endl;
+			ServerComm.Write(drive_info_local_copy);
+		}
+		notify_ServerWrite_Task = false;
+	}
+	Alf_Log::alf_log_write("Ended writeData thread", log_info);
 }
 
 void readData(void) {
 	std::string rec;
+	Alf_Log::alf_log_write("Started readData thread", log_info);
 
 	while(run_threads) {
 		Alf_Urg_Measurements_Buffer readBuffer(10);
@@ -68,6 +119,7 @@ void readData(void) {
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(1/COMFREQ*1000));
 	}
+	Alf_Log::alf_log_write("Ended readData thread", log_info);
 }
 
 int main()
@@ -86,17 +138,23 @@ int main()
 	global_drive_info.Gyroscope_Z = 1;
 	global_drive_info.temperature = 13;
 
+    fd = open("/dev/uio0", O_RDWR);
+    if (fd < 0) {
+        Alf_Log::alf_log_write("Opening /dev/uio0 does not work -> Abort!", log_error);
+        exit(EXIT_FAILURE);
+    }
 	if(shared_mem.Init(SHARED_MEMORY_MASTER_HPS_0_BASE, SHARED_MEMORY_MUTEX_MASTER_HPS_0_BASE, MAILBOX_ARM2NIOS_0_BASE, SHARED_MEMORY_MASTER_NIOS_0_BASE, SHARED_MEMORY_MUTEX_MASTER_NIOS_0_BASE, MAILBOX_NIOS2ARM_0_BASE, 01, HPS_OFFSET)) {
 
+		shared_mem.EnableMailboxInterrupt();
 		Alf_Log::alf_log_write("Initialized Mailbox", log_info);
 
 		if(ServerComm.Init(COMPORT)) {
 
 			Alf_Log::alf_log_write("Created socket", log_info);
+			shared_mem.WriteInterfaceStatus = true;
+			std::thread hardwareReadThread(HardwareReadHandler);
 			std::thread sendThread(writeData);
 			std::thread recThread(readData);
-
-			//Run_Main_Task_cond.wait(lck); //waiting until this main thread should continue
 
 			Run_Main_Task_cond.wait(lck);
 
@@ -104,7 +162,9 @@ int main()
 
 			sendThread.join();
 			recThread.join();
+			hardwareReadThread.join();
 
+			close(fd);
 			ServerComm.EndCommunication();
 		}
 		else {

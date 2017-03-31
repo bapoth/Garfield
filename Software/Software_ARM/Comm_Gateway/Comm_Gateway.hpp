@@ -35,6 +35,11 @@
  */
 void Stop_Program(int sig);
 
+/**
+ * @brief This function is for interrupt handling from the hardware mailbox in user mode. It should run in its own thread.
+ */
+void HardwareReadHandler(void);
+
 /*!
  * @brief writeData() Function runs in a thread an writes cyclic the alf_drive_info data in the socket for Garfield_control to display
  */
