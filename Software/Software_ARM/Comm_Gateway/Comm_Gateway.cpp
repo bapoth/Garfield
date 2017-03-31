@@ -90,7 +90,6 @@ void writeData(void) {
 			Run_ServerWrite_Task.wait(lock);
 		}
 		if(shared_mem.Read(drive_info_local_copy) == ALF_NO_ERROR){
-			std::cout << "temp" << drive_info_local_copy.temperature << std::endl;
 			ServerComm.Write(drive_info_local_copy);
 		}
 		notify_ServerWrite_Task = false;
