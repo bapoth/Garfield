@@ -31,6 +31,10 @@ static const alt_u8 emergency_stop_distance = 12;
 static const alt_u8 close_range_distance = 25;
 static const alt_u8 close_range_speed = 20;
 
+/*!
+ *@brief this value is reduced every time the drive task is executed and is reset to the starting value in the mailbox interrupt service routine;
+ *	this allows a timeout mechanism when the communication is failing to stop the vehicle. (meaning no new driving values incoming)
+ * */
 static volatile alt_u8 timeout = 20;
 
 /*
@@ -63,6 +67,9 @@ void readMPU( void* p)
 	{
 		// Wait for the next cycle ( every 50ms )
 		vTaskDelayUntil( &xLastWakeTime, xFrequency );
+
+		// if the IIC communication is failing due to the FreeRTOS scheduler (interrupted) make this a critical section by suspending other task
+		// or by using the FreeRTOS critical section handling, currently not a problem
 		mpu.ReadAccelerometer(global_acc_data);
 		mpu.ReadGyroscope(global_gyro_data);
 		mpu.ReadTemperature(global_temp_data);
@@ -101,7 +108,7 @@ void readUltraSonic ( void* p )
 		 vTaskDelayUntil( &xLastWakeTime, xFrequency );
 
 		 us_front_left.readRegister(UltraSonicRegisterRead::ECHO_0x01, global_us_front_left_data);
-		 us_rear_right.readRegister(UltraSonicRegisterRead::ECHO_0x01, global_us_front_right_data);
+		 us_front_right.readRegister(UltraSonicRegisterRead::ECHO_0x01, global_us_front_right_data);
 		 us_rear_left.readRegister(UltraSonicRegisterRead::ECHO_0x01, global_us_rear_left_data);
 		 us_rear_right.readRegister(UltraSonicRegisterRead::ECHO_0x01, global_us_rear_right_data);
 
@@ -129,7 +136,7 @@ void readUltraSonic ( void* p )
 			 Drive::SetBlock_Rear(true);
 			 close_range_rear = true;
 		 }
-		 else if (global_us_rear_left_data < close_range_distance || global_us_rear_right_data < emergency_stop_distance)
+		 else if (global_us_rear_left_data < close_range_distance || global_us_rear_right_data < close_range_distance)
 		 { // close range, careful
 			 close_range_rear = true;
 			 Drive::SetBlock_Rear(false);
@@ -196,6 +203,13 @@ void setMotor_and_Steering ( void* p )
 
 		real_speed = drive.speed;
 		real_direction = drive.direction;
+
+		// set light pins active low
+		IOWR(GARFIELD_LIGHTING_BASE, 0, static_cast<alt_u8>(drive.light) == true ? 0 : 1);
+		IOWR(GARFIELD_LIGHTING_BASE, 1, static_cast<alt_u8>(drive.light) == true ? 0 : 1);
+		IOWR(GARFIELD_LIGHTING_BASE, 2, static_cast<alt_u8>(drive.light) == true ? 0 : 1);
+		IOWR(GARFIELD_LIGHTING_BASE, 3, static_cast<alt_u8>(drive.light) == true ? 0 : 1);
+
 
 		Steering::Set(drive.angle);
 

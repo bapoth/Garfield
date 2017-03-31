@@ -122,6 +122,12 @@ public:
 	 * @return s.a.
 	 * */
 	alt_u8 ReadTemperature(temp& temp_data);
+	/*!
+	 * @brief reads the status register and returns the current measurement status (temp, gyro and acc), the register is automatically reseted by the read operation
+	 * @return  1: if the current measurement is finished
+	 * 			0: no measurement is finished
+	 * */
+	alt_u8 readStatus(void);
 
 private:
 	/*!

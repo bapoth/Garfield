@@ -64,7 +64,7 @@ alt_u8 mpu6050::InitMPU6050(AccelerometerSettings acc_sens, GyroscopeSettings gy
 alt_u8 mpu6050::ReadAccelerometer(AccelerometerData& acc_data)
 {
 	alt_u8 result = 1;
-	alt_u16 acc_data_tmp = 0;
+	alt_16 acc_data_tmp = 0;
 
 	I2C_start(I2C_OPENCORES_0_BASE, static_cast<alt_u32>(__deviceAddress), 0);
 	I2C_write(I2C_OPENCORES_0_BASE, static_cast<alt_u8>(MPU6050_Register::ACCEL_XOUT_H), 1);
@@ -108,7 +108,7 @@ alt_u8 mpu6050::ReadAccelerometer(AccelerometerData& acc_data)
 alt_u8 mpu6050::ReadGyroscope(GyroscopeData& gyro_data)
 {
 	alt_u8 result = 1;
-	alt_u16 gyro_data_tmp = 0;
+	alt_16 gyro_data_tmp = 0;
 
 	I2C_start(I2C_OPENCORES_0_BASE, static_cast<alt_u32>(__deviceAddress), 0);
 	I2C_write(I2C_OPENCORES_0_BASE, static_cast<alt_u8>(MPU6050_Register::GYRO_XOUT_H), 1);
@@ -152,7 +152,7 @@ alt_u8 mpu6050::ReadGyroscope(GyroscopeData& gyro_data)
 alt_u8 mpu6050::ReadTemperature(temp& temp_data)
 {
 	alt_u8 result = 1;
-	alt_u16 temp_data_tmp = 0;
+	alt_16 temp_data_tmp = 0;
 
 	I2C_start(I2C_OPENCORES_0_BASE, static_cast<alt_u32>(__deviceAddress), 0);
 	I2C_write(I2C_OPENCORES_0_BASE, static_cast<alt_u8>(MPU6050_Register::TEMP_OUT_H), 1);
@@ -169,4 +169,11 @@ alt_u8 mpu6050::ReadTemperature(temp& temp_data)
 	return result;
 }
 
+alt_u8 mpu6050::readStatus(void)
+{
+	I2C_start(I2C_OPENCORES_0_BASE, static_cast<alt_u32>(__deviceAddress), 0);
+	I2C_write(I2C_OPENCORES_0_BASE, static_cast<alt_u8>(MPU6050_Register::INT_STATUS), 1);
+	I2C_start(I2C_OPENCORES_0_BASE, static_cast<alt_u32>(__deviceAddress), 1);
+	return (I2C_read(I2C_OPENCORES_0_BASE, 1) & 1);
+}
 
