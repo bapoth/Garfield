@@ -1,4 +1,4 @@
-\subsection{\ac{FPGA} Design}
+\section{\ac{FPGA} Design}
 Die Beschreibung des \ac{FPGA} wird, soweit möglich, mit dem Systemintegrationstool QSYS, das Teil der Quartus Toolchain ist, durchgeführt. Das Mapping zwischen QSYS-System und Pins wird klassisch in VHDL beschrieben. Das Top-Level-File des Systems ist \\ \texttt{FPGA\_Design/Garfield\_Design/Garfield.vhdl}. Dort wird das von QSYS erzeugt System und einige kleine \ac{IP}-Cores zusammengeführt und auf definierte Aus-/Eingänge geführt. Diese Ein-/Ausgänge werden dann über den \textit{Pin-Planner} auf die physikalischen Pins geführt.\\
 Im Projektverzeichnis befinden sich alle Dateien, die für den \ac{FPGA} Teil relevant sind, unter \texttt{FPGA\_Design}. Die Struktur ab diesem Ordner ist wie folgt aufgebaut:
 \begin{itemize}
@@ -11,7 +11,7 @@ Im Projektverzeichnis befinden sich alle Dateien, die für den \ac{FPGA} Teil re
 
 Im folgenden werden die alle Systemkomponenten, die für das \Projectname-Projekt erzeugt wurden, beschrieben.
 
-\subsubsection{\ac{IP}-Cores}
+\section{\ac{IP}-Cores}
 \label{IP-Cores}
 
 \begin{figure}
@@ -70,7 +70,7 @@ Es folgt eine Beschreibung der \ac{IP}-Cores, die für die Kommunikation gebrauc
 	Man kann also nur schreibend auf den Mutex zugreifen, wenn einem der Mutex bereits gehört oder der Mutex frei (=0) ist. Nach einem schreibenden Zugriff muss der Registerwert mit dem Wert der geschrieben wurde verglichen werden. Stimmen beide Werte überein, hat der Schreiber den Mutex gelockt, andernfalls ist der atomare Lock fehlgeschlagen.
 \end{itemize}
 
-\subsubsection{Address-Map}
+\section{Address-Map}
 
 \begin{figure}
 	\includegraphics[width=\textwidth]{Abb/Address_Map.png}
@@ -80,9 +80,9 @@ Es folgt eine Beschreibung der \ac{IP}-Cores, die für die Kommunikation gebrauc
 
 Abbildung \ref{FPGA:AddrMap} zeigt die Addressen die im System benutzt werden und den zugehörigen Addressbereich der verfügbar ist. Diese Addressmap ist auch im QSYS-Projekt des Projektes verfügbar.
 
-\subsubsection{Eigenentwickelte \ac{IP}-Cores}
+\section{Eigenentwickelte \ac{IP}-Cores}
 
-\paragraph{Der PWM-Generator} generiert ein PWM Signal auf die Ausgabeleitung. Der Registerzugriff ist in Tabelle \ref{hw:pwm} dargestellt
+\subsection{Der PWM-Generator} generiert ein PWM Signal auf die Ausgabeleitung. Der Registerzugriff ist in Tabelle \ref{hw:pwm} dargestellt
 
 \begin{table}
 \begin{longtable}[]{@{}c|l|c|c|l@{}}
@@ -94,12 +94,12 @@ Abbildung \ref{FPGA:AddrMap} zeigt die Addressen die im System benutzt werden un
 	signal generator\tabularnewline
 	\texttt{31\ ...\ 7} & - & R & 0 & not used\tabularnewline
 
-\end{longtable} 
+\end{longtable}
 \caption{Registermap des PWM Cores}
 \label{hw:pwm}
 \end{table}
 
-\paragraph{Der Rotary Encoder} \ac{IP}-Core kann steigende Flanken von einer externen Flanke zählen, hat ein auslesbares Ergebnisregister (siehe \ref{hw:rotary:result})und ein Controlregister (siehe \ref{hw:rotary:control}).
+\subsection{Der Rotary Encoder} \ac{IP}-Core kann steigende Flanken von einer externen Flanke zählen, hat ein auslesbares Ergebnisregister (siehe \ref{hw:rotary:result})und ein Controlregister (siehe \ref{hw:rotary:control}).
 
 \begin{table}
 \begin{longtable}[]{@{}clccl@{}}

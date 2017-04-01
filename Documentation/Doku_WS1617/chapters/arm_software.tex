@@ -1,6 +1,4 @@
-\todo{Comm Gateway beschreiben}
-
-\subsubsection{Mailbox Kommunikation ARM $\leftrightarrow$ NIOS2}
+\subsection{Mailbox Kommunikation ARM $\leftrightarrow$ NIOS2}
 Die Kommunikation über die in das \ac{FPGA} programmierte Mailbox (siehe \ref{IP-Cores}) wird über eine abstrakte Klassenimplementierung in C++ dargestellt. \todo{Name, Pfad?}
 Die Klasse stellt einige \textit{Write} und \textit{Read} Funktionen zur Verfügung, die mit verschiedenen Objekten umgehen können. Durch dieses Vorgehen ist sichergestellt, das der Aufrufer als Übergabeparameter nur bestimmte Objekte (die sauber definiert sind) übergegeben werden können, die auch verarbeitet werden können. Die Kommunikation erfolgt asynchron und ist intern gepuffert. Die Klasse dient als Abstraktionsschicht in beide Richtungen. Sowohl die Empfangsrichtung als auch die Senderichtung werden über die Klasse abgebildet, sodass der Aufrufer keinerlei interne Informationen über die Hardware und die Implementierung haben muss.
 Nachfolgend werden die beiden wesentlichen Operationen (\textit{Write} und \textit{Read}) dargestellt und beschrieben.
@@ -21,7 +19,7 @@ Der erste Teil der lesenden Kommunikation besteht aus dem \textbf{Interrupt}. Vo
 
 Der zweite Teil besteht aus einem \textbf{Hintergrundtask} der zyklisch durchlaufen wird. Innerhalb dieses Task werden die Werte eines Objekts, die ausgelesen werden sollen, über eine \textit{Read} Funktion bei Bedarf überschrieben. Bei Bedarf deswegen, weil die Werte nur überschrieben werden, wenn aktuellere Werte im Shared Memory stehen. Sind aktuelle Werte verfügbar, ist der Klasseninterne Ringpuffer, der die Addressen für die Nutzdaten enthält, nicht leer. Es wird über die Addresse aus dem Shared Memory gelesen und anschließend diese Nachricht (also die Addresse) aus dem Ringpuffer entfernt.
 
-\subsubsection{\ac{HPS} Startvorgang und Software}
+\subsection{\ac{HPS} Startvorgang und Software}
 Der folgende Abschnitt beschreibt die Bestandteile die für den Betrieb des ARM Dualcore notwendig sind und wie diese konfiguriert und kompiliert werden.\\
 
 \begin{figure}
@@ -32,16 +30,18 @@ Der folgende Abschnitt beschreibt die Bestandteile die für den Betrieb des ARM 
 
 Eine sehr gute und übersichtliche Beschreibung des Bootvorgangs der A9 Kerne ist in \cite{arm_booting} beschrieben. Der im \Projectname Projekt verwendeter Bootvorgang ist in Abbildung \ref{Software:ArmBooting} dargestellt. Die ersten beiden Schritte (BootRom, Preloader) sollen hier nicht weiter beschrieben werden da keine manuelle Anpassung daran notwendig ist. Als Referenz für den Buildvorgang des gesamten Systems diente \href{https://eewiki.net/display/linuxonarm/DE0-Nano-SoC+Kit}{https://eewiki.net/display/linuxonarm/DE0-Nano-SoC+Kit}. Eine komplette Kopie des Tutorials befindet sich auch im Projektverzeichnis unter \todo{Pfad}. Wenn Änderungen an der im Tutorial beschriebenden Vorgehensweise notwendig sind werden diese erwähnt.
 
-\paragraph{Als Bootloader} kommt der beliebte U-Boot \footnote{\href{https://www.denx.de/wiki/U-Boot}{https://www.denx.de/wiki/U-Boot}} in einer leicht angepassten Variante zum Einsatz. Wie im Tutorial beschrieben werden einige Startvariablen(unter anderem das zu ladende Linux Device Tree Binary) hinzugefügt um von der SD Karte zu booten. U-Boot lädt nach dem Start dann automatisch zunächst den
+\subsubsection{Bootloader}
+Als Bootloader kommt der beliebte U-Boot \footnote{\href{https://www.denx.de/wiki/U-Boot}{https://www.denx.de/wiki/U-Boot}} in einer leicht angepassten Variante zum Einsatz. Wie im Tutorial beschrieben werden einige Startvariablen(unter anderem das zu ladende Linux Device Tree Binary) hinzugefügt um von der SD Karte zu booten. U-Boot lädt nach dem Start dann automatisch zunächst den
 
-\paragraph{Linux Device Tree} Der Linux Device Tree ist ein Bestandteil des Linux Kernels um eine Abstraktionsschicht zwischen Hardware (Pinouts, Speicher, Interrupts) und dem Linux Kernel zu schaffen. Durch Einsatz des Device Tree kann ein gleiches Kernel Binary auf verschiedenen Hardwareversionen und sogar komplett verschiedenen Boards benutzt werden. Der Device Tree ist eine textuelle Beschreibung der Hardware die kompiliert wird und dem Kernel beim Startvorgang übergeben wird. Ein Auszug aus einem solchen Device Tree zeigt der Code \ref{Software:DeviceTree}. Die Spezifikation des Device Trees kann man unter \href{http://www.devicetree.org/specifications/}{http://www.devicetree.org/specifications/} einsehen.
+\subsubsection{Linux Device Tree} 
+Der Linux Device Tree ist ein Bestandteil des Linux Kernels um eine Abstraktionsschicht zwischen Hardware (Pinouts, Speicher, Interrupts) und dem Linux Kernel zu schaffen. Durch Einsatz des Device Tree kann ein gleiches Kernel Binary auf verschiedenen Hardwareversionen und sogar komplett verschiedenen Boards benutzt werden. Der Device Tree ist eine textuelle Beschreibung der Hardware die kompiliert wird und dem Kernel beim Startvorgang übergeben wird. Ein Auszug aus einem solchen Device Tree zeigt der Code \ref{Software:DeviceTree}. Die Spezifikation des Device Trees kann man unter \href{http://www.devicetree.org/specifications/}{http://www.devicetree.org/specifications/} einsehen.
 
 \begin{lstlisting}[caption={[Auszug aus socfpga.dtsi]Auszug aus socfpga.dtsi \cite[Version~4.7, \texttt{arch/arm/boot/dts/socfpga.dtsi}]{Linux_Kernel}}, label=Software:DeviceTree]
 cpus {
 	#address-cells = <1>;
 	#size-cells = <0>;
 	enable-method = "altr,socfpga-smp";
-	
+
 	cpu@0 {
 		compatible = "arm,cortex-a9";
 		device_type = "cpu";
@@ -93,24 +93,25 @@ Die Änderungen, die für den Device Tree im \Projectname Projekt nötig sind, s
 		\item \texttt{@} - Die Zahl nach dem @ entspricht der Physikalischen Addresse der Mailbox. Da die Adresse im weiteren Verlauf nicht verwendet wird ist der exakte Wert nicht von Bedeutung.
 		\item \texttt{compatible} - Mit diesem Attribut wird dem Interrupt ein Name gegeben. Wäre im Kernel ein generischer Hardwaretreiber für diese Mailbox vorhanden könnte dieser zur Verarbeitung genutzt werden. Wichtig für das Projekt ist der Name trotzdem, da damit das Zuordnen der Interrupt-Service-Routine zu dem Interrupt geschieht.
 		\item \texttt{interrupt-parent} - Damit wird der Interrupt Controller (in unserem Fall der ARM GIC, der in einer inkludierten Beschreibungsdatei beschrieben wird) identfiziert, der das Interrupt aufnimmt und die weitere Abarbeitung in die Wege leitet.
-		\item \texttt{interrupts} - Damit wird das Interrupt, das am GIC ausgelöst wird (Nummer 60) bekannt gemacht. Die Nummer ergibt sich aus: 
+		\item \texttt{interrupts} - Damit wird das Interrupt, das am GIC ausgelöst wird (Nummer 60) bekannt gemacht. Die Nummer ergibt sich aus:
 		\begin{itemize}
 			\item Das 60te Interrupt der \textit{Shared Peripheral Interrupt} am GIC entspricht der 92ten Interruptleitung am GIC.
 			\item Die 92ten Interruptleitung entspricht der 20ten Interruptleitung, die vom \ac{FPGA} verfügbar ist.
-		\end{itemize} 
+		\end{itemize}
 		\cite{interrupts_linux}.
 	\end{itemize}
 \end{itemize}
 Die Änderungen werden direkt in die Datei arch/arm/boot/dts/socfpga\_cyclone5\_de0\_sockit.dts geschrieben.
 
-\paragraph{Linux} wird als Betriebssystem von U-Boot geladen. Im Projekt kommt eine leicht angepasste Version der im Tutorial beschriebenen Linux Version vor. Die Änderungen sind marginal und betreffen:
+\subsubsection{Betriebssystem}
+Linux wird als Betriebssystem von U-Boot geladen. Im Projekt kommt eine leicht angepasste Version der im Tutorial beschriebenen Linux Version vor. Die Änderungen sind marginal und betreffen:
 \begin{itemize}
 	\item Das USB-Subsystem - Zum Betrieb des \ac{Lidar} ist es notwendig einige Punkte des USB Subsystem während des Linux Kompiliervorgang (\lstinline|make menuconfig|) auszuwählen und zu kompilieren. Im groben handelt es sich um die USB-OTG Unterstützung, das ACM Subsystem und noch einige kleinere Änderungen. Auch für diesen Schritt existiert eine patch Datei im Verzeichnis \todo{Pfad}.
 	\item Das \texttt{uio} Modul - Mit diesem Modul ist es möglich mit Interrupts im User-Space von Linux zu arbeiten. Dazu wird das Modul mit dem Namen, der im Device Tree angegeben wurde \lstinline|altr,mailbox-1.0| geladen. Dieses Modul erzeugt anschließend ein Gerät unter \texttt{/dev}, dass dann im User-Space genutzt werden kann. Auch diese Änderung ist in der patch Datei mit angegeben.
 \end{itemize}
-Als Distribution kommt eine minimale Version von Ubuntu zum Einsatz (Alternativ kann auch Debian verwendet werden). Diese Distribution wurde gewählt um einen kleine Footprint (im Leerlauf insgesammt nur ca. 35MB Arbeitsspeicherverbrauch) mit dem Komfort einer \textquotedblleft normalen\textquotedblright Linux Distribution inklusiver einem Softwarerepository zur einfachen Installation von Software zu verbinden. Sobald Linux gestartet ist kann die (hier) entscheidene Applikation
+Als Distribution kommt eine minimale Version von Ubuntu zum Einsatz (Alternativ kann auch Debian verwendet werden). Diese Distribution wurde gewählt um einen kleine Footprint (im Leerlauf insgesammt nur ca. 35MB Arbeitsspeicherverbrauch) mit dem Komfort einer \textquotedblleft normalen\textquotedblright Linux Distribution inklusiver einem Softwarerepository zur einfachen Installation von Software zu verbinden. Sobald Linux gestartet ist kann die (hier) entscheidene Applikation gestartet werden.
 
-\paragraph{Comm-Gateway} gestartet werden.
+\subsubsection{Kommunikationsgateway}
 Das Kommunikationsgateway ist die Schnittstelle um zwischen einem Host-PC und dem NIOS2 kommunizieren zu können. Die Sourcedateien befinden sich unter \texttt{Software/Software\_ARM/Gateway}. Dieses Programm wird später auch ausgeführt um Daten austauschen zu können. Neben der Initialisierung der Hardware, dem Öffnen eines Serverports, um sich mit dem Client zu verbinden und Daten auszutauschen, besteht dieses Programm aus insgesamt drei Threads:
 
 \begin{figure}
@@ -132,7 +133,7 @@ Das Kommunikationsgateway ist die Schnittstelle um zwischen einem Host-PC und de
 \end{figure}
 
 
-\subsubsection{Empfohlener Buildvorgang und Abweichungen zum Tutorial}
+\subsection{Empfohlener Buildvorgang und Abweichungen zum Tutorial}
 Der schnellste und unkomplizierteste Weg zu einem funktionierenden Linux Image auf SD-Karte ist folgender
 \begin{enumerate}
 	\item Das Tutorial unter \href{https://eewiki.net/display/linuxonarm/DE0-Nano-SoC+Kit}{https://eewiki.net/display/linuxonarm/DE0-Nano-SoC+Kit} mit einer beliebigen (Mindestgröße 4GB) SD Karte durchführen. Als Kernelversion sollte unbedingt die Version 4.7 gewählt werden, da sich die im Projektrepository befindlichen Dateien darauf beziehen. Nach diesem Schritt kann man den Bootvorgang von U-Boot und Linux testen und versuchen sich im Ubuntu einzuloggen. Anschließend werden die Änderungen durchgeführt.
@@ -149,14 +150,14 @@ patch socfpga-kernel-dev/KERNEL/.config Garfield_Kernel.patch)
 	\item Den Linux Kernel und die Device Trees wie im Tutorial (die Punkte \texttt{Copy Kernel Image} und \texttt{Copy Kernel Device Tree Binaries}) auf die SD Karte kopieren.
 \end{enumerate}
 
-Anschließend kann man die SD-Karte wieder entnehmen und das \ac{FPGA} wieder einschalten. Das System sollte wie gewohnt starten. Um zu überprüfen, ob die Operationen funktioniert haben sollten folgenden Befehle die gleiche Ausgabe wie in Listing \todo{Verweis} haben. 
+Anschließend kann man die SD-Karte wieder entnehmen und das \ac{FPGA} wieder einschalten. Das System sollte wie gewohnt starten. Um zu überprüfen, ob die Operationen funktioniert haben sollten folgenden Befehle die gleiche Ausgabe wie in Listing \todo{Verweis} haben.
 \todo{Listing einfügen, module uio und enable bridge enable}
 
-\subsubsection{\ac{FPGA} Programmierung}
+\subsection{\ac{FPGA} Programmierung}
 Die Programmierung des \ac{FPGA} Subsystems erfolgt unmittelbar während des Systemstarts und ist aktuell vom Softwarestart abgekoppelt. Das Image für das \ac{FPGA} wird dabei aus dem auf dem Board integrierten Flash-Speicher geladen. Die möglichen alternativen Konfigurationen sind übersichtlich im User-Manual zu dem \texttt{DE0-Nano} Board aufgelistet. Das Manual dazu findet man auf der System CD, die unter \href{http://www.terasic.com/downloads/cd-rom/de0-nano-soc/}{Link} verfügbar ist.\\
 
 Auf dem Flash befindet sich sowohl das Image für das \ac{FPGA} als auch das executable für den nach dem flashen im \ac{FPGA} verfügbaren NIOS2. \todo{Kopie?}
-\subsubsection{Applikationsstart}
+\subsection{Applikationsstart}
 Für die Kommunikation zwischen Host PC und NIOS2 ist das starten des Kommunikationsgateway erforderlich. Dies befindet sich unter \texttt{HPS/bin/Comm\_Gateway} und ist das Kompilat des oben beschriebenen \todo{Name}. Damit das Programm Ordnungsgemäß funktionieren kann müssen noch einige Schritte durchgeführt werden, die hier kurz erklärt werden.
 
 \lstset{language=bash}
@@ -164,7 +165,7 @@ Für die Kommunikation zwischen Host PC und NIOS2 ist das starten des Kommunikat
 	sudo -s # superuserrechte erlangen, Passwort = temppwd
 	rmmod uio_pdrv_genirq
 	rmmod uio
-	modprobe 
+	modprobe
 	ls /dev/
 	bin/Comm_Gateway
 \end{lstlisting}
@@ -176,6 +177,5 @@ Der Codeausschnit \ref{StartApp} zeigt alle durchzuführenden Schritte, die notw
 	\item Anschließendes Verbinden der Applikation auf dem Host-PC mit dem Server. Daten werden ab diesem Zeitpunkt ausgetauscht.
 \end{enumerate}
 
-\subsubsection{Beenden der Applikation}
+\subsection{Beenden der Applikation}
 Aktuell ist keinerlei Fehlerbehandlung für das Beenden der Client-Server Verbindung (Host-PC $\leftrightarrow$ \ac{HPS}) vorhanden. Beendet der Client die Kommunikation hängt sich das gesamte System auf (Grund: Interrupts werden nicht mehr angenommen und der interne Bus wird durch die Mailbox blockiert!). Es ist also unbedingt notwendig die Applikation auf dem laufenden Linux mittels eines \lstinline|SIGINT| (STRG+C) zu beenden. Alternativ kann man dem Programm auch auf der Kommandozeile oder durch z.B. htop das Signal schicken. Mit dem Signal sendet Linux einen speziellen Befehl an den NIOS2 wodurch dieser die Kommunikation auch beendet. Werden wieder Befehle geschickt, wird die Kommunikation von beiden Seiten wieder aufgenommen.
- 

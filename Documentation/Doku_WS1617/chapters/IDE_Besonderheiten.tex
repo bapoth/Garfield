@@ -1,5 +1,5 @@
-\chapter{Eclipse NIOS2}
-\section{C++ - Beschränkungen, besondere Einstellungen}
+\subsection{Eclipse NIOS2}
+\subsubsection{C++ - Beschränkungen, besondere Einstellungen}
 Das in der 16.1 verwendeten Quartus mit dem mitgeliefertem GCC Compiler hat einige Einschränkungen bezüglich der Verwendung von einigen C++ Features. Alle in den C++ Standardbibliotheken vorhandenen STL Container, z. B. std::vector, std::stack, std::map usw., sind nicht benutzbar. Außerdem ist es nicht möglich die std::string Klasse zu benutzen. Die Benutzung solcher Features führt dazu, dass der Speicher nicht mehr ausreicht. Für die Verwendung dieser Klassen sind auf dem NIOS2 mit der aktuellen Toolchain ca 700KB RAM nötig, allerdings sind nur 128KB RAM vorhanden. Dies wurde vom ALTERA Support Team direkt bestätigt mit der Angabe, dass die Benutzung von C++ im Moment nicht effizient möglich ist und externer Speicher für die Verwendung von C++ angeraten ist. Alle anderen Features hingegen sind, soweit bekannt, ohne Einschränkungen benutzbar.
 
 Für die Unterstützung von c++11 ist eine kleine manuelle Anpassung des Makefiles nötig, welches die Toolchain mit Erstellung eines BSP automatisch generiert. In der Sektion
@@ -12,6 +12,6 @@ ist die Ergänzung folgenden Flags nötig: -std=c++11; da diese Einstellung übe
 \end{itemize}
 Diese Einstellung ist auch unbedingt nötig, da einige c++11 Features verwendet wurden und demzufolge ohne diesem Flag die Applikation nicht erfolgreich kompiliert.
 
-\section{Die externen/internen ips}
+\subsubsection{Die externen/internen ips}
 Qsys bemühen, die mitzunehmen, sonst fehlt da was; siehe git doku?
 
