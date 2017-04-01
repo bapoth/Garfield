@@ -1,0 +1,26 @@
+Nachfolgend wird die Umsetzung der Headquarter-Software \glqq Garfield Control\grqq{} beschrieben. Diese ermöglicht sowohl die Steuerung des Fahrzeuges, als auch die Visualisierung der vom Fahrzeug bzw. den angebrachten Sensoren erfassten Daten.
+
+\subsubsection{Funktionalitäten}
+
+Zur Herstellung der Verbindung zum Comm Gateway lassen sich die verwendete IP-Adresse und der Port im Einstellungsdialog festlegen. Auch die Verbindung zu einem Playstation 3 Controller lässt sich dort definieren. Durch Verlassen des Einstellungsdialoges mit dem OK-Button werden alle Einstellungen gespeichert und anschließend versucht eine Verbindung zum Controller herzustellen. Hat dies nicht geklappt, wird eine entsprechende Nachricht in der Statusleiste angezeigt. Durch Aktivieren der Debugausgaben lässt sich außerdem die Funktionalität der Steuerung mithilfe des Controllers testen. Im Anschluss lässt sich die Socketverbindung zum Comm Gateway durch Klicken des Connect-Buttons starten.
+
+Ist eine Verbindung zum Comm Gateway hergestellt, lässt sich das Fahrzeug steuern und alle empfangenen Daten visualisieren. Dies wird nachfolgend kurz erläutert.
+
+\paragraph{Die Steuerung} des Fahrzeuges ist am komfortablesten durch Benutzung des laboreignen Playstation 3 Controller möglich. Zudem lässt es sich durch Benutzung der Tastatur oder der direkten Bedienung der GUI Elemente mit der Maus bedienen. Dabei sind folgende Befehle möglich:
+
+\begin{itemize}
+	\item Die Geschwindigkeit in Fahrtrichtung (vorwärts oder rückwärts) lässt sich am Controller durch Betätigung von R2 (vorwärts) oder L2 (rückwärts) setzen. Dabei werden die vom Controller übermittelten Geschwindigkeitswerte in einen Wertebereich von 0 - 255 übersetzt und anschließend zusammen mit der Richtungsangabe übertragen. Durch Drücken der Taste W (vorwärts) oder S (rückwärts) auf der Tastatur oder einen Klick auf den entsprechenden Button der Anwendung lässt sich die maximale Geschwindigkeit ebenfalls setzen.
+	
+	\item Die Lenkung des Fahrzeuges lässt sich durch Bedienung des linken Sticks auf dem Controller steuern. Dabei werden Werte zwischen -90° und 90° versendet. Durch Verwendung der Tasten D oder A oder Klicken auf den entsprechenden Button lässt sich außerdem der maximale Lenkeinschlag setzen.
+	
+	\item Die am Fahrzeug angebrachte Beleuchtung lässt sich durch Betätigung des Triangle-Buttons, Klicken auf L oder einen Klick auf die entsprechende Checkbox in der Anwendung aktivieren oder deaktivieren.
+	
+\end{itemize}
+
+\paragraph{Die Visualisierung} der vom Fahrzeug übertragenen Daten umfasst neben der durch den rotary encoder gemessenen Geschwindigkeit, alle Daten der MPU6050, wie die Temperatur sowie Beschleunigung und Neigung des Fahrzeuges an allen 3 Achsen. Diese empfangenen Werte werden in der Applikation entsprechend dargestellt. Bis auf die Beschleunigung, welche durch einen sich der jeweiligen Achse anpassenden Punkt in einem Koordinatensystem dargestellt wird, werden alle Werte in Textausgabefeldern angezeigt.
+
+\subsubsection{Umsetzung}
+Die Anwendung Garfield Control wurde mithilfe von Qt für Linux entwickelt. Alle für die Socketverbindung gemeinsam genutzten Funktionen sind unter \texttt{Software/common/ARM\_HQ} bzw. \texttt{Software/common/ARM\_NIOS\_HQ} abgelegt. Die eigenständigen Softwarebestandteile sind unter \texttt{Software/Software\_HQ/Garfield\_Control} vorhanden. Zur einfachen Benutzung der Anwendung wurden alle notwendigen Bibliotheken und Plugins mithilfe von \href{https://github.com/probonopd/linuxdeployqt}{linuxdeployqt} zusammengefügt und als zip-Datei im Repository abgelegt. Somit lässt sich Garfield Control auch ohne eine Installation von Qt Paketen benutzen.\\
+Die Verbindung zu einem Playstation 3 Controller wurde mithilfe einer API, welcher der Device Name übergeben wird, umgesetzt (\href{https://github.com/drewnoakes/joystick}{Github Repository}). Ist ein Controller mit der Anwendung verbunden, so wird dieser alle 20ms nach aufgetretenden Events abgefragt.\\
+Ebenfalls alle 20ms wird die Aktualisierung der Visualisierung der Beschleunigungswerte durchgeführt. Diese zyklischen Aufgaben werden unter zuhilfename von QTimern gestartet. Dazu lässt sich der Ablauf der Timer mit dem Aufruf der entsprechenden Methode verknüpfen.\\
+Wurde eine Socketverbindung mit dem Comm Gateway hergestellt, so werden zwei seperate Threads gestartet, welche alle 20ms versuchen Informationsdaten zu empfangen, bzw. Steuerungsbefehle zu senden. Dazu wurden die gemeinsam verwendeten Klassen \texttt{Alf\_Drive\_Info} und \texttt{Alf\_Drive\_Command} benutzt, sodass sichergestellt ist, dass alle beteiligten Kommunikationspartner die gleiche Datenstruktur benutzen können.
