@@ -112,17 +112,25 @@ Als Distribution kommt eine minimale Version von Ubuntu zum Einsatz (Alternativ 
 
 \paragraph{Comm-Gateway} gestartet werden.
 Das Kommunikationsgateway ist die Schnittstelle um zwischen einem Host-PC und dem NIOS2 kommunizieren zu können. Die Sourcedateien befinden sich unter \texttt{Software/Software\_ARM/Gateway}. Dieses Programm wird später auch ausgeführt um Daten austauschen zu können. Neben der Initialisierung der Hardware, dem Öffnen eines Serverports, um sich mit dem Client zu verbinden und Daten auszutauschen, besteht dieses Programm aus insgesamt drei Threads:
-\begin{itemize}
-	\item \lstinline|readData| - Dieser Thread behandelt den Nachrichtenaustausch in Richtung Host PC $\rightarrow$ NIOS2. Der Thread wartet auf eingehenden Nachrichten (im Moment nur Fahrkommandos), parst und castet diese in das entsprechende Objekt und schreibt das Objekt dann über die Klasse \todo{KLass} in den Shared Memory mit dem NIOS2. Dieser Kommunikationsweg ist auch in Abbildung \ref{SW:Komm:HOSTNIOS} dargestellt.
-	\item \lstinline|writeData| - 
-	\item \lstinline|HardwareReadHandler| - 
-\end{itemize}
 
 \begin{figure}
 	\includegraphics[width=\textwidth]{Abb/Komm_Host_NIOS.png}
 	\caption{Kommunikationsablauf zwischen Host PC und NIOS}
 	\label{SW:Komm:HOSTNIOS}
 \end{figure}
+
+\begin{itemize}
+	\item \lstinline|readData| - Dieser Thread behandelt den Nachrichtenaustausch in Richtung Host PC $\rightarrow$ NIOS2. Der Thread wartet auf eingehenden Nachrichten (im Moment nur Fahrkommandos), parst und castet diese in das entsprechende Objekt und schreibt das Objekt dann über die Klasse \todo{KLass} in den Shared Memory mit dem NIOS2. Dieser Kommunikationsweg ist auch in Abbildung \ref{SW:Komm:HOSTNIOS} dargestellt.
+	\item \lstinline|HardwareReadHandler| - Dieser Thread ist alleine für die Abarbeitung der Interrupts im User-Space zuständig. Die Abarbeitung des Interrupts erfolgt nur durch Speicherung der Meta Informationen einer Nachricht (Nachrichten-ID und Pointer im Shared Memory). Wurde eine gültige Nachricht verarbeitet wird der folgende Thread aktiviert.
+	\item \lstinline|writeData| - Dieser Task wird durch den \lstinline|HardwareReadHandler| Thread bei einer gültigen Nachricht in einem Buffer aufgeweckt. Anschließend sendet der Thread die Nachricht über die Socketverbindung an den Client und blockiert abermals bis eine Nachricht eingeht. Abbildung verdeutlicht den Nachrichtaustausch mit der Kommunikationsrichtung NIOS2 $\rightarrow$ Host PC.
+\end{itemize}
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{Abb/Komm_NIOS_Host.png}
+	\caption{Kommunikationsablauf zwischen NIOS und Host PC}
+	\label{SW:Komm:NIOSHOST}
+\end{figure}
+
 
 \subsubsection{Empfohlener Buildvorgang und Abweichungen zum Tutorial}
 Der schnellste und unkomplizierteste Weg zu einem funktionierenden Linux Image auf SD-Karte ist folgender
