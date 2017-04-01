@@ -1,11 +1,11 @@
 \subsection{NIOS2 - Treiber / Hardware Abstraction}
 Hier wird kurz der Aufbau der HAL bzw. der Aufbau der jetzt zur Verfügung stehenden Treiber des NIOS2 Cores erläutert. Genauere Dokumentation ist in der Doxygen Dokumentation zu finden, die im Anhang mitgeliefert wird. 
 \subsubsection{Display}
-Das Display kann sogar Zahlen anzeigen
+Das Display welches in diesem Projekt verwendet wurde, besitzt neben dem graphischen Display einen Mikro SD Karten Slot und einen Touchscreen, welche über SPI angesprochen werden. Letztere werden zum aktuellen Zeitpunkt vom Display Treiber nicht unterstützt. Der Dispaly Treiber basiert auf der \href{https://github.com/adafruit/Adafruit-GFX-Library}{Adafruit GFX Library} und läuft zum aktuellen Zeitpunkt mit der maximalen Geschwindigkeit von 24 MHz. Bevor das Display benutzt werden kann, muss es initialisiert werden. Im Anschluss lässt sich eine Zeile auf das Display schreiben. Der Treiber fügt an den Beginn der Zeile die aktuelle Zeilennummer hinzu. Ist das Display bereits durch vorherige Zeilen gefüllt, so wird automatisch von oben neu begonnen. Der Methode zum Schreiben einer Zeile muss somit lediglich die Farbe und Größe übergeben werden.
 \subsubsection{Motor}
 Die Klasse Drive ist für die Ansteuerung des Motors zuständig. Dabei ist es möglich die maximale Geschwindigkeit im Bereich zwischen 0\% und 100\% zu begrenzen. Eine weitere Funktion ermöglicht das Setzen der Richtung und der Geschwindigkeit, das dann in ein PWM Signal für den Motor umgerechnet wird. 
 \subsubsection{Lenkung}
-Die Lenkung wird mittels der Klasse Steering ermöglicht. Eine Init() Funktion setzt denn maximalen Lenkwinkel, der für die Lenkung benutzt wird. Eine weitere Funktion Set() setzt dann den tatsächlichen Winkel.
+Die Lenkung des Fahrzeuges wird mithilfe der Klasse Steering ermöglicht. Der verwendete Servo Blue Bird BMS-630MG besitzt einen maximalen Winkel von $\pm$60°, welcher sich durch die Init() Funktion begrenzen lässt. Der Servo arbeitet mit einer PWM Frequenz von 125 Hz und erreicht seine maximale Winkel bei einer Periodendauer von 900 bzw. 2100 $\mu$s (Siehe Datenblatt im Repository für weitere Details). Die Funktion Set() setzt dann den tatsächlichen Winkel.
 \subsubsection{MPU6050}
 Das mpu6050 Modul ist über den IIC Bus angeschlossen und kann die 3 Beschleunigungsachsen, 3 Drehachsen und die Temperatur auslesen. Das Modul muss vor der Verwendung einmalig initalisiert werden. Dabei ist zu beachten, dass der AD0 Pin die IIC Adresse des mpu6050 Bausteines hardwaremäßig verändert. 
 \subsubsection{Ultraschall}

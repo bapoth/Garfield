@@ -1,3 +1,12 @@
+\section{Schaltplan}
+
+\begin{figure}
+	\includegraphics[angle=90, height=\textheight]{Abb/Garfield_Circuit.pdf}
+	\caption{Schaltplan mit FPGA und verwendeter Peripherie}
+	\label{Garfield_Circuit}
+\end{figure}
+Abbildung \ref{Garfield_Circuit} zeigt den erstellten Schaltplan des HSP. Dieser soll nachfolgend kurz beschrieben werden.\\
+Alle ein- und ausgeheneden Signale mit Ausnahme der SPI Pins zur Ansteuerung des Displays (vgl. Abb. \ref{Garfield_Circuit} JP4) werden über Levelshifter geführt. Dies ermöglicht es zum einen alle Signale an die jeweils notwendigen Pegel anzupassen und zum anderen den maximalen vom FPGA bereitgestellten Strom nicht zu überschreiten. Dadurch ergeben sich die zwei Logikpegel 3,3V und 5V im System. Über den IIC Port werden alle Ultraschallsensoren und die MPU6050 angesprochen. Es wurden die internen pull-up Widerstände des IIC Ports aktiviert um dessen Funktionsfähigkeit sicherzustellen. Über den PWM Generator wird die Lenkung und der Motortreiber für die Geradeausfahrt angesteuert. Zur Ansteuerung der Beleuchtung und dem Setzen der Richtung des Motors werden einfache GPIO Pins benutzt. Der Schaltplan enthält zudem die Ansteuerung des Rotary Encoders zum Messen der Drehzahl des Motors. Da dieser jedoch unerwarteterweise nicht funktionsfähig war, sind die betrefenden Stellen im Schaltplan entsprechend gekennzeichnet.
 \section{\ac{FPGA} Design}
 Die Beschreibung des \ac{FPGA} wird, soweit möglich, mit dem Systemintegrationstool QSYS, das Teil der Quartus Toolchain ist, durchgeführt. Das Mapping zwischen QSYS-System und Pins wird klassisch in VHDL beschrieben. Das Top-Level-File des Systems ist \\ \texttt{FPGA\_Design/Garfield\_Design/Garfield.vhdl}. Dort wird das von QSYS erzeugt System und einige kleine \ac{IP}-Cores zusammengeführt und auf definierte Aus-/Eingänge geführt. Diese Ein-/Ausgänge werden dann über den \textit{Pin-Planner} auf die physikalischen Pins geführt.\\
 Im Projektverzeichnis befinden sich alle Dateien, die für den \ac{FPGA} Teil relevant sind, unter \texttt{FPGA\_Design}. Die Struktur ab diesem Ordner ist wie folgt aufgebaut:
