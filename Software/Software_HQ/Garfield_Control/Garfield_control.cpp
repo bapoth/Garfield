@@ -21,7 +21,7 @@
 #define ACC_MAX_VAL 2.0
 #define ACC_MIN_VAL -2.0
 
-#define POLLING_GAMEPAD_INTERVAL_MS 1
+#define POLLING_GAMEPAD_INTERVAL_MS 20
 
 #define ACC_MAP_UPDATE_MS 20
 
@@ -81,9 +81,9 @@ Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
 
     GridPointPos = ui->GridPoint_label->pos();
 
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update_acceleration()));
-    timer->start(1/1000*ACC_MAP_UPDATE_MS);
+    UpdateAccTimer = new QTimer(this);
+    connect(UpdateAccTimer, SIGNAL(timeout()), this, SLOT(update_acceleration()));
+    UpdateAccTimer->start(ACC_MAP_UPDATE_MS);
 
     _acceleration = 0;
     _lateral_acceleration = 0;
@@ -91,7 +91,12 @@ Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
 
 Garfield_control::~Garfield_control()
 {
+    GamepadTimer->stop();
+    UpdateAccTimer->stop();
+    open_close_connection();
     delete ui;
+
+    qDebug()<<"Quit Program";
 }
 
 bool Garfield_control::connect_gamepad() {
@@ -103,7 +108,7 @@ bool Garfield_control::connect_gamepad() {
     if(_joystick->isFound()) {
         GamepadTimer = new QTimer(this);
         connect(GamepadTimer, SIGNAL(timeout()), this, SLOT(poll_gamepad()));
-        GamepadTimer->start(1/1000*POLLING_GAMEPAD_INTERVAL_MS);
+        GamepadTimer->start(POLLING_GAMEPAD_INTERVAL_MS);
 
         return true;
     }

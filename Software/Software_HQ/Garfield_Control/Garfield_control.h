@@ -174,6 +174,9 @@ class Garfield_control : public QMainWindow {
         /// ClientComm for communicating with garfield over the socket
         Alf_Communication<Client> ClientComm;
 
+        /// Cyclic timer for updating the acceleration map
+        QTimer *UpdateAccTimer;
+
         /// object of class settings for the settings window
         Settings *settings;
 
