@@ -163,21 +163,23 @@ Anschließend kann man die SD-Karte wieder entnehmen und das \ac{FPGA} wieder ei
 	\caption{Eintrag in /dev/}
 	\label{SW:arm:devices}
 	\end{subfigure}
+	\caption{Einträge zur Überprüfung der Funktionsweise der Mailbox}
 \end{figure}
+
 
 \subsection{\ac{FPGA} Programmierung}
 Die Programmierung des \ac{FPGA} Subsystems erfolgt unmittelbar während des Systemstarts und ist aktuell vom Softwarestart abgekoppelt. Das Image für das \ac{FPGA} wird dabei aus dem auf dem Board integrierten Flash-Speicher geladen. Die möglichen alternativen Konfigurationen sind übersichtlich im User-Manual zu dem \texttt{DE0-Nano} Board aufgelistet. Das Manual dazu findet man auf der System CD, die unter \href{http://www.terasic.com/downloads/cd-rom/de0-nano-soc/}{Link} verfügbar ist.\\
 
-Auf dem Flash befindet sich sowohl das Image für das \ac{FPGA} als auch das executable für den nach dem flashen im \ac{FPGA} verfügbaren NIOS2. \todo{Kopie?}
+Auf dem Flash befindet sich sowohl das Image für das \ac{FPGA} als auch das executable für den nach dem flashen im \ac{FPGA} verfügbaren NIOS2.
 \subsection{Applikationsstart}
-Für die Kommunikation zwischen Host PC und NIOS2 ist das starten des Kommunikationsgateway erforderlich. Dies befindet sich unter \texttt{HPS/bin/Comm\_Gateway} und ist das Kompilat des oben beschriebenen \todo{Name}. Damit das Programm Ordnungsgemäß funktionieren kann müssen noch einige Schritte durchgeführt werden, die hier kurz erklärt werden.
+Für die Kommunikation zwischen Host PC und NIOS2 ist das starten des Kommunikationsgateway erforderlich. Dies befindet sich unter \texttt{HPS/bin/Comm\_Gateway} und ist das Kompilat des oben beschriebenen HSP\_ARM\_Gateway. Damit das Programm Ordnungsgemäß funktionieren kann müssen noch einige Schritte durchgeführt werden, die hier kurz erklärt werden.
 
 \lstset{language=bash}
 \begin{lstlisting}[caption=Listing, label={StartApp}]
 	sudo -s # superuserrechte erlangen, Passwort = temppwd
 	rmmod uio_pdrv_genirq
 	rmmod uio
-	modprobe
+	modprobe uio_pdrv_genirq of_id="altr,mailbox-1.0"
 	ls /dev/
 	bin/Comm_Gateway
 \end{lstlisting}

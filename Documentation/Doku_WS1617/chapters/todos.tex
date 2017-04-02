@@ -1,6 +1,6 @@
-\chapter{Offene Probleme und zukünftige Arbeitspakete}
+\chapter{Probleme und zukünftige Arbeitspakete}
 
-\section{Offene Probleme}
+\section{Aktuelle Probleme}
 Zum Zeitpunkt der Ab-/Übergabe des Garfield Projekts bestehen noch einige kleine und umfangreichere Probleme. Manche dieser Probleme sollten mit einer hohen Priorität behandelt werden, andere Probleme stören nur die Bedienbarkeit und haben deswegen eine niedrigere Priorität.
 
 \subsection{Spannungs- und Stromversorgung}
@@ -11,7 +11,7 @@ Dies ist ein Problem, dass mit höherer Prioriät, bevorzugt am Anfang des näch
 	\item Eine nicht ausreichende Spannungsversorgung durch kleine RC-Akkus mit einer Sollspannung von $7,2$ Volt.
 \end{itemize}
 
-Für die Spannungseinbrüche konnte bis jetzt wieder eine sinnvolle Erklärung noch ein Lösungsvorschlag erreicht werden. Die Einbrüche treten sowohl an der Versorgung durch ein Labornetzteil auf(wobei nicht jedes Labornetzteil die gleichen Symptome zeigt) als auch bei Speisung durch einen großen RC Akku mit 12V Sollspannung auf. An einem Labornetzteil treten die Einbrüche zwar wesentlich weniger oft auf, aber auch dort treten sie nicht-deterministisch auf. Die Fehler treten auch wesentlich öfter auf als dies im Vorgängerprojekt mit einem Rasperry Pi der Fall war. Die aktuelle Lösung braucht zwar etwas mehr Leistung (zwischen $0.5$ und $1$ Watt), aber sowohl der RC Akku als auch ein Labornetzteil können normalerweise mit solchen Problemen umgehen\\
+Für die Spannungseinbrüche konnte bis jetzt wieder eine sinnvolle Erklärung noch ein Lösungsvorschlag erreicht werden. Die Einbrüche treten sowohl an der Versorgung durch ein Labornetzteil auf (wobei nicht jedes Labornetzteil die gleichen Symptome zeigt) als auch bei Speisung durch einen großen RC Akku mit 12V Sollspannung auf. An einem Labornetzteil treten die Einbrüche zwar wesentlich weniger oft auf, aber auch dort treten sie nicht-deterministisch auf. Die Fehler treten auch wesentlich öfter auf als dies im Vorgängerprojekt mit einem Rasperry Pi der Fall war. Die aktuelle Lösung braucht zwar etwas mehr Leistung (zwischen $0.5$ und $1$ Watt), aber sowohl der RC Akku als auch ein Labornetzteil können normalerweise mit solchen Problemen umgehen\\
 
 Das Problem mit den kleinen RC Akkus (für die sich eine Akkuhalterung auf dem Auto befindet) kann sich ebenfalls nicht erklärt werden. Die $7,2V$ werden nur zur Versorung des Motors benötigt, ansonsten sind nur 5V und $3.3V$ notwendig. Diese beiden Spannungen werden aber über Konstantspannungskonverter erzeugt, die beide relativ unempfindlich gegen höhere, auch schwankende Spannungen sind.\\
 
@@ -30,4 +30,10 @@ Eine mögliche Lösung wäre die Fehlersignale und das Resetsignal mit dem \ac{F
 In der Nachrichtenübertragung zwischen Host-PC und NIOS2 (mit dem Nachrichtenweg wie in Abbildung \todo{irgendwie Nachrichtenweg noch herzaubern?}) treten sporadische Fehler auf. Diese äußern sich in Nachrichtenpaketen (einzelne Werte, i.d.R. sind nicht alle Werte falsch), die den jeweiligen Maximalwert annehmen(z.B. \lstinline|uint8\_t x = 255| anstatt \lstinline|uint8\_t x = 0|). Für diesen Fehlerfall konnten noch keine weiteren Beobachtungen gemacht werden, insbesondere nicht woher die falschen Nachrichten kommen (Entweder vom Host PC als Initiator der Nachricht oder vom Kommunikationsgateway das für das kopieren von Nachrichten in den Speicher verantwortlich ist). Die falschen Werte treten in sehr unregelmäßigen Abständen auf, es ist auch möglich das über mehrere Sitzungen hinweg kein einziger solcher Fehler auftritt. An anderen Tagen tritt dieser Fehler wiederrum regelmäßig im 10-Sekundentakt auf.
 
 \section{Mögliche Arbeitspakete}
-Die nächsten Schritte
+Nachfolgend sollen alle denkbaren Arbeitspakete aufgelistet werden, welche durch eine nachfolgende Gruppe behandelt werden können.
+\begin{itemize}
+	\item Die Behebung aller oben beschriebenen Probleme, bildet ein Arbeitspaket für nachfolgende Gruppen und verhilft dem System zu einem noch reibungsloseren Arbeiten.
+	\item Durch die leistungsstärkere Hardware wird es nun möglich, die Berechnung eines SLAM Algorithmus auf dem Fahrzeug durchzuführen, ohne an die Grenzen der Hardware zu stoßen. Damit wäre ein weiterer wichtiger Schritt zur Durchführung einer reelen autonomen Fahrt gemacht.
+	\item Die weitere Optimierung des Systems bildet ein weiteres Arbeitspaket. Dabei ist eine Optimierung im Bereich der Kommunikation denkbar. Diese lässt sich beispielsweise komplett auf Basis von Interrupts durchführen, wodurch sich weitere Performancevorteile ergeben. Auch die Kommunikation über die Mailbox zwischen ARM und NIOS ließe sich weiter optimieren oder mit weiteren Funktionalitäten erweitern.
+	\item Im Bereich des zukünftigen Einsatzgebietes - der autonomen Fahrt, lässt sich das System mit weiteren Features ausstatten, denkbar ist hier beispielsweise eine Kamera zur Wegerkennung, oder weitere Sensoren.
+\end{itemize}
