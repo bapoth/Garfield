@@ -1,4 +1,4 @@
-//#include "sys/alt_stdio.h"
+#include "altera_avalon_pio_regs.h"
 #include "sys/alt_irq.h"
 #include "system.h"
 #include "FreeRTOS.h"
@@ -19,6 +19,8 @@ int main()
 
 	//lcd.writeLine("Start Application", ILI9341_DARKGREEN, 2);
 
+
+	IOWR_ALTERA_AVALON_PIO_DATA(ONBOARD_LED_BASE, 0x0F);
 	/* init section */
 	alt_irq_register(MAILBOX_ARM2NIOS_0_IRQ, 0, Mailbox_isr);
 	I2C_init(I2C_OPENCORES_0_BASE, ALT_CPU_CPU_FREQ, 100000);

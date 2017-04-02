@@ -70,6 +70,7 @@
 /* Standard includes. */
 #include <stdlib.h>
 #include <string.h>
+#include <altera_avalon_pio_regs.h>
 
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
 all the API functions to use the MPU wrappers.  That should only be done when
@@ -1906,6 +1907,7 @@ BaseType_t xReturn;
 
 		/* Setting up the timer tick is hardware specific and thus in the
 		portable interface. */
+		IOWR_ALTERA_AVALON_PIO_DATA(ONBOARD_LED_BASE, 0xF0);
 		if( xPortStartScheduler() != pdFALSE )
 		{
 			/* Should not reach here as if the scheduler is running the
