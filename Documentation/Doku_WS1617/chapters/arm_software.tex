@@ -101,7 +101,7 @@ Die Änderungen, die für den Device Tree im \Projectname Projekt nötig sind, s
 		\cite{interrupts_linux}.
 	\end{itemize}
 \end{itemize}
-Die Änderungen werden direkt in die Datei arch/arm/boot/dts/socfpga\_cyclone5\_de0\_sockit.dts geschrieben.
+Die Änderungen werden direkt in die Datei \texttt{LINUX\_V4.7/arch/arm/boot/dts\\/socfpga\_cyclone5\_de0\_sockit.dts} geschrieben.
 
 \subsubsection{Betriebssystem}
 Linux wird als Betriebssystem von U-Boot geladen. Im Projekt kommt eine leicht angepasste Version der im Tutorial beschriebenen Linux Version vor. Die Änderungen sind marginal und betreffen:
@@ -112,7 +112,7 @@ Linux wird als Betriebssystem von U-Boot geladen. Im Projekt kommt eine leicht a
 Als Distribution kommt eine minimale Version von Ubuntu zum Einsatz (Alternativ kann auch Debian verwendet werden). Diese Distribution wurde gewählt um einen kleine Footprint (im Leerlauf insgesammt nur ca. 35MB Arbeitsspeicherverbrauch) mit dem Komfort einer \textquotedblleft normalen\textquotedblright Linux Distribution inklusiver einem Softwarerepository zur einfachen Installation von Software zu verbinden. Sobald Linux gestartet ist kann die (hier) entscheidene Applikation gestartet werden.
 
 \subsubsection{Kommunikationsgateway}
-Das Kommunikationsgateway ist die Schnittstelle um zwischen einem Host-PC und dem NIOS2 kommunizieren zu können. Die Sourcedateien befinden sich unter \texttt{Software/Software\_ARM/Gateway}. Dieses Programm wird später auch ausgeführt um Daten austauschen zu können. Neben der Initialisierung der Hardware, dem Öffnen eines Serverports, um sich mit dem Client zu verbinden und Daten auszutauschen, besteht dieses Programm aus insgesamt drei Threads:
+Das Kommunikationsgateway ist die Schnittstelle um zwischen einem Host-PC und dem NIOS2 kommunizieren zu können. Die Sourcedateien befinden sich unter \texttt{Software\\/Software\_ARM/Gateway}. Dieses Programm wird später auch ausgeführt um Daten austauschen zu können. Neben der Initialisierung der Hardware, dem Öffnen eines Serverports, um sich mit dem Client zu verbinden und Daten auszutauschen, besteht dieses Programm aus insgesamt drei Threads:
 
 \begin{figure}
 	\includegraphics[width=\textwidth]{Abb/Komm_Host_NIOS.png}
@@ -123,7 +123,7 @@ Das Kommunikationsgateway ist die Schnittstelle um zwischen einem Host-PC und de
 \begin{itemize}
 	\item \lstinline|readData| - Dieser Thread behandelt den Nachrichtenaustausch in Richtung Host PC $\rightarrow$ NIOS2. Der Thread wartet auf eingehenden Nachrichten (im Moment nur Fahrkommandos), parst und castet diese in das entsprechende Objekt und schreibt das Objekt dann über die Klasse \todo{KLass} in den Shared Memory mit dem NIOS2. Dieser Kommunikationsweg ist auch in Abbildung \ref{SW:Komm:HOSTNIOS} dargestellt.
 	\item \lstinline|HardwareReadHandler| - Dieser Thread ist alleine für die Abarbeitung der Interrupts im User-Space zuständig. Die Abarbeitung des Interrupts erfolgt nur durch Speicherung der Meta Informationen einer Nachricht (Nachrichten-ID und Pointer im Shared Memory). Wurde eine gültige Nachricht verarbeitet wird der folgende Thread aktiviert.
-	\item \lstinline|writeData| - Dieser Task wird durch den \lstinline|HardwareReadHandler| Thread bei einer gültigen Nachricht in einem Buffer aufgeweckt. Anschließend sendet der Thread die Nachricht über die Socketverbindung an den Client und blockiert abermals bis eine Nachricht eingeht. Abbildung verdeutlicht den Nachrichtaustausch mit der Kommunikationsrichtung NIOS2 $\rightarrow$ Host PC.
+	\item \lstinline|writeData| - Dieser Task wird durch den \lstinline|HardwareReadHandler| Thread bei einer gültigen Nachricht in einem Buffer aufgeweckt. Anschließend sendet der Thread die Nachricht über die Socketverbindung an den Client und blockiert abermals bis eine Nachricht eingeht. Abbildung \ref{SW:Komm:NIOSHOST} verdeutlicht den Nachrichtaustausch mit der Kommunikationsrichtung NIOS2 $\rightarrow$ Host PC.
 \end{itemize}
 
 \begin{figure}
@@ -134,7 +134,7 @@ Das Kommunikationsgateway ist die Schnittstelle um zwischen einem Host-PC und de
 
 
 \subsection{Empfohlener Buildvorgang und Abweichungen zum Tutorial}
-Der schnellste und unkomplizierteste Weg zu einem funktionierenden Linux Image auf SD-Karte ist folgender
+Der schnellste und unkomplizierteste Weg zu einem funktionierenden Linux Image auf SD-Karte ist:
 \begin{enumerate}
 	\item Das Tutorial unter \href{https://eewiki.net/display/linuxonarm/DE0-Nano-SoC+Kit}{https://eewiki.net/display/linuxonarm/DE0-Nano-SoC+Kit} mit einer beliebigen (Mindestgröße 4GB) SD Karte durchführen. Als Kernelversion sollte unbedingt die Version 4.7 gewählt werden, da sich die im Projektrepository befindlichen Dateien darauf beziehen. Nach diesem Schritt kann man den Bootvorgang von U-Boot und Linux testen und versuchen sich im Ubuntu einzuloggen. Anschließend werden die Änderungen durchgeführt.
 	\item Den Linux Devcie Tree Patchen. Dazu in einem Linux-Terminal
@@ -146,7 +146,7 @@ patch socfpga-kernel-dev/KERNEL/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dt
 	\begin{lstlisting}[breaklines=true]
 patch socfpga-kernel-dev/KERNEL/.config Garfield_Kernel.patch)
 	\end{lstlisting}
-	\item Anschließend über das Skript \texttt{socfpga-kernel-dev/tools/rebuild.sh} (oder manuell über den entsprechenden make-Befehl) den Kernel inkl. Device Tree neu kompilieren
+	\item Anschließend über das Skript \texttt{TutorialPath/socfpga-kernel-dev/tools/rebuild.sh} (oder manuell über den entsprechenden make-Befehl) den Kernel inkl. Device Tree neu kompilieren
 	\item Den Linux Kernel und die Device Trees wie im Tutorial (die Punkte \texttt{Copy Kernel Image} und \texttt{Copy Kernel Device Tree Binaries}) auf die SD Karte kopieren.
 \end{enumerate}
 
@@ -170,7 +170,7 @@ Für die Kommunikation zwischen Host PC und NIOS2 ist das starten des Kommunikat
 	bin/Comm_Gateway
 \end{lstlisting}
 
-Der Codeausschnit \ref{StartApp} zeigt alle durchzuführenden Schritte, die notwendig sind um das Kommunikationsgatway ordnungsgemäß zu starten. Die ersten beide Befehle entfernen evtl. geladenene Module, die beim startup mit falschen Parametern geladen werden. Der dritte Befehl lädt das Linux-Modul um mit Interrupts im User-Space umgehen zu können und erstellt dafür ein Gerät mit dem Namen \texttt{HSP\_boot/dev/uio0}, dass im Kommunikationsgatway verwendet werden. Hier ist auch der Name, der im Linux Device Tree angegeben wurde, von Bedeutung, da über diesen das richtige Interrupt ausgewählt wird. Mit dem vierten Befehl sollte vor Ausführung des Gateways überprüft werden ob das Gerät \texttt{HSP\_boot/dev/uio0} auch wirklich verfügbar ist. Ist dies der Fall, kann die Applikation mit Superuserrechten gestartet werden. Die Reihenfolge ist dabei
+Der Codeausschnit \ref{StartApp} zeigt alle durchzuführenden Schritte, die notwendig sind um das Kommunikationsgatway ordnungsgemäß zu starten. Die ersten beide Befehle entfernen evtl. geladenene Module, die beim startup mit falschen Parametern geladen werden. Der dritte Befehl lädt das Linux-Modul um mit Interrupts im User-Space umgehen zu können und erstellt dafür ein Gerät mit dem Namen \texttt{HSP\_boot/dev/uio0}, dass im Kommunikationsgatway verwendet wird. Hier ist auch der Name, der im Linux Device Tree angegeben wurde, von Bedeutung, da über diesen das richtige Interrupt ausgewählt wird. Mit dem vierten Befehl sollte vor Ausführung des Gateways überprüft werden ob das Gerät \texttt{HSP\_boot/dev/uio0} auch wirklich verfügbar ist. Ist dies der Fall, kann die Applikation mit Superuserrechten gestartet werden. Die Reihenfolge ist dabei
 \begin{enumerate}
 	\item Starten des FreeRTOS auf dem NIOS2 (wird i.d.R. automatisch bei Systemstart durch Laden aus dem externen Flash durchgeführt).
 	\item Konfigurieren des Linux und starten der Applikation (eine Serververbindung wird angeboten).
