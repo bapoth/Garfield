@@ -1,6 +1,5 @@
 \subsection{Mailbox Kommunikation ARM $\leftrightarrow$ NIOS2}
-Die Kommunikation über die in das \ac{FPGA} programmierte Mailbox (siehe \ref{IP-Cores}) wird über eine abstrakte Klassenimplementierung in C++ dargestellt. \todo{Name, Pfad?}
-Die Klasse stellt einige \textit{Write} und \textit{Read} Funktionen zur Verfügung, die mit verschiedenen Objekten umgehen können. Durch dieses Vorgehen ist sichergestellt, das der Aufrufer als Übergabeparameter nur bestimmte Objekte (die sauber definiert sind) übergegeben werden können, die auch verarbeitet werden können. Die Kommunikation erfolgt asynchron und ist intern gepuffert. Die Klasse dient als Abstraktionsschicht in beide Richtungen. Sowohl die Empfangsrichtung als auch die Senderichtung werden über die Klasse abgebildet, sodass der Aufrufer keinerlei interne Informationen über die Hardware und die Implementierung haben muss.
+Die Kommunikation über die in das \ac{FPGA} programmierte Mailbox (siehe \ref{IP-Cores}) wird über eine abstrakte Klassenimplementierung in C++ dargestellt. Die Klasse \textit{Alf\_SharedMemoryComm} (zu finden unter Software/common/ARM\_NIOS/) stellt einige \textit{Write} und \textit{Read} Funktionen zur Verfügung, die mit verschiedenen Objekten umgehen können. Durch dieses Vorgehen ist sichergestellt, das der Aufrufer als Übergabeparameter nur bestimmte Objekte (die sauber definiert sind) übergegeben werden können, die auch verarbeitet werden können. Die Kommunikation erfolgt asynchron und ist intern gepuffert. Die Klasse dient als Abstraktionsschicht in beide Richtungen. Sowohl die Empfangsrichtung als auch die Senderichtung werden über die Klasse abgebildet, sodass der Aufrufer keinerlei interne Informationen über die Hardware und die Implementierung haben muss.
 Nachfolgend werden die beiden wesentlichen Operationen (\textit{Write} und \textit{Read}) dargestellt und beschrieben.
 
 \begin{figure}
@@ -28,7 +27,7 @@ Der folgende Abschnitt beschreibt die Bestandteile die für den Betrieb des ARM 
 	\label{Software:ArmBooting}
 \end{figure}
 
-Eine sehr gute und übersichtliche Beschreibung des Bootvorgangs der A9 Kerne ist in \cite{arm_booting} beschrieben. Der im \Projectname Projekt verwendeter Bootvorgang ist in Abbildung \ref{Software:ArmBooting} dargestellt. Die ersten beiden Schritte (BootRom, Preloader) sollen hier nicht weiter beschrieben werden da keine manuelle Anpassung daran notwendig ist. Als Referenz für den Buildvorgang des gesamten Systems diente \href{https://eewiki.net/display/linuxonarm/DE0-Nano-SoC+Kit}{https://eewiki.net/display/linuxonarm/DE0-Nano-SoC+Kit}. Eine komplette Kopie des Tutorials befindet sich auch im Projektverzeichnis unter \todo{Pfad}. Wenn Änderungen an der im Tutorial beschriebenden Vorgehensweise notwendig sind werden diese erwähnt.
+Eine sehr gute und übersichtliche Beschreibung des Bootvorgangs der A9 Kerne ist in \cite{arm_booting} beschrieben. Der im \Projectname Projekt verwendeter Bootvorgang ist in Abbildung \ref{Software:ArmBooting} dargestellt. Die ersten beiden Schritte (BootRom, Preloader) sollen hier nicht weiter beschrieben werden da keine manuelle Anpassung daran notwendig ist. Als Referenz für den Buildvorgang des gesamten Systems diente \href{https://eewiki.net/display/linuxonarm/DE0-Nano-SoC+Kit}{https://eewiki.net/display/linuxonarm/DE0-Nano-SoC+Kit}. Eine komplette Kopie des Tutorials befindet sich auch im Projektverzeichnis unter \textit{Software/Software\_ARM/Linux/website/}. Wenn Änderungen an der im Tutorial beschriebenden Vorgehensweise notwendig sind werden diese erwähnt.
 
 \subsubsection{Bootloader}
 Als Bootloader kommt der beliebte U-Boot \footnote{\href{https://www.denx.de/wiki/U-Boot}{https://www.denx.de/wiki/U-Boot}} in einer leicht angepassten Variante zum Einsatz. Wie im Tutorial beschrieben werden einige Startvariablen(unter anderem das zu ladende Linux Device Tree Binary) hinzugefügt um von der SD Karte zu booten. U-Boot lädt nach dem Start dann automatisch zunächst den
@@ -106,7 +105,7 @@ Die Änderungen werden direkt in die Datei \texttt{LINUX\_V4.7/arch/arm/boot/dts
 \subsubsection{Betriebssystem}
 Linux wird als Betriebssystem von U-Boot geladen. Im Projekt kommt eine leicht angepasste Version der im Tutorial beschriebenen Linux Version vor. Die Änderungen sind marginal und betreffen:
 \begin{itemize}
-	\item Das USB-Subsystem - Zum Betrieb des \ac{Lidar} ist es notwendig einige Punkte des USB Subsystem während des Linux Kompiliervorgang (\lstinline|make menuconfig|) auszuwählen und zu kompilieren. Im groben handelt es sich um die USB-OTG Unterstützung, das ACM Subsystem und noch einige kleinere Änderungen. Auch für diesen Schritt existiert eine patch Datei im Verzeichnis \todo{Pfad}.
+	\item Das USB-Subsystem - Zum Betrieb des \ac{Lidar} ist es notwendig einige Punkte des USB Subsystem während des Linux Kompiliervorgang (\lstinline|make menuconfig|) auszuwählen und zu kompilieren. Im groben handelt es sich um die USB-OTG Unterstützung, das ACM Subsystem und noch einige kleinere Änderungen. Auch für diesen Schritt existiert eine patch Datei im Verzeichnis \textit{Software/Software\_ARM/Linux/}.
 	\item Das \texttt{uio} Modul - Mit diesem Modul ist es möglich mit Interrupts im User-Space von Linux zu arbeiten. Dazu wird das Modul mit dem Namen, der im Device Tree angegeben wurde \lstinline|altr,mailbox-1.0| geladen. Dieses Modul erzeugt anschließend ein Gerät unter \texttt{/dev}, dass dann im User-Space genutzt werden kann. Auch diese Änderung ist in der patch Datei mit angegeben.
 \end{itemize}
 Als Distribution kommt eine minimale Version von Ubuntu zum Einsatz (Alternativ kann auch Debian verwendet werden). Diese Distribution wurde gewählt um einen kleine Footprint (im Leerlauf insgesammt nur ca. 35MB Arbeitsspeicherverbrauch) mit dem Komfort einer \textquotedblleft normalen\textquotedblright Linux Distribution inklusiver einem Softwarerepository zur einfachen Installation von Software zu verbinden. Sobald Linux gestartet ist kann die (hier) entscheidene Applikation gestartet werden.
@@ -121,7 +120,7 @@ Das Kommunikationsgateway ist die Schnittstelle um zwischen einem Host-PC und de
 \end{figure}
 
 \begin{itemize}
-	\item \lstinline|readData| - Dieser Thread behandelt den Nachrichtenaustausch in Richtung Host PC $\rightarrow$ NIOS2. Der Thread wartet auf eingehenden Nachrichten (im Moment nur Fahrkommandos), parst und castet diese in das entsprechende Objekt und schreibt das Objekt dann über die Klasse \todo{KLass} in den Shared Memory mit dem NIOS2. Dieser Kommunikationsweg ist auch in Abbildung \ref{SW:Komm:HOSTNIOS} dargestellt.
+	\item \lstinline|readData| - Dieser Thread behandelt den Nachrichtenaustausch in Richtung Host PC $\rightarrow$ NIOS2. Der Thread wartet auf eingehenden Nachrichten (im Moment nur Fahrkommandos), parst und castet diese in das entsprechende Objekt und schreibt das Objekt dann über die Klasse \textit{Alf\_SharedMemoryComm} in den Shared Memory mit dem NIOS2. Dieser Kommunikationsweg ist auch in Abbildung \ref{SW:Komm:HOSTNIOS} dargestellt.
 	\item \lstinline|HardwareReadHandler| - Dieser Thread ist alleine für die Abarbeitung der Interrupts im User-Space zuständig. Die Abarbeitung des Interrupts erfolgt nur durch Speicherung der Meta Informationen einer Nachricht (Nachrichten-ID und Pointer im Shared Memory). Wurde eine gültige Nachricht verarbeitet wird der folgende Thread aktiviert.
 	\item \lstinline|writeData| - Dieser Task wird durch den \lstinline|HardwareReadHandler| Thread bei einer gültigen Nachricht in einem Buffer aufgeweckt. Anschließend sendet der Thread die Nachricht über die Socketverbindung an den Client und blockiert abermals bis eine Nachricht eingeht. Abbildung \ref{SW:Komm:NIOSHOST} verdeutlicht den Nachrichtaustausch mit der Kommunikationsrichtung NIOS2 $\rightarrow$ Host PC.
 \end{itemize}
@@ -150,8 +149,21 @@ patch socfpga-kernel-dev/KERNEL/.config Garfield_Kernel.patch)
 	\item Den Linux Kernel und die Device Trees wie im Tutorial (die Punkte \texttt{Copy Kernel Image} und \texttt{Copy Kernel Device Tree Binaries}) auf die SD Karte kopieren.
 \end{enumerate}
 
-Anschließend kann man die SD-Karte wieder entnehmen und das \ac{FPGA} wieder einschalten. Das System sollte wie gewohnt starten. Um zu überprüfen, ob die Operationen funktioniert haben sollten folgenden Befehle die gleiche Ausgabe wie in Listing \todo{Verweis} haben.
-\todo{Listing einfügen, module uio und enable bridge enable}
+Anschließend kann man die SD-Karte wieder entnehmen und das \ac{FPGA} wieder einschalten. Das System sollte wie gewohnt starten. Um zu überprüfen, ob die Operationen funktioniert haben sollten folgenden Befehle die gleiche Ausgabe wie in Abb. \ref{SW:arm:interrupts} und \ref{SW:arm:devices} haben.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[a]{0.7\textwidth}
+	\includegraphics[width=1\linewidth]{Abb/arm_interrupts.png}
+	\caption{Eintrag mailbox interrupt}
+	\label{SW:arm:interrupts}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.7\textwidth}
+	\includegraphics[width=1\textwidth]{Abb/arm_devices.png}
+	\caption{Eintrag in /dev/}
+	\label{SW:arm:devices}
+	\end{subfigure}
+\end{figure}
 
 \subsection{\ac{FPGA} Programmierung}
 Die Programmierung des \ac{FPGA} Subsystems erfolgt unmittelbar während des Systemstarts und ist aktuell vom Softwarestart abgekoppelt. Das Image für das \ac{FPGA} wird dabei aus dem auf dem Board integrierten Flash-Speicher geladen. Die möglichen alternativen Konfigurationen sind übersichtlich im User-Manual zu dem \texttt{DE0-Nano} Board aufgelistet. Das Manual dazu findet man auf der System CD, die unter \href{http://www.terasic.com/downloads/cd-rom/de0-nano-soc/}{Link} verfügbar ist.\\
