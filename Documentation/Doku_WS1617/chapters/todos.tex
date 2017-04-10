@@ -23,9 +23,6 @@ Der Motortreiber hat während der Tests immer wieder sporadische Aussetzer gehab
 Die Ursache für diese Fehler ist nicht offensichtlich, aber eventuell ist ein Zusammenhang mit den in \ref{Problem:Spannung} beschriebenen Fehlern zu beobachten.\\
 Eine mögliche Lösung wäre die Fehlersignale und das Resetsignal mit dem \ac{FPGA} zu verbinden und im NIOS2 zu verarbeiten. Dann kann eine saubere Fehlerbehandlung eine Resetauslösung durch einen $\mu$Controller erfolgen.
 
-\subsection{MPU6050}
-\todo{Tobi: Probleme beschreiben}
-
 \subsection{Sporadische Fehler in der Nachrichtenübertragung}
 In der Nachrichtenübertragung zwischen Host-PC und NIOS2 (mit dem Nachrichtenweg wie in Abbildung \todo{irgendwie Nachrichtenweg noch herzaubern?}) treten sporadische Fehler auf. Diese äußern sich in Nachrichtenpaketen (einzelne Werte, i.d.R. sind nicht alle Werte falsch), die den jeweiligen Maximalwert annehmen(z.B. \lstinline|uint8\_t x = 255| anstatt \lstinline|uint8\_t x = 0|). Für diesen Fehlerfall konnten noch keine weiteren Beobachtungen gemacht werden, insbesondere nicht woher die falschen Nachrichten kommen (Entweder vom Host PC als Initiator der Nachricht oder vom Kommunikationsgateway das für das kopieren von Nachrichten in den Speicher verantwortlich ist). Die falschen Werte treten in sehr unregelmäßigen Abständen auf, es ist auch möglich das über mehrere Sitzungen hinweg kein einziger solcher Fehler auftritt. An anderen Tagen tritt dieser Fehler wiederrum regelmäßig im 10-Sekundentakt auf.
 

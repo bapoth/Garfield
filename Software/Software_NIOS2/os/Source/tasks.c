@@ -1907,7 +1907,7 @@ BaseType_t xReturn;
 
 		/* Setting up the timer tick is hardware specific and thus in the
 		portable interface. */
-		IOWR_ALTERA_AVALON_PIO_DATA(ONBOARD_LED_BASE, 0xF0);
+		IOWR_ALTERA_AVALON_PIO_DATA(ONBOARD_LED_BASE, 0xFF);
 		if( xPortStartScheduler() != pdFALSE )
 		{
 			/* Should not reach here as if the scheduler is running the
