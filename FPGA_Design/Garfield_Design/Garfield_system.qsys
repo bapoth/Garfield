@@ -884,7 +884,7 @@
  <module name="Drive_PWM" kind="PWM_Generator" version="1.0" enabled="1">
   <parameter name="datawidth" value="32" />
   <parameter name="freq_core" value="50000000" />
-  <parameter name="freq_pwm" value="2000" />
+  <parameter name="freq_pwm" value="15000" />
  </module>
  <module
    name="Garfield_GPIO"
