@@ -1,22 +1,21 @@
 \chapter{Einleitung}
 Dieser Projektbericht beschreibt die Tätigkeiten der Autoren im Laufe des 
 \ac{HSP} im Wintersemester 2016/2017. Diese beinhalten im wesentlichen 
-Folgendes:
-Die Ersetzung der kompletten Hardwarearchitektur des ALF und dessen Raspberry Pi 
+die Ersetzung der kompletten Hardwarearchitektur des ALF und dessen Raspberry Pi 
 auf eine neuere, verbesserste Hardwarearchitektur, um mehr Leistungsreserven zu 
 besitzen.
 
 \paragraph{Motivation für das Ersetzen des Raspberry Pi} 
 \begin{itemize}
  \item Leistungsreserven: Da die alte Hardwareplattform des Raspberry Pi keine ausreichende Performace für zusätzliche Anwendungen, wie zum Beispiel SLAM Algorithmen, besitzt, wurde die Entscheidung getroffen, eine komplett neue Hardware zu erstellen.
-\item Um eine möglichst hohe Flexibilität zu erreichen, wurde dabei auf ein FPGA gesetzt. Somit ist es einfach möglich neue Anwendungen hinzuzufügen, oder bestehende Anwendungen zu erweitern.
+\item Um eine möglichst hohe Flexibilität zu erreichen, wurde dabei auf ein FPGA gesetzt. Somit ist es einfach möglich neue Anwendungen hinzuzufügen oder bestehende Anwendungen zu erweitern.
 \end{itemize}
 
 \section{Lesehinweise}
 Dieses Dokument ist in mehrere Kapitel gegliedert. Bevor dieses Dokument gelesen und verstanden werden kann folgen hier einige Lesehinweise:
 \begin{itemize}
 	\item Coderepository - Der gesamte Code und alle relevante Dokumenation zu dem Projekt befindet sich aktuell auf Github. Der Link zum aktuellen Stand ist \href{https://github.com/Alabamajack/Garfield}{https://github.com/Alabamajack/Garfield}. 
-	\item Weitere Dateien - Leider beschränkt Github die maximale Dateigröße auf 100MB. Aus diesem Grund liegen Dateien, die größer als 100MB sind, auf dem Laborlaufwerk unter dem Verzeichnis \todo{Pfad zum Laborlaufwerk}. Diese Daten werden im Dokument extra gennant.
+	\item Weitere Dateien - Leider beschränkt Github die maximale Dateigröße auf 100MB. Aus diesem Grund liegen Dateien, die größer als 100MB sind, auf dem Laborlaufwerk unter dem \href{run:L:/DT/Lehrveranstaltungen/Prof Metzner/HSP/Garfield_Wise1617}{Verzeichnis}. Diese Daten werden im Dokument extra gennant.
 	\item Pfade - Alle Dateipfade, die im Dokument genannt werden und für die keine weiteren Informationen angegeben sind, beziehen sich auf das root-Verzeichnis des Coderepositories. Weitere Pfade die verwendet werden sind:
 	\begin{itemize}
 		\item Pfad im Linux Kernel: Diese Pfade sind absolute Pfade innerhalb einer bestimmten Version des Linux Kernels (nur Releases, keine Pre-Releases etc.). Solche Pfade haben den Prefix \textit{LINUX\_VX.X} wobei \textit{X.X} die Version des Linux Kernel bezeichnet, der verwendet wurde.
