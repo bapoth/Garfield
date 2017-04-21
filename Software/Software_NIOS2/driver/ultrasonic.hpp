@@ -121,7 +121,7 @@ public:
 
 	/*!
 	 * @brief function to read one complete range measurement
-	 * @param[in/out] ultrasonic_measurement: buffer to store the current measurement
+	 * @param[out] ultrasonic_measurement: buffer to store the current measurement
 	 * @param[in] length: maximal length to read
 	 * @return result (status) of this operation
 	 * */
