@@ -1,3 +1,6 @@
+/*!
+ * @file
+ * */
 #ifndef TASKS_NIOS_HPP_
 #define TASKS_NIOS_HPP_
 

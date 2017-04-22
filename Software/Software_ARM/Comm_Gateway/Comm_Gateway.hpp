@@ -1,3 +1,6 @@
+/*!
+ * @file
+ * */
 /*
  * Comm_Gateway.hpp
  *

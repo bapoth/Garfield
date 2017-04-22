@@ -1,3 +1,6 @@
+/*!
+ * @file
+ * */
 #ifndef ALF_DATA_INFO
 #define ALF_DATA_INFO
 #include "stdint.h"

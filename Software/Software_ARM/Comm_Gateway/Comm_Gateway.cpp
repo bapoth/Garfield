@@ -1,3 +1,6 @@
+/*!
+ * @file
+ * */
 #include "Comm_Gateway.hpp"
 #include "hps_fpga_addresses.h"
 #include <stdint.h>

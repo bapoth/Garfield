@@ -1,5 +1,5 @@
 /*!
- * @file Display.hpp
+ * @file lcdfont.hpp
  */
 
 #ifndef LCDFONT_HPP_

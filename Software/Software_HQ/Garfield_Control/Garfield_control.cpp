@@ -1,3 +1,6 @@
+/*!
+ * @file
+ * */
 #include "QSettings"
 
 #include "alf_data.hpp"

@@ -1,3 +1,6 @@
+/*!
+ * @file
+ * */
 #ifndef GARFIELD_CONTROL_H
 #define GARFIELD_CONTROL_H
 

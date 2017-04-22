@@ -1,3 +1,6 @@
+/*!
+ * @file
+ * */
 #include "Settings.h"
 #include "ui_Settings.h"
 

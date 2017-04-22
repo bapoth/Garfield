@@ -1,3 +1,6 @@
+/*!
+ * @file
+ * */
 #include "i2c_opencores.h"
 #include "system.h"
 

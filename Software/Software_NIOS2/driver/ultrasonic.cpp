@@ -70,6 +70,10 @@ alt_u8 UltraSonicDevice::readRegister(const UltraSonicRegisterRead reg, alt_u16&
 			result = I2C_start(I2C_OPENCORES_0_BASE, static_cast<alt_u32>(__deviceAddress), 1);
 			readPtr = I2C_read(I2C_OPENCORES_0_BASE, 1) + ( hlp << 8);
 	}
+	else
+        {
+            readPtr = hlp;
+        }
 
 	return result ;
 }

@@ -1,3 +1,6 @@
+/*!
+ * @file
+ * */
 #ifndef MPU6050_HPP_
 #define MPU6050_HPP_
 

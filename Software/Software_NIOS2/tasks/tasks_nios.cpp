@@ -1,3 +1,6 @@
+/*!
+ * @file
+ * */
 #include "tasks_nios.hpp"
 
 #include "alt_types.h"
