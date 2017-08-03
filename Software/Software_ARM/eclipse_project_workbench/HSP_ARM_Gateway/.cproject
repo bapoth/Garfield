@@ -28,9 +28,9 @@
 								<option id="gnu.cpp.compiler.option.optimization.level.995202471" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.2027420622" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.include.paths.1067211911" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;C:\Users\bauma\hspII_workplace\Software\common\ARM_HQ&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Users\bauma\hspII_workplace\Software\common\ARM_NIOS&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Users\bauma\hspII_workplace\Software\common\ARM_NIOS_HQ&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\133x\Documents\studium\oth\HSP\GITHUB_Verzeichniss\Software\common\ARM_NIOS&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\133x\Documents\studium\oth\HSP\GITHUB_Verzeichniss\Software\common\ARM_NIOS_HQ&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\133x\Documents\studium\oth\HSP\GITHUB_Verzeichniss\Software\common\ARM_HQ&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.2004179770" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -48,7 +48,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -96,7 +96,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -123,4 +123,5 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="refreshScope"/>
 </cproject>
