@@ -143,7 +143,7 @@ int main() {
 	 */
 	ALF_LOG_INIT("Alf_urg.log", log_debug, true);
 	signal(SIGINT, Stop_Program);
-
+	printf("Hello world! Lex ist super mega toll!!");
 	//initialize the urg_sensor
 	ALF_LOG_WRITE("Initializing the urg sensor...", log_info);
 	if (urg_open(&urg_sensor, Alf_Urg_Sensor::alf_urg_connection_type,((char*) std::string(Alf_Urg_Sensor::alf_urg_device_port).c_str()), Alf_Urg_Sensor::alf_urg_baudrate) < 0) {

@@ -116,7 +116,7 @@ void readData(void) {
 		rec += ", Light: " + std::to_string(global_drive_command.light);
 
 		my_log.alf_log_write(rec, log_info);
-
+		global_drive_command.speed=80;
 		shared_mem.Write(global_drive_command);
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(1/COMFREQ*1000));
