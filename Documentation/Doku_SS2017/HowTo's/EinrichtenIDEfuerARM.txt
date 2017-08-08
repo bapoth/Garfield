@@ -1,0 +1,40 @@
+In Windows:
+
+1. Downloaden von:
+- JRE (für Eclipse) von:		http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html
+					-> Windows x64 Offline	62.34 MB  	jre-8u144-windows-x64.exe
+- Eclipse Neon von:			http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/neon/3/eclipse-cpp-neon-3-win32-x86_64.zip
+- Make-Kommando von:			http://gnuwin32.sourceforge.net/packages/make.htm
+					-> Complete package, except sources	 	Setup
+- ARM-Compiler-Kommando von:		https://releases.linaro.org/components/toolchain/binaries/5.3-2016.02/arm-linux-gnueabihf/
+					-> gcc-linaro-5.3-2016.02-i686-mingw32_arm-linux-gnueabihf.tar.xz
+					!! Nicht die neueste Version downloaden !!  
+
+2. Entpacke Make-Kommando-Zip und ARM-Compiler-Kommando-Zip in: 
+   C:\bin
+
+3. Erweitere PATH-Variable mit den Pfaden:
+- C:\Program Files (x86)\Java\jre1.8.0_144\bin
+- C:\Program Files (x86)\GnuWin32\bin
+- C:\bin\linaro_Older\gcc\gcc\bin
+
+4. In Eclipse:
+- Hinzufügen von Files als Links:
+	C:\Users\bauma\hspII_workplace\Software\Software_ARM\Comm_Gateway\<allFiles>
+	C:\Users\bauma\hspII_workplace\Software\common\ARM_HQ\<allFiles>
+	C:\Users\bauma\hspII_workplace\Software\common\ARM_NIOS\<allFiles> (außer: using_shared_memory_example.cpp)
+	C:\Users\bauma\hspII_workplace\Software\common\ARM_NIOS_HQ\<allFiles>
+	
+- Project->Properties->Settings->Tool Settings->Cross GCC Compiler: 	arm-linux-gnueabihf-gcc
+									${COMMAND} ${FLAGS}  -std=c++11 -lpthread ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}
+  Project->Properties->Settings->Tool Settings->Cross G++ Compiler: 	arm-linux-gnueabihf-g++
+									${COMMAND} ${FLAGS} -std=c++11 -lpthread ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}
+  Project->Properties->Settings->Tool Settings->Cross G++ Linker:	arm-linux-gnueabihf-g++
+									${COMMAND} ${FLAGS}  -std=c++11 -lpthread ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}
+- Hinzufügen von IncludePath für Files (durch Angabe von FileSystem):
+		Project->Properties->Settings->Tool Settings->Cross G++ Compiler->Includes:	"C:\Users\bauma\hspII_workplace\Software\common\ARM_HQ"
+												"C:\Users\bauma\hspII_workplace\Software\common\ARM_NIOS"
+												"C:\Users\bauma\hspII_workplace\Software\common\ARM_NIOS_HQ"
+
+- In Comm_Gateway.cpp: Ändere Object "log" in "mylog"
+
