@@ -63,7 +63,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="ip_lineEdit">
+       <widget class="QLineEdit" name="lineEdit">
         <property name="maximumSize">
          <size>
           <width>150</width>

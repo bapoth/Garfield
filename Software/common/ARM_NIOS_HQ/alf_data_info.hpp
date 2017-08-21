@@ -40,8 +40,17 @@ public:
     bool light;
 };
 
+class Alf_Position{
+public:
+    ///This variable holds the x-coordinate of the car's current position on the map
+    int x_position;
+    ///This variable holds the y-coordinate of the car's current position on the map
+    int y_position;
+};
+
 /// global variables
 extern Alf_Drive_Info global_drive_info;
 extern Alf_Drive_Command global_drive_command;
+extern Alf_Position global_alf_position;
 
 #endif

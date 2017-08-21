@@ -16,6 +16,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QDebug>
+#include <qpainter.h>
 
 #define ANGLE_MAX_VAL 90
 #define ANGLE_MIN_VAL -90
@@ -34,12 +35,15 @@ Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
     ui(new Ui::Garfield_control)
     {
     ui->setupUi(this);
-
+    ui->label->setPixmap(QPixmap("/home/lex/Dokumente/BreezySLAM-master/examples/exp2.pgm"));
+    ui->label_2->setPixmap(QPixmap("/home/lex/Downloads/auto.png"));
     //Set initial values
     _speed = 0;
     _direction = 0;
     _angle = 0;
     _light = false;
+    x_position = 390;
+    y_position = 390;
 
     //Load Settings
     m_sSettingsFile = QApplication::applicationDirPath() + "/Garfield.conf";
@@ -192,19 +196,25 @@ void Garfield_control::keyPressEvent(QKeyEvent* e) {
     if(e->key() == Qt::Key_W) {
         ui->pushButton_up->setDown(true);
         command_forward();
+        y_position--;
     }
     if(e->key() == Qt::Key_S) {
         ui->pushButton_down->setDown(true);
         command_back();
+        y_position++;
     }
     if(e->key() == Qt::Key_D) {
         ui->pushButton_right->setDown(true);
         command_right();
+        x_position++;
     }
     if(e->key() == Qt::Key_A) {
         ui->pushButton_left->setDown(true);
         command_left();
+        x_position--;
     }
+    ui->label_2->setGeometry(x_position,y_position,ui->label_2->geometry().width(),ui->label_2->geometry().height());
+    ui->label_2->show();
 
     QMainWindow::keyPressEvent(e);
 }
@@ -466,4 +476,27 @@ void Garfield_control::recThread() {
     }
     open_close_connection();
     return;
+}
+
+void Garfield_control::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    painter.setPen(Qt::blue);
+    painter.setFont(QFont("Arial", 30));
+    QPen linepen(Qt::red);
+    linepen.setCapStyle(Qt::RoundCap);
+    linepen.setWidth(10);
+    painter.setRenderHint(QPainter::Antialiasing,true);
+    painter.setPen(linepen);
+
+
+    painter.drawPoint(x_position,y_position);
+
+    //painter.drawText(rect(), Qt::AlignCenter, "Qt");
+}
+
+void Garfield_control::on_pushButton_clicked()
+{
+    ui->label->setPixmap(QPixmap("/home/lex/Dokumente/BreezySLAM-master/examples/exp4.pgm"));
+    ui->label->show();
 }

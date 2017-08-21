@@ -1,0 +1,42 @@
+In Ubuntu 16.04:
+
+1. Installation:
+(Site für downloaden: https://wiki.ubuntuusers.de/Qt/ )
+sudo apt-get install qt5-default
+sudo apt-get install qtcreator 
+
+2. Erstelle Projekt(=Qt-Widgets-Anwendungen)
+
+3. Lösche alle Dateien außer .pro-File
+
+4. Hinzufügen von Dateien mit RechtsklickAufProjekt->Hinzufügen Existierender Dateien:
+   ../HSP/Garfield-master/Software/common/ARM_HQ/<alleFiles>
+   ../HSP/Garfield-master/Software/common/ARM_NIOS_HQ/<alleFiles>
+   ../HSP/Garfield-master/Software/Software_HQ/Garfield_Control/<alleFiles>
+
+5. Hinzufügen in .pro-File:
+	INCLUDEPATH += \
+    		../HSP/Garfield-master/Software/common/ARM_HQ/ \
+    		../HSP/Garfield-master/Software/common/ARM_NIOS_HQ/ \
+    		../HSP/Garfield-master/Software/Software_HQ/Garfield_Control/ \
+    		/usr/include/x86_64-linux-gnu/qt5/QtConcurrent/ \
+    		/usr/include/x86_64-linux-gnu/qt5/QtCore/ \
+    		/usr/include/x86_64-linux-gnu/qt5/QtGui/
+
+	CONFIG += c++11
+
+
+________________________________________________
+melmac_rviz - Projekt benötigt noch ROS API
+
+6. Download ROS API
+(Site für downloaden: http://wiki.ros.org/kinetic/Installation/Ubuntu)
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+sudo apt-get update
+sudo apt-get install ros-kinetic-desktop-full
+sudo rosdep init
+rosdep update
+echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+sudo apt-get install python-rosinstall python-rosinstall-generator python-wstool build-essential
