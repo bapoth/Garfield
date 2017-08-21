@@ -9,7 +9,7 @@
 #include <stdint.h>
 #include <string>
 
-#include "urg_connection.h"
+#include <urg_connection.h>
 
 /*!
  * @brief Represents the laser scanner on the alf vehicle and provide common settings etc.

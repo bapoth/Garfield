@@ -162,6 +162,7 @@ class Garfield_control : public QMainWindow {
          * @brief recThread() is executed in an extra thread. It handles all data that are received over the socket
          */
         void recThread();
+        void paintEvent(QPaintEvent *);
     private:
         /// Joystick object for getting all data  of the gamepad
         Joystick *_joystick;
@@ -205,6 +206,11 @@ class Garfield_control : public QMainWindow {
         double _acceleration;
         /// transverse acceleration of the car which is received on the socket
         double _lateral_acceleration;
+
+        ///variable holding the x-coordinate of the car's position on the map
+        int x_position;
+        ///variable holding the y-coordinate of the car's position on the map
+        int y_position;
 
         /// true: connected with socket, false: else
         bool _connected;
@@ -283,6 +289,7 @@ class Garfield_control : public QMainWindow {
         * @brief open_close_connection() slot which is called when connect/disconnect button is pressed
         */
         void open_close_connection();
+        void on_pushButton_clicked();
 };
 
 #endif //GARFIELD_CONTROL_H
