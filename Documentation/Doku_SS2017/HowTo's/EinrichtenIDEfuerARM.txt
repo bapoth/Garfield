@@ -10,8 +10,10 @@ In Windows:
 					-> gcc-linaro-5.3-2016.02-i686-mingw32_arm-linux-gnueabihf.tar.xz
 					!! Nicht die neueste Version downloaden !!  
 
-2. Entpacke Make-Kommando-Zip und ARM-Compiler-Kommando-Zip in: 
+2. Entpacke ARM-Compiler-Kommando-Zip in: 
    C:\bin
+
+   und Ausführen von make-3.81.exe
 
 3. Erweitere PATH-Variable mit den Pfaden:
 - C:\Program Files (x86)\Java\jre1.8.0_144\bin
@@ -25,16 +27,49 @@ In Windows:
 	C:\Users\bauma\hspII_workplace\Software\common\ARM_NIOS\<allFiles> (außer: using_shared_memory_example.cpp)
 	C:\Users\bauma\hspII_workplace\Software\common\ARM_NIOS_HQ\<allFiles>
 	
-- Project->Properties->Settings->Tool Settings->Cross GCC Compiler: 	arm-linux-gnueabihf-gcc
+- Project->Properties->C/C++-Build->Settings->Cross GCC Compiler: 	arm-linux-gnueabihf-gcc
 									${COMMAND} ${FLAGS}  -std=c++11 -lpthread ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}
-  Project->Properties->Settings->Tool Settings->Cross G++ Compiler: 	arm-linux-gnueabihf-g++
+  Project->Properties->C/C++-Build->Settings->Cross G++ Compiler: 	arm-linux-gnueabihf-g++
 									${COMMAND} ${FLAGS} -std=c++11 -lpthread ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}
-  Project->Properties->Settings->Tool Settings->Cross G++ Linker:	arm-linux-gnueabihf-g++
+  Project->Properties->C/C++-Build->Settings->Cross G++ Linker:	arm-linux-gnueabihf-g++
 									${COMMAND} ${FLAGS}  -std=c++11 -lpthread ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}
 - Hinzufügen von IncludePath für Files (durch Angabe von FileSystem):
-		Project->Properties->Settings->Tool Settings->Cross G++ Compiler->Includes:	"C:\Users\bauma\hspII_workplace\Software\common\ARM_HQ"
+		Project->Properties->C/C++-Build->Settings->Cross G++ Compiler->Includes:	"C:\Users\bauma\hspII_workplace\Software\common\ARM_HQ"
 												"C:\Users\bauma\hspII_workplace\Software\common\ARM_NIOS"
 												"C:\Users\bauma\hspII_workplace\Software\common\ARM_NIOS_HQ"
 
 - In Comm_Gateway.cpp: Ändere Object "log" in "mylog"
+  wegen Compiler-Version !!! (Mit Compiler-Version 6 wurde es mit "log" gehen)
+
+
+____________________________________________________________________________________________
+Erweiterung: Garfield-Projekt mit BreezySLAM-Library
+5. In Eclipse: Erstelle ein neues Projekt für Erstellen der Library/.so-Files
+- Anlegen von C++ Projekt mit unter
+	File->New->C++ Project
+  mit Eigenschaften:
+	- Project type: Makefile project -> Empty project
+	- Toolchains:	Cross GCC
+
+- Hinzufügen von Files als Links:
+	C:\Users\bauma\hspII_workplace\Software\Software_ARM\Comm_Gateway\BreezySLAM
+
+- Erstelle ein File, namens "makefile" in auf oberster Projektebene.
+  Kopiere Code von C:\Users\bauma\hspII_workplace\Software\Software_ARM\Comm_Gateway\BreezySLAM\makefile in erstelltes "makefile"
+  (PS: Evtl. muss man Pfad zu ..../BreezySLAM/cpp und ..../BreezySLAM/c anpassen)
+
+- Build Project
+
+6. In Eclipse-Project für Comm_Gateway: Erweitere Code mit erstellter Library/.so-Files
+- Include Library unter
+	Project->Properties->C/C++-Build->Settings->Cross G++ Linker->Libraries
+  mit:
+	- Libraries:		breezyslam
+				(=Name von erstellter Library, wobei "lib" am Anfang & ".so" am Ende weggelassen werden)
+	- Library search path:	"C:\Users\bauma\hspII_workplace\Software\Software_ARM\eclipse_workbench_arm\BreezySLAMLibOwnMakefile"
+				(=Pfad von erstellter Library)
+
+- Hinzufügen von IncludePath für Files (durch Angabe von FileSystem):
+	Project->Properties->C/C++-Build->Settings->Cross G++ Compiler->Includes:	"C:\Users\bauma\hspII_workplace\Software\Software_ARM\Comm_Gateway\BreezySLAM\c"
+											"C:\Users\bauma\hspII_workplace\Software\Software_ARM\Comm_Gateway\BreezySLAM\cpp"
 

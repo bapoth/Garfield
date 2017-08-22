@@ -24,6 +24,6 @@ Rechner mit Netzwerk von Vehikel verbunden sein.
 
 	2.1	Einstellungen:
 		- IP: 	192.168.100.149
-		- Port:	6667
+		- Port:	6667 (oder: 6666)
 
 	
