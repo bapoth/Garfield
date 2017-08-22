@@ -37,8 +37,6 @@ using namespace std;
 
 Laser::Laser(void)
 {
-   // this = new laser_t;
-
     this->scan_size = 0;
     this->scan_rate_hz = 0;
     this->detection_angle_degrees = 0;
@@ -46,11 +44,6 @@ Laser::Laser(void)
     this->detection_margin = 0;
     this->offset_mm = 0;
 }
-/*URG04LX::URG04LX(const bool debug)
-
-{
-        this->hokuyo = hokuyo_create("URG04LX::URG04LX", debug);
-}*/
 
 URG04LX::~URG04LX()
 {
