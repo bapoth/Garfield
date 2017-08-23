@@ -2,6 +2,7 @@
  * @file
  * @brief contains the implementations for template functions to be outside of the hpp
  */
+#define DEBUG 1
 template<class _comType>
 uint8_t Alf_Communication<_comType>::readLine(std::fstream& comtype,
 		string& s) {
@@ -128,6 +129,20 @@ alf_error Alf_Communication<_comType>::Write(Alf_Drive_Command &command) {
         to_send += std::to_string(command.direction) + __delim;
         to_send += std::to_string(command.angle) + __delim;
         to_send += std::to_string(command.light) + __end_delim;
+        ret_val = ALF_NO_ERROR;
+        ret_val = __writeLine(__comHandler, to_send);
+    }
+    return ret_val;
+}
+
+template<class _comType>
+alf_error Alf_Communication<_comType>::Write(Alf_Position &command) {
+    alf_error ret_val = ALF_CANNOT_SEND_MESSAGE;
+    if(__comHandler.good() and __comHandler.is_open()){
+        string to_send;
+        to_send = std::to_string((uint8_t) ALF_POSITION_ID) + __delim;
+        to_send += std::to_string(command.x_position) + __delim;
+        to_send += std::to_string(command.y_position) + __delim;
         ret_val = ALF_NO_ERROR;
         ret_val = __writeLine(__comHandler, to_send);
     }
@@ -279,6 +294,8 @@ alf_error Alf_Communication<_comType>::Read(Alf_Urg_Measurements_Buffer& readBuf
                                 global_drive_info.temperature = std::stof(match.str());
                                 break;
                         }
+                        //if(DEBUG) printf("drive info "+ global_drive_info.speed + " accel" + global_drive_info.acceleration + "gyro_xyz" + global_drive_info.Gyroscope_X+","+global_drive_info.Gyroscope_Y +"," + global_drive_info.Gyroscope_Z + " temperature" + global_drive_info.temperature +"\n");
+                        if (DEBUG) printf("drive info %d accel : %f gyro_xyz %f  %f  %f temp: %f",global_drive_info.speed,global_drive_info.acceleration,global_drive_info.Gyroscope_X,global_drive_info.Gyroscope_Y,global_drive_info.Gyroscope_Z,global_drive_info.temperature);
                     }
                     else if(msgType == ALF_DRIVE_COMMAND_ID)
                     {
@@ -297,6 +314,20 @@ alf_error Alf_Communication<_comType>::Read(Alf_Urg_Measurements_Buffer& readBuf
                                 global_drive_command.light = std::stoi(match.str());
                             break;
                         }
+                        if(DEBUG) printf("drive command speed %d direction %d angle %d  light %d \n",global_drive_command.speed,global_drive_command.direction,global_drive_command.angle,global_drive_command.light);
+                    }
+                    else if(msgType == ALF_POSITION_ID)
+                    {
+                        switch(idx++)
+                        {
+                            case 1:
+                                global_alf_position.x_position = std::stoi(match.str());
+                                break;
+                            case 2:
+                                global_alf_position.y_position = std::stoi(match.str());
+                                break;
+                        }
+                        if(DEBUG) printf("position %d  %d \n",global_alf_position.x_position,global_alf_position.y_position);
                     }
 					else
 					{
@@ -335,6 +366,9 @@ alf_error Alf_Communication<_comType>::Read(Alf_Urg_Measurements_Buffer& readBuf
 				}
 			}
 		}
+	}
+	if (DEBUG == 1){
+		printf("DEBUG: global drive info speed = %d",global_drive_info.speed);
 	}
 	return ret_val;
 }

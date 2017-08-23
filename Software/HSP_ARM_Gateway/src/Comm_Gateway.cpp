@@ -8,7 +8,7 @@
 #include <fcntl.h>
 
 ///Port on which socket is created
-#define COMPORT 6666
+#define COMPORT 6667
 
 ///Send/Receive Frequence in Hz
 #define COMFREQ 50
@@ -24,7 +24,7 @@ std::condition_variable Run_ServerWrite_Task;
 std::mutex Run_Main_Task_mut;
 
 ///Alf Log
-Alf_Log log;
+Alf_Log mylog;
 
 ///Shared Memory Mailbox object
 Alf_SharedMemoryComm shared_mem;
@@ -89,15 +89,37 @@ void writeData(void) {
 	std::mutex mux;
 	std::unique_lock<std::mutex> lock(mux);
 	while(run_threads) {
+		if(DEBUG) printf("write Data thread\n");
 		while(not notify_ServerWrite_Task){
 			Run_ServerWrite_Task.wait(lock);
 		}
 		if(shared_mem.Read(drive_info_local_copy) == ALF_NO_ERROR){
 			ServerComm.Write(drive_info_local_copy);
+			if (DEBUG) printf("servercomm write something\n");
+			if(DEBUG) Alf_Log::alf_log_write("write Data thread doing something", log_info);
 		}
 		notify_ServerWrite_Task = false;
 	}
 	Alf_Log::alf_log_write("Ended writeData thread", log_info);
+}
+
+void writePosition(void) {
+	Alf_Log::alf_log_write("Started writePosition thread", log_info);
+
+	Alf_Drive_Info drive_info_local_copy;
+	Alf_Position alf_position;
+	alf_position.x_position = 400;
+	alf_position.y_position = 250;
+	std::mutex mux;
+	std::unique_lock<std::mutex> lock(mux);
+	while(run_threads) {
+
+			ServerComm.Write(alf_position);
+			if (DEBUG) printf("position thread write something\n");
+			if(DEBUG) Alf_Log::alf_log_write("write Position thread doing something", log_info);
+
+	}
+	Alf_Log::alf_log_write("Ended writePosition thread", log_info);
 }
 
 void readData(void) {
@@ -115,7 +137,8 @@ void readData(void) {
 		rec += ", Angle: " + std::to_string(global_drive_command.angle);
 		rec += ", Light: " + std::to_string(global_drive_command.light);
 
-		log.alf_log_write(rec, log_info);
+		mylog.alf_log_write(rec, log_info);
+		if(DEBUG) printf("read Data: %s",rec.c_str());
 
 		shared_mem.Write(global_drive_command);
 
@@ -129,7 +152,7 @@ int main()
 	std::unique_lock<std::mutex> lck(Run_Main_Task_mut);
 	signal(SIGINT, Stop_Program);
 
-	log.alf_log_init("Melmac.log", log_debug, true);
+	mylog.alf_log_init("Melmac.log", log_debug, true);
 
 	global_drive_info.speed = 42;
 	global_drive_info.acceleration = 43;
@@ -157,6 +180,7 @@ int main()
 			std::thread hardwareReadThread(HardwareReadHandler);
 			std::thread sendThread(writeData);
 			std::thread recThread(readData);
+			std::thread posThread(writePosition);
 
 			Run_Main_Task_cond.wait(lck);
 
@@ -165,6 +189,7 @@ int main()
 			sendThread.join();
 			recThread.join();
 			hardwareReadThread.join();
+			posThread.join();
 
 			close(fd);
 			ServerComm.EndCommunication();

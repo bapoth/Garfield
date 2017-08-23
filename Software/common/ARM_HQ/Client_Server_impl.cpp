@@ -10,7 +10,7 @@
 #include <netdb.h>
 
 using std::string;
-
+#define DEBUG 1
 
 uint8_t Client::startConnection(const uint32_t& _portno, const string& _server)
 {
@@ -49,6 +49,9 @@ alf_error Client::sendOverSocket(const string& data)
 	else{
 		ret_val = ALF_SOCKET_NOT_READY;
 	}
+	if (DEBUG){
+		printf("client sending: %s\n",data);
+	}
 	return ret_val;
 }
 
@@ -70,6 +73,9 @@ alf_error Client::readOverSocket(string& s)
 			}
 		} while (hlp != ';');
 		ret_val = ALF_NO_ERROR;
+	}
+	if (DEBUG){
+		printf("client reading: %s\n",s);
 	}
 	return ret_val;
 }
@@ -144,6 +150,15 @@ alf_error Server::readOverSocket(string& s)
         } while (hlp != ';');
         ret_val = ALF_NO_ERROR;
     }
+	if (DEBUG){
+		string s1 = "hallo";
+		string s2 = s.data();
+		printf("server reading: %s\n","halo fester string");
+		printf("server reading2: %s\n",s1.c_str());
+		printf("server reading3: %s \n", s.c_str());
+
+		//printf("server reading3: %s\n",s1);
+	}
     return ret_val;
 }
 
@@ -157,6 +172,9 @@ alf_error Server::sendOverSocket(const string &data){
 	}
 	else{
 		ret_val = ALF_SOCKET_NOT_READY;
+	}
+	if (DEBUG){
+		printf("server sending: %s\n",data);
 	}
 	return ret_val;
 }

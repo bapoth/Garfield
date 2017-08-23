@@ -125,6 +125,7 @@ public:
      * @param[in] Info - Info object
      * @return
      */
+    alf_error Write(Alf_Position &command);
     alf_error Write(Alf_Drive_Info &info);
 
 	/*!
