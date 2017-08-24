@@ -1,0 +1,8 @@
+breezy/Laser.o: ../breezy/Laser.cpp ../breezy/hokuyo.h \
+ ../breezy/Laser.hpp ../breezy/coreslam.h
+
+../breezy/hokuyo.h:
+
+../breezy/Laser.hpp:
+
+../breezy/coreslam.h:

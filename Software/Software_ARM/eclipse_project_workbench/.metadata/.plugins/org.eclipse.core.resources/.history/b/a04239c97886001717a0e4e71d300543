@@ -1,0 +1,13 @@
+breezy/Scan.o: ../breezy/Scan.cpp ../breezy/coreslam.h \
+ ../breezy/Velocities.hpp ../breezy/Laser.hpp ../breezy/hokuyo.h \
+ ../breezy/Scan.hpp
+
+../breezy/coreslam.h:
+
+../breezy/Velocities.hpp:
+
+../breezy/Laser.hpp:
+
+../breezy/hokuyo.h:
+
+../breezy/Scan.hpp:

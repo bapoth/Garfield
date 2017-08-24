@@ -1,0 +1,8 @@
+breezy/coreslam.o: ../breezy/coreslam.c ../breezy/coreslam.h \
+ ../breezy/coreslam_internals.h ../breezy/random.h
+
+../breezy/coreslam.h:
+
+../breezy/coreslam_internals.h:
+
+../breezy/random.h:

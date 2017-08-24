@@ -1,0 +1,3 @@
+src/c/ziggurat.o: ../src/c/ziggurat.c ../src/c/ziggurat.h
+
+../src/c/ziggurat.h:

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item value="breezyslam" key="org.eclipse.cdt.utils.ui.controls.FileListControl"/>
+	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration">
+	</section>
+	<section name="PDOMSearchPage">
+		<item value="false" key="caseSensitive"/>
+		<item value="227191" key="searchFlags"/>
+		<list key="previousPatterns">
+			<item value="fd"/>
+			<item value="notify_ServerWrite_Task"/>
+			<item value="Laser"/>
+			<item value="segmentation"/>
+			<item value="global_drive_command"/>
+		</list>
+	</section>
+	<section name="OptionalMessageDialog.hide.">
+		<item value="0" key="askReindex.detail"/>
+	</section>
+	<section name="completion_proposal_size">
+	</section>
+</section>

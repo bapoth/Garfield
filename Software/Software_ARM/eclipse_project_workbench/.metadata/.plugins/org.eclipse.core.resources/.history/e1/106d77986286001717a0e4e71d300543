@@ -1,0 +1,8 @@
+src/breezy/hokuyo.o: ../src/breezy/hokuyo.c ../src/breezy/hokuyo.h \
+ ../src/breezy/serial_device.h ../src/breezy/message_utils.h
+
+../src/breezy/hokuyo.h:
+
+../src/breezy/serial_device.h:
+
+../src/breezy/message_utils.h:

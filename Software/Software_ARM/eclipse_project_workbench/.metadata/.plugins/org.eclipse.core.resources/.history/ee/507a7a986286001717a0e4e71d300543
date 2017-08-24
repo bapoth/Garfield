@@ -1,0 +1,6 @@
+src/breezy/random.o: ../src/breezy/random.c ../src/breezy/ziggurat.h \
+ ../src/breezy/random.h
+
+../src/breezy/ziggurat.h:
+
+../src/breezy/random.h:

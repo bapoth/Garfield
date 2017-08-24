@@ -1,0 +1,39 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../src/c/coreslam.c \
+../src/c/coreslam_armv7l.c \
+../src/c/hokuyo.c \
+../src/c/random.c \
+../src/c/serial_device.c \
+../src/c/ziggurat.c 
+
+OBJS += \
+./src/c/coreslam.o \
+./src/c/coreslam_armv7l.o \
+./src/c/hokuyo.o \
+./src/c/random.o \
+./src/c/serial_device.o \
+./src/c/ziggurat.o 
+
+C_DEPS += \
+./src/c/coreslam.d \
+./src/c/coreslam_armv7l.d \
+./src/c/hokuyo.d \
+./src/c/random.d \
+./src/c/serial_device.d \
+./src/c/ziggurat.d 
+
+
+# Each subdirectory must supply rules for building sources it contributes
+src/c/%.o: ../src/c/%.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross GCC Compiler'
+	arm-linux-gnueabihf-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -mfpu=neon -std=c++11 -lpthread -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+

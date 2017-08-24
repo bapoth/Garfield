@@ -1,0 +1,5 @@
+src/c/random.o: ../src/c/random.c ../src/c/ziggurat.h ../src/c/random.h
+
+../src/c/ziggurat.h:
+
+../src/c/random.h:

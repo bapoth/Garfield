@@ -1,0 +1,25 @@
+breezy/algorithms.o: ../breezy/algorithms.cpp ../breezy/coreslam.h \
+ ../breezy/random.h ../breezy/Position.hpp ../breezy/Map.hpp \
+ ../breezy/Laser.hpp ../breezy/hokuyo.h ../breezy/Scan.hpp \
+ ../breezy/Velocities.hpp ../breezy/WheeledRobot.hpp \
+ ../breezy/algorithms.hpp
+
+../breezy/coreslam.h:
+
+../breezy/random.h:
+
+../breezy/Position.hpp:
+
+../breezy/Map.hpp:
+
+../breezy/Laser.hpp:
+
+../breezy/hokuyo.h:
+
+../breezy/Scan.hpp:
+
+../breezy/Velocities.hpp:
+
+../breezy/WheeledRobot.hpp:
+
+../breezy/algorithms.hpp:

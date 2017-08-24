@@ -1,0 +1,6 @@
+src/c/serial_device.o: ../src/c/serial_device.c ../src/c/serial_device.h \
+ ../src/c/message_utils.h
+
+../src/c/serial_device.h:
+
+../src/c/message_utils.h:

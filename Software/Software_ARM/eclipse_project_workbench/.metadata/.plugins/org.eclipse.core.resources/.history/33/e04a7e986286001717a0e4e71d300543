@@ -1,0 +1,3 @@
+src/breezy/ziggurat.o: ../src/breezy/ziggurat.c ../src/breezy/ziggurat.h
+
+../src/breezy/ziggurat.h:

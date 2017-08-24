@@ -1,0 +1,14 @@
+src/cpp/Scan.o: ../src/cpp/Scan.cpp \
+ C:\Users\133x\Documents\studium\oth\HSP\GITHUB_Verzeichniss\Software\Software_ARM\eclipse_project_workbench\HSP_Breezyslam\src\c/coreslam.h \
+ ../src/cpp/Velocities.hpp ../src/cpp/Laser.hpp ../src/cpp/../c/hokuyo.h \
+ ../src/cpp/Scan.hpp
+
+C:\Users\133x\Documents\studium\oth\HSP\GITHUB_Verzeichniss\Software\Software_ARM\eclipse_project_workbench\HSP_Breezyslam\src\c/coreslam.h:
+
+../src/cpp/Velocities.hpp:
+
+../src/cpp/Laser.hpp:
+
+../src/cpp/../c/hokuyo.h:
+
+../src/cpp/Scan.hpp:

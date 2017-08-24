@@ -1,0 +1,6 @@
+src/c/coreslam_sisd.o: ../src/c/coreslam_sisd.c ../src/c/coreslam.h \
+ ../src/c/coreslam_internals.h
+
+../src/c/coreslam.h:
+
+../src/c/coreslam_internals.h:

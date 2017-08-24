@@ -1,0 +1,36 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+CPP_SRCS += \
+../src/cpp/Laser.cpp \
+../src/cpp/Map.cpp \
+../src/cpp/Scan.cpp \
+../src/cpp/WheeledRobot.cpp \
+../src/cpp/algorithms.cpp 
+
+OBJS += \
+./src/cpp/Laser.o \
+./src/cpp/Map.o \
+./src/cpp/Scan.o \
+./src/cpp/WheeledRobot.o \
+./src/cpp/algorithms.o 
+
+CPP_DEPS += \
+./src/cpp/Laser.d \
+./src/cpp/Map.d \
+./src/cpp/Scan.d \
+./src/cpp/WheeledRobot.d \
+./src/cpp/algorithms.d 
+
+
+# Each subdirectory must supply rules for building sources it contributes
+src/cpp/%.o: ../src/cpp/%.cpp
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross G++ Compiler'
+	arm-linux-gnueabihf-g++ -I"C:\Users\133x\Documents\studium\oth\HSP\GITHUB_Verzeichniss\Software\common\ARM_NIOS" -I"C:\Users\133x\Documents\studium\oth\HSP\GITHUB_Verzeichniss\Software\Software_ARM\eclipse_project_workbench\HSP_Breezyslam\src\c" -I"C:\Users\133x\Documents\studium\oth\HSP\GITHUB_Verzeichniss\Software\Software_ARM\eclipse_project_workbench\HSP_Breezyslam\src\cpp" -I"C:\Users\133x\Documents\studium\oth\HSP\GITHUB_Verzeichniss\Software\common\ARM_NIOS_HQ" -I"C:\Users\133x\Documents\studium\oth\HSP\GITHUB_Verzeichniss\Software\common\ARM_HQ" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -mfpu=neon -std=c++11 -lpthread -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+

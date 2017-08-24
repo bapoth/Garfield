@@ -1,0 +1,8 @@
+src/cpp/Laser.o: ../src/cpp/Laser.cpp ../src/cpp/Laser.hpp \
+ ../src/cpp/../c/hokuyo.h ../src/cpp/../c/coreslam.h
+
+../src/cpp/Laser.hpp:
+
+../src/cpp/../c/hokuyo.h:
+
+../src/cpp/../c/coreslam.h:

@@ -1,0 +1,6 @@
+breezy/coreslam_armv7l.o: ../breezy/coreslam_armv7l.c \
+ ../breezy/coreslam.h ../breezy/coreslam_internals.h
+
+../breezy/coreslam.h:
+
+../breezy/coreslam_internals.h:

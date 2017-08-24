@@ -1,0 +1,6 @@
+src/c/coreslam_armv7l.o: ../src/c/coreslam_armv7l.c ../src/c/coreslam.h \
+ ../src/c/coreslam_internals.h
+
+../src/c/coreslam.h:
+
+../src/c/coreslam_internals.h:

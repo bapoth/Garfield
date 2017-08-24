@@ -1,0 +1,6 @@
+breezy/serial_device.o: ../breezy/serial_device.c \
+ ../breezy/serial_device.h ../breezy/message_utils.h
+
+../breezy/serial_device.h:
+
+../breezy/message_utils.h:

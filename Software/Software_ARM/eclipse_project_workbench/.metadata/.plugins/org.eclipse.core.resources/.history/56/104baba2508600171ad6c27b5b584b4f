@@ -1,0 +1,8 @@
+src/c/coreslam.o: ../src/c/coreslam.c ../src/c/coreslam.h \
+ ../src/c/coreslam_internals.h ../src/c/random.h
+
+../src/c/coreslam.h:
+
+../src/c/coreslam_internals.h:
+
+../src/c/random.h:

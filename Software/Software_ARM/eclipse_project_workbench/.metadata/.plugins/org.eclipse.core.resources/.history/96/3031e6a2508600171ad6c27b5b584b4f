@@ -1,0 +1,6 @@
+src/cpp/WheeledRobot.o: ../src/cpp/WheeledRobot.cpp \
+ ../src/cpp/WheeledRobot.hpp ../src/cpp/Velocities.hpp
+
+../src/cpp/WheeledRobot.hpp:
+
+../src/cpp/Velocities.hpp:

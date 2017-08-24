@@ -1,0 +1,6 @@
+breezy/WheeledRobot.o: ../breezy/WheeledRobot.cpp \
+ ../breezy/WheeledRobot.hpp ../breezy/Velocities.hpp
+
+../breezy/WheeledRobot.hpp:
+
+../breezy/Velocities.hpp:

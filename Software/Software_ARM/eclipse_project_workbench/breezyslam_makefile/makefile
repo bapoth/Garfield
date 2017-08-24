@@ -1,0 +1,107 @@
+# Makefile : builds libbreezyslam.so C++ library
+#
+# Copyright (C) Simon D. Levy 2014
+#
+# This code is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as 
+# published by the Free Software Foundation, either version 3 of the 
+# License, or (at your option) any later version.
+#
+# This code is distributed in the hope that it will be useful,     
+# but WITHOUT ANY WARRANTY without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License 
+#  along with this code.  If not, see <http:#www.gnu.org/licenses/>.
+#  You should also have received a copy of the Parrot Parrot AR.Drone 
+#  Development License and Parrot AR.Drone copyright notice and disclaimer 
+#  and If not, see 
+#   <https:#projects.ardrone.org/attachments/277/ParrotLicense.txt> 
+# and
+#   <https:#projects.ardrone.org/attachments/278/ParrotCopyrightAndDisclaimer.txt>.
+
+# Where you want to put the library
+LIBDIR = .
+
+CPPPATH = C:/Users/133x/Documents/studium/oth/HSP/GITHUB_Verzeichniss/Software/Software_ARM/eclipse_project_workbench/breezyslam_makefile/src/
+CPATH = C:/Users/133x/Documents/studium/oth/HSP/GITHUB_Verzeichniss/Software/Software_ARM/eclipse_project_workbench/breezyslam_makefile/src/
+
+# Set library extension based on OS
+#ifeq ("$(shell uname)","Darwin")
+#  LIBEXT = dylib
+#else ifeq ("$(shell uname)","Linux")
+  CFLAGS = -fPIC
+  LIBEXT = so
+#else
+#  LIBEXT = dll
+#endif
+
+#ARCH = $(shell uname -m)
+ARCH = armv7l
+
+# Set SIMD compile params based on architecture
+#ifeq ("$(ARCH)","armv7l")
+  SIMD_FLAGS = -mfpu=neon
+#else ifeq ("$(ARCH)","i686")
+#  SIMD_FLAGS = -msse3
+#else
+#  ARCH = sisd
+#endif
+
+all: libbreezyslam.$(LIBEXT)
+
+test: breezytest
+	./breezytest
+
+libbreezyslam.$(LIBEXT): algorithms.o  Scan.o Map.o WheeledRobot.o \
+                         coreslam.o coreslam_$(ARCH).o random.o ziggurat.o \
+			 serial_device.o hokuyo.o Laser.o
+	arm-linux-gnueabihf-g++ -O3 -shared algorithms.o Scan.o Map.o WheeledRobot.o \
+                        coreslam.o coreslam_$(ARCH).o random.o ziggurat.o \
+			serial_device.o hokuyo.o Laser.o\
+          -o libbreezyslam.$(LIBEXT) -lm -std=c++11 -lpthread -mfpu=neon -fPIC 
+
+algorithms.o: $(CPPPATH)algorithms.cpp $(CPPPATH)algorithms.hpp $(CPPPATH)Laser.hpp $(CPPPATH)Position.hpp $(CPPPATH)Map.hpp $(CPPPATH)Scan.hpp $(CPPPATH)Velocities.hpp \
+               $(CPPPATH)WheeledRobot.hpp $(CPPPATH)coreslam.h 
+	arm-linux-gnueabihf-g++ -O3 -I$(CPPPATH)../c -c -Wall $(CFLAGS) $(CPPPATH)algorithms.cpp -std=c++11 -lpthread -mfpu=neon -fPIC
+
+Laser.o: $(CPPPATH)Laser.cpp $(CPPPATH)Laser.hpp $(CPPPATH)coreslam.h $(CPPPATH)hokuyo.h
+	arm-linux-gnueabihf-g++ -O3 -I$(CPATH) -c -Wall $(CFLAGS) $(CPPPATH)Laser.cpp -std=c++11 -lpthread -mfpu=neon -fPIC
+
+Scan.o: $(CPPPATH)Scan.cpp $(CPPPATH)Scan.hpp $(CPPPATH)Velocities.hpp $(CPPPATH)Laser.hpp $(CPPPATH)coreslam.h $(CPPPATH)hokuyo.h
+	arm-linux-gnueabihf-g++ -O3 -I$(CPATH) -c -Wall $(CFLAGS) $(CPPPATH)Scan.cpp -std=c++11 -lpthread -mfpu=neon -fPIC
+
+
+serial_device.o : $(CPPPATH)serial_device.c $(CPPPATH)serial_device.h $(CPPPATH)message_utils.h
+	arm-linux-gnueabihf-g++ -Wall -c -I$(CPATH) $(CPPPATH)serial_device.c  -std=c++11 -lpthread -mfpu=neon -fPIC
+
+hokuyo.o : $(CPPPATH)hokuyo.c $(CPPPATH)hokuyo.h $(CPPPATH)message_utils.h
+	arm-linux-gnueabihf-g++ -Wall -c -I$(CPPPATH)../c $(CPPPATH)hokuyo.c  -std=c++11 -lpthread -mfpu=neon -fPIC
+
+Map.o: $(CPPPATH)Map.cpp $(CPPPATH)Map.hpp $(CPPPATH)Position.hpp $(CPPPATH)Scan.hpp $(CPPPATH)coreslam.h
+	arm-linux-gnueabihf-g++ -O3 -I$(CPPPATH)../c -c -Wall $(CFLAGS) $(CPPPATH)Map.cpp -std=c++11 -lpthread -mfpu=neon -fPIC
+
+WheeledRobot.o: $(CPPPATH)WheeledRobot.cpp $(CPPPATH)WheeledRobot.hpp 
+	arm-linux-gnueabihf-g++ -O3 -I$(CPPPATH)../c -c -Wall $(CFLAGS) $(CPPPATH)WheeledRobot.cpp -std=c++11 -lpthread -mfpu=neon -fPIC
+
+coreslam.o: $(CPPPATH)coreslam.c $(CPPPATH)coreslam.h
+	arm-linux-gnueabihf-gcc -O3 -c -Wall $(CFLAGS) $(CPPPATH)coreslam.c -std=c++11 -lpthread -mfpu=neon -fPIC
+
+coreslam_$(ARCH).o: $(CPPPATH)coreslam_$(ARCH).c $(CPPPATH)coreslam.h
+	arm-linux-gnueabihf-gcc -O3 -c -Wall $(CFLAGS) $(SIMD_FLAGS) $(CPPPATH)coreslam_$(ARCH).c -std=c++11 -lpthread -mfpu=neon -fPIC
+
+random.o: $(CPPPATH)random.c
+	arm-linux-gnueabihf-gcc -O3 -c -Wall $(CFLAGS) $(CPPPATH)random.c -std=c++11 -lpthread -mfpu=neon -fPIC
+	
+ziggurat.o: $(CPPPATH)ziggurat.c
+	arm-linux-gnueabihf-gcc -O3 -c -Wall $(CFLAGS) $(CPPPATH)ziggurat.c -std=c++11 -lpthread -mfpu=neon -fPIC
+	
+install: libbreezyslam.$(LIBEXT)
+	cp libbreezyslam.$(LIBEXT) $(LIBDIR)
+	
+doc:
+	doxygen
+
+clean:
+	rm -rf  libbreezyslam.$(LIBEXT) *.o Documentation \#* *~

@@ -1,0 +1,8 @@
+src/c/hokuyo.o: ../src/c/hokuyo.c ../src/c/hokuyo.h \
+ ../src/c/serial_device.h ../src/c/message_utils.h
+
+../src/c/hokuyo.h:
+
+../src/c/serial_device.h:
+
+../src/c/message_utils.h:

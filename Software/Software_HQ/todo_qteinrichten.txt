@@ -1,0 +1,4 @@
+https://packages.ubuntu.com/xenial/amd64/qttools5-dev/filelist
+
+
+qt concurrent, qtcore hinzufügen
