@@ -54,6 +54,7 @@ void HardwareReadHandler(void){
         .events = POLLIN,
     };
 	while(run_threads){
+		printf("Hallo vom HardwareReadHandler Task \n");
 	    irq_info = 1; /* unmask */
 
 	    nb = write(fd, &irq_info, sizeof(irq_info));
@@ -63,11 +64,14 @@ void HardwareReadHandler(void){
 	    	break;
 	    }
 
+	    //LEX:: Test: muss wieder einkommentiert werden
 		ret = poll(&fds, 1, -1);	//waiting until interrupt was coming
+		printf("es wurde was gepollt in der HardwareReadHandler \n");
         if (ret >= 1) {
             nb = read(fd, &irq_info, sizeof(irq_info));
             if (nb == sizeof(irq_info)) {
             	shared_mem.ReadInterruptHandler();
+            	printf("und das notify_ServerWrite_Task wurde gesetzt\n");
             	notify_ServerWrite_Task = true;
             	Run_ServerWrite_Task.notify_one();
             }
@@ -88,11 +92,14 @@ void writeData(void) {
 	std::mutex mux;
 	std::unique_lock<std::mutex> lock(mux);
 	while(run_threads) {
+		printf("hallo vom schreib an server task \n");
+
 		while(not notify_ServerWrite_Task){
 			Run_ServerWrite_Task.wait(lock);
 		}
 		if(shared_mem.Read(drive_info_local_copy) == ALF_NO_ERROR){
 			ServerComm.Write(drive_info_local_copy);
+
 		}
 		notify_ServerWrite_Task = false;
 	}
@@ -108,7 +115,7 @@ void readData(void) {
 		alf_mess_types msgType;
 
 		ServerComm.Read(readBuffer, msgType);
-
+		//printf("es wurde was vom server gelesen \n");
 		rec = "Speed: " + std::to_string(global_drive_command.speed);
 		rec += ", Direction: " + std::to_string(global_drive_command.direction);
 		rec += ", Angle: " + std::to_string(global_drive_command.angle);
