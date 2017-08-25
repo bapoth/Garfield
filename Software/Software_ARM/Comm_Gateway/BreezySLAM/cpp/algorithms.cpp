@@ -118,7 +118,7 @@ void CoreSLAM::getmap(unsigned char * mapbytes)
 
 void CoreSLAM::setmap(unsigned char * mapbytes)
 {
-    this->map->get((char *)mapbytes);
+    this->map->set((char *)mapbytes);
 }
 
 Scan * CoreSLAM::scan_create(int span)
@@ -139,6 +139,13 @@ CoreSLAM(laser, map_size_pixels, map_size_meters)
     this->position = Position(this->init_coord_mm(), this->init_coord_mm(), 0);
 }
 
+SinglePositionSLAM::SinglePositionSLAM(Laser & laser, int map_size_pixels, double map_size_meters,
+									   double startpos_x, double startpos_y,
+									   double startpos_degrees) :
+CoreSLAM(laser, map_size_pixels, map_size_meters)
+{
+    this->position = Position(startpos_x, startpos_y, startpos_degrees);
+}
     
 // SinglePositionSLAM class -------------------------------------------------------------------------------------------
 
@@ -251,10 +258,16 @@ SinglePositionSLAM(laser, map_size_pixels, map_size_meters)
 {
 }
 
+Deterministic_SLAM::Deterministic_SLAM(Laser & laser, int map_size_pixels, double map_size_meters,
+		   	   	   	   	   	   	   	   double startpos_x, double startpos_y,
+									   double startpos_degrees) :
+SinglePositionSLAM(laser, map_size_pixels, map_size_meters,
+				   startpos_x, startpos_y, startpos_degrees)
+{}
+
 Position Deterministic_SLAM::getNewPosition(Position & start_pos)
 {
     return Position(start_pos.x_mm, start_pos.y_mm, start_pos.theta_degrees);
 }
-
 
         

@@ -25,6 +25,9 @@ File was changed for Garfield-Project.
 #ifndef __ALGORITHMS__
 #define __ALGORITHMS__
 
+#include "Velocities.hpp"
+#include "Position.hpp"
+
 #include <stdio.h>
 #include <math.h>
 
@@ -129,7 +132,7 @@ protected:
     /**
     * Deallocates this CoreSLAM object.
     */
-    ~CoreSLAM(void);
+    virtual ~CoreSLAM(void);
 
      /**
      * A pointer to the current map
@@ -201,6 +204,24 @@ protected:
     */
     SinglePositionSLAM(Laser & laser, int map_size_pixels, double map_size_meters);
     
+    /**
+    * Creates a SinglePositionSLAM object.
+    * @param laser 				a Laser object containing parameters for your Lidar equipment
+    * @param map_size_pixels 	the size of the desired map (map is square)
+    * @param map_size_meters 	the size of the area to be mapped, in meters
+    * @param startpos_x 		the x coordinate of the startposition
+    * @param startpos_y 		the y coordinate of the startposition
+    * @param startpos_degrees	the theta degress coordinate of the startposition
+    * @return a new SinglePositionSLAM object
+    */
+    SinglePositionSLAM(Laser & laser, int map_size_pixels, double map_size_meters,
+    				   double startpos_x, double startpos_y, double startpos_degrees);
+
+    /**
+    * Deallocates this SinglePositionSLAM object.
+    */
+    virtual ~SinglePositionSLAM(void){}
+
     
     /**
     * Updates the map and point-cloud (particle cloud). Called automatically by CoreSLAM::update()
@@ -305,6 +326,25 @@ public:
     */
     Deterministic_SLAM(Laser & laser, int map_size_pixels, double map_size_meters);
     
+    /**
+    * Creates a Deterministic_SLAM object.
+    * @param laser a Laser object containing parameters for your Lidar equipment
+    * @param map_size_pixels the size of the desired map (map is square)
+    * @param map_size_meters the size of the area to be mapped, in meters
+    * @param startpos_x 		the x coordinate of the startposition
+    * @param startpos_y 		the y coordinate of the startposition
+    * @param startpos_degrees	the theta degress coordinate of the startposition
+    * @return a new CoreSLAM object
+    */
+    Deterministic_SLAM(Laser & laser, int map_size_pixels, double map_size_meters,
+			   	   	   double startpos_x, double startpos_y, double startpos_degrees);
+
+
+    /**
+    * Deallocates this Deterministic_SLAM object.
+    */
+    ~Deterministic_SLAM(void){}
+
 protected:
 
     /**

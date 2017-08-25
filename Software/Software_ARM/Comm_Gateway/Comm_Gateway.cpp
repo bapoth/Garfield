@@ -7,6 +7,10 @@
 #include <poll.h>
 #include <fcntl.h>
 
+//Pat:
+#include "BreezySLAM.hpp"
+//#include "log2pgm.hpp"
+
 ///Port on which socket is created
 #define COMPORT 6667
 
@@ -98,18 +102,13 @@ void writeData(void) {
 
 
 		if(DEBUG) printf("write Data thread\n");
->>>>>>> 16134b3bdd11983e6503d0088963b6d2163f4f0b:Software/HSP_ARM_Gateway/src/Comm_Gateway.cpp
 		while(not notify_ServerWrite_Task){
 			Run_ServerWrite_Task.wait(lock);
 		}
 		if(shared_mem.Read(drive_info_local_copy) == ALF_NO_ERROR){
 			ServerComm.Write(drive_info_local_copy);
-
-
-
 			if (DEBUG) printf("servercomm write something\n");
-			if(DEBUG) Alf_Log::alf_log_write("write Data thread doing something", log_info);
->>>>>>> 16134b3bdd11983e6503d0088963b6d2163f4f0b:Software/HSP_ARM_Gateway/src/Comm_Gateway.cpp
+			if (DEBUG) Alf_Log::alf_log_write("write Data thread doing something", log_info);
 		}
 		notify_ServerWrite_Task = false;
 	}
@@ -187,6 +186,20 @@ int main()
 		Alf_Log::alf_log_write("Initialized Mailbox", log_info);
 
 		if(ServerComm.Init(COMPORT)) {
+
+			//Pat: Probieren von Breezyslam
+
+			BreezySLAM slamAlg;
+			slamAlg.startBreezySLAM(16000,16000,0,(char*)"/home/ubuntu/bin/exp2.pgm");
+			slamAlg.saveCurrentMap((char*)"/home/ubuntu/bin/exp2_saving.pgm");
+			double x = -1;
+			double y = -2;
+			double theta = -3;
+		    slamAlg.getCurrentPos(x, y, theta);
+			printf("Current Pos: %f, %f, %f \n", x, y, theta);
+			slamAlg.endBreezySLAM();
+
+			//mainBreezySLAM();
 
 			Alf_Log::alf_log_write("Created socket", log_info);
 			shared_mem.WriteInterfaceStatus = true;

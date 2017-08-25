@@ -109,6 +109,25 @@ public:
 
         return out;
     }
+
+    operator std::string() const
+    {
+        char str[512];
+
+        sprintf(str,
+             "<scan_size=%d | scan_rate=%3.3f hz | "
+             "detection_angle=%3.3f deg | "
+             "distance_no_detection=%7.4f mm | "
+             "detection_margin=%d | offset=%4.4f mm>",
+             this->scan_size,  this->scan_rate_hz,
+			 this->detection_angle_degrees,
+			 this->distance_no_detection_mm,
+			 this->detection_margin,
+			 this->offset_mm);
+
+        return str;
+    }
+
 };
     
 /**
