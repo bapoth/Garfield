@@ -126,6 +126,14 @@ public:
      * @return
      */
     alf_error Write(Alf_Position &command);
+
+    /*!
+     * @brief Creates a string with all, for application relevant information of slam-algorithm
+     * @param[in] Info - Info object
+     * @return
+     */
+    alf_error Write(Alf_PositionAndMap &command);
+
     alf_error Write(Alf_Drive_Info &info);
 
 	/*!

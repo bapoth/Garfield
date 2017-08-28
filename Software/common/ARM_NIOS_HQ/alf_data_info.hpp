@@ -4,6 +4,7 @@
 #ifndef ALF_DATA_INFO
 #define ALF_DATA_INFO
 #include "stdint.h"
+#include <vector>
 
 /*!
  * @brief The Alf_Drive_Info class holds the Infos for steering the Alf
@@ -46,6 +47,19 @@ public:
     int x_position;
     ///This variable holds the y-coordinate of the car's current position on the map
     int y_position;
+    ///This variable holds the theta-coordinate of the car's current position on the map
+    double theta_position;
+};
+
+class Alf_PositionAndMap{
+public:
+    ///This variable holds the coordinate of the car's current position on the map
+    ///in pixel.
+	Alf_Position pixPosition;
+
+	///This variable holds the map.
+	///The map is an vector of char. Each char represents an Pixel value.
+	std::vector<unsigned char> map;
 };
 
 /// global variables

@@ -20,6 +20,8 @@ enum ALF_MESSAGE_TYPES{
     ALF_DRIVE_INFO_ID = 4,
 	///ALF Position
 	ALF_POSITION_ID = 5,
+	///ALF Position and Map
+	ALF_POSITIONANDMAP_ID = 6,
 	/// the communication should stop or interrupt now
 	ALF_END_ID = 255
 };

@@ -7,15 +7,21 @@
 #include <poll.h>
 #include <fcntl.h>
 
-//Pat:
-#include "BreezySLAM.hpp"
-//#include "log2pgm.hpp"
 
 ///Port on which socket is created
 #define COMPORT 6667
 
 ///Send/Receive Frequence in Hz
 #define COMFREQ 50
+
+///delay of info-transportation to HQ/GUI
+#define COMPOSMAP 300
+#define COMSAVEMAP 300
+
+///BreezySLAM: File for saving the current map
+#define SAVEPGMFILE "/home/ubuntu/bin/savingSlamMap.pgm"
+///BreezySLAM: File, which is loaded into slam-algorithm
+#define SOURCEPGMFILE "/home/ubuntu/bin/srcSlamMap.pgm"
 
 ///Alf Communication Server object
 Alf_Communication<Server> ServerComm;
@@ -90,6 +96,23 @@ void HardwareReadHandler(void){
 	Alf_Log::alf_log_write("Ended HardwareReadHandler thread", log_info);
 }
 
+void saveCurrentMap(BreezySLAM slamAlg) {
+	Alf_Log::alf_log_write("Started saveCurrentMap thread", log_info);
+
+	/* Loop: save map into an pgm-File*/
+	std::mutex mux;
+	std::unique_lock<std::mutex> lock(mux);
+	while(run_threads) {
+
+		/* Save the current map */
+		slamAlg.saveCurrentMap((char*)SAVEPGMFILE);
+
+		/* Wait => avoid overloading of vehicle */
+		std::this_thread::sleep_for(std::chrono::milliseconds(1/COMSAVEMAP));
+	}
+	Alf_Log::alf_log_write("Ended writePosition thread", log_info);
+}
+
 void writeData(void) {
 	Alf_Log::alf_log_write("Started writeData thread", log_info);
 
@@ -97,10 +120,6 @@ void writeData(void) {
 	std::mutex mux;
 	std::unique_lock<std::mutex> lock(mux);
 	while(run_threads) {
-
-	
-
-
 		if(DEBUG) printf("write Data thread\n");
 		while(not notify_ServerWrite_Task){
 			Run_ServerWrite_Task.wait(lock);
@@ -115,21 +134,54 @@ void writeData(void) {
 	Alf_Log::alf_log_write("Ended writeData thread", log_info);
 }
 
-void writePosition(void) {
+void writePositionAndMap(BreezySLAM slamAlg) {
 	Alf_Log::alf_log_write("Started writePosition thread", log_info);
 
-	Alf_Drive_Info drive_info_local_copy;
-	Alf_Position alf_position;
-	alf_position.x_position = 400;
-	alf_position.y_position = 250;
+	int currentXPos;
+	int currentYPos;
+	double currentThetaPos;
+	Alf_Position currentPosition;
+	unsigned char * currentMap;
+	int currentMapSize;
+	std::vector<unsigned char> currentMapVector;
+	Alf_PositionAndMap posAndMap;
+
+
+	/* Loop: Update&Send current position and map to HQ/GUI */
 	std::mutex mux;
 	std::unique_lock<std::mutex> lock(mux);
 	while(run_threads) {
 
-			ServerComm.Write(alf_position);
-			if (DEBUG) printf("position thread write something\n");
-			if(DEBUG) Alf_Log::alf_log_write("write Position thread doing something", log_info);
+			/* Get current position values from slam-algorithm */
+			slamAlg.getCurrentPosAsPixel(currentXPos, currentYPos, currentThetaPos);
+			currentPosition.x_position 		= currentXPos;
+			currentPosition.y_position 		= currentYPos;
+			currentPosition.theta_position 	= currentThetaPos;
 
+
+			/* Get the current map from slam-algorithm */
+			slamAlg.getCurrentMap(&currentMap);
+			currentMapSize = slamAlg.map_size_pixels * slamAlg.map_size_pixels;
+			currentMapVector.assign(currentMap, currentMap + currentMapSize);
+
+			/* Set info into one datastructur */
+			posAndMap.pixPosition = currentPosition;
+			posAndMap.map		  = currentMapVector;
+
+			/* Send to HQ/GUI */
+			ServerComm.Write(posAndMap);
+			if (DEBUG) printf("PositionAndMap thread write something\n");
+			if (DEBUG) Alf_Log::alf_log_write("write PositionAndMap thread doing something", log_info);
+
+			/* Clean up */
+			if(currentMap != NULL)
+			{
+				delete [] currentMap;
+				currentMap = NULL;
+			}
+
+			/* Wait => avoid overloading of vehicle */
+			std::this_thread::sleep_for(std::chrono::milliseconds(1/COMPOSMAP));
 	}
 	Alf_Log::alf_log_write("Ended writePosition thread", log_info);
 }
@@ -149,7 +201,8 @@ void readData(void) {
 		rec += ", Angle: " + std::to_string(global_drive_command.angle);
 		rec += ", Light: " + std::to_string(global_drive_command.light);
 
-		mylog.alf_log_write(rec, log_info);
+		// Patrick: ausgabe auskommentiert
+		// mylog.alf_log_write(rec, log_info);
 		if(DEBUG) printf("read Data: %s",rec.c_str());
 
 		shared_mem.Write(global_drive_command);
@@ -187,26 +240,35 @@ int main()
 
 		if(ServerComm.Init(COMPORT)) {
 
-			//Pat: Probieren von Breezyslam
-
+			/* Start the slam-algorithm "BreezySLAM" */
 			BreezySLAM slamAlg;
-			slamAlg.startBreezySLAM(16000,16000,0,(char*)"/home/ubuntu/bin/exp2.pgm");
-			slamAlg.saveCurrentMap((char*)"/home/ubuntu/bin/exp2_saving.pgm");
-			double x = -1;
-			double y = -2;
-			double theta = -3;
-		    slamAlg.getCurrentPos(x, y, theta);
-			printf("Current Pos: %f, %f, %f \n", x, y, theta);
-			slamAlg.endBreezySLAM();
+			slamAlg.startBreezySLAM(16000,16000,0,(char*)SOURCEPGMFILE);
 
-			//mainBreezySLAM();
+			//Patrick: Probieren von Breezyslam
+//			BreezySLAM slamAlg;
+//			slamAlg.endBreezySLAM();
+//			slamAlg.startBreezySLAM(16000,16000,0,(char*)"/home/ubuntu/bin/exp2.pgm");
+//			slamAlg.startBreezySLAM(16000,16000,0,(char*)"/home/ubuntu/bin/exp2.pgm");
+//			for(int i=0; i<5000; i++){
+//				cout << i << endl;
+//			}
+//			slamAlg.saveCurrentMap((char*)"/home/ubuntu/bin/exp2_saving.pgm");
+//			double x = -1;
+//			double y = -2;
+//			double theta = -3;
+//		    slamAlg.getCurrentPos(x, y, theta);
+//			printf("Current Pos: %f, %f, %f \n", x, y, theta);
+//			slamAlg.endBreezySLAM();
+//			slamAlg.endBreezySLAM();
+
 
 			Alf_Log::alf_log_write("Created socket", log_info);
 			shared_mem.WriteInterfaceStatus = true;
 			std::thread hardwareReadThread(HardwareReadHandler);
 			std::thread sendThread(writeData);
 			std::thread recThread(readData);
-			std::thread posThread(writePosition);
+			std::thread posAndMapThread(writePositionAndMap, slamAlg);
+			std::thread savingMapThread(saveCurrentMap, slamAlg);
 
 			Run_Main_Task_cond.wait(lck);
 
@@ -215,7 +277,8 @@ int main()
 			sendThread.join();
 			recThread.join();
 			hardwareReadThread.join();
-			posThread.join();
+			posAndMapThread.join();
+			savingMapThread.join();
 
 			close(fd);
 			ServerComm.EndCommunication();

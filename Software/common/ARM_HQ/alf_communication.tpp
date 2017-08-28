@@ -2,7 +2,7 @@
  * @file
  * @brief contains the implementations for template functions to be outside of the hpp
  */
-#define DEBUG 1
+#define DEBUG 0
 template<class _comType>
 uint8_t Alf_Communication<_comType>::readLine(std::fstream& comtype,
 		string& s) {
@@ -148,6 +148,23 @@ alf_error Alf_Communication<_comType>::Write(Alf_Position &command) {
     }
     return ret_val;
 }
+
+template<class _comType>
+alf_error Alf_Communication<_comType>::Write(Alf_PositionAndMap &command) {
+    alf_error ret_val = ALF_CANNOT_SEND_MESSAGE;
+    if(__comHandler.good() and __comHandler.is_open()){
+        string to_send;
+        to_send = std::to_string((uint8_t) ALF_POSITIONANDMAP_ID) + __delim;
+        to_send += std::to_string(command.pixPosition.x_position) + __delim;
+        to_send += std::to_string(command.pixPosition.y_position) + __delim;
+        to_send += std::to_string(command.pixPosition.theta_position) + __delim;
+        to_send += std::to_string(command.map.size()) + __delim;
+        ret_val = ALF_NO_ERROR;
+        ret_val = __writeLine(__comHandler, to_send);
+    }
+    return ret_val;
+}
+
 
 template<class _comType>
 alf_error Alf_Communication<_comType>::Write(Alf_Drive_Info &info) {
