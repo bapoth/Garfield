@@ -31,6 +31,8 @@
 
 #include "alf_sharedmemory.hpp"
 
+#include "usebreezyslam.hpp"
+
 
 /*!
  * @brief Sig Handler for closing the socket
@@ -44,9 +46,20 @@ void Stop_Program(int sig);
 void HardwareReadHandler(void);
 
 /*!
+ * @brief writeData() Function runs in a thread an saves cyclic the current map of the slam-algorithm into an pgm-File.
+ */
+void saveCurrentMap(BreezySLAM slamAlg);
+
+/*!
  * @brief writeData() Function runs in a thread an writes cyclic the alf_drive_info data in the socket for Garfield_control to display
  */
 void writeData(void);
+
+/*!
+ * @brief writeData() Function runs in a thread an writes cyclic the Alf_PositionAndMap data in the socket for Garfield_control to display
+ * 		  Alf_PositionAndMap data is gotten from the slam-algorithm.
+ */
+void writePositionAndMap(BreezySLAM slamAlg);
 
 /*!
  * @brief readData() Function runs in a thread an reads cyclic the alf_drive_command data from the socket to send it over the Mailbox to the NIOS2
