@@ -14,9 +14,9 @@
 BreezySLAM::BreezySLAM(int nmap_size_pixels, double nmap_size_meters,
 					   char * nlidar_device)
 : map_size_pixels(nmap_size_pixels), map_size_meters(nmap_size_meters),
-  lidar_device(nlidar_device), stopRunningSlamAlg(false)
+  lidar_device(nlidar_device), laser(NULL), slam(NULL), threadSlamAlg(),
+  stopRunningSlamAlg(false)
 {}
-// ToDo: Anlegen slam als pointer auf default-object!!Muss man später freigeben!! oder NULL
 
 BreezySLAM::~BreezySLAM()
 {}
@@ -41,7 +41,7 @@ void * BreezySLAM::runSlamAlgorithm(void * arg)
 
 	    /* Get the lidarsensor-values */
 	    unsigned int lidarsensor_values[1000];
-	    pObj->laser.getScan(lidarsensor_values);
+	    pObj->laser->getScan(lidarsensor_values);
 
 	    // Update current map & position in slam-algorithm
 	    pObj->slam->update((int*)lidarsensor_values, velocities_values);
@@ -58,7 +58,8 @@ int BreezySLAM::load_map_from_file(char * mapbytes, char * path2pgm)
 	FILE * fp = fopen(path2pgm, "rt");
 	if(!fp)
 	{
-		Alf_Log::alf_log_write("Opening pgm-file failed", log_info);
+		Alf_Log::alf_log_write("load_map_from_file(): " \
+								"Opening pgm-file failed", log_info);
 		return -1;	// opening pgm-file failed
 	}
 
@@ -92,33 +93,42 @@ int BreezySLAM::coords2index(double x,  double y)
 int BreezySLAM::startBreezySLAM(double startpos_x, double startpos_y, double startpos_degrees,
 								char * srcpath2map, bool use_srcpath2map)
 {
+	/* Check if: */
+	/* startBreezySLAM() was invoked a second time
+	   without calling endBreezySLAM() to end the previous execution */
+	if((slam != NULL)||(laser != NULL)){
+		Alf_Log::alf_log_write("startBreezySLAM(): "\
+								"startBreezySLAM() was invoked a second time " \
+								"without calling endBreezySLAM()", log_info);
+		return -4;
+	}
+
+	/* Create object for connecting to lidarsensor */
+	this->laser = new URG04LX;
+
     /* try connecting to lidarsensor */
     Alf_Log::alf_log_write("Connecting to lidar", log_info);
-    bool is_connected = this->laser.connect(this->lidar_device);
+    bool is_connected = this->laser->connect(this->lidar_device);
 
     if(is_connected != 0)
     {
-    	Alf_Log::alf_log_write("Connection to lidar failed", log_info);
+    	Alf_Log::alf_log_write("startBreezySLAM():" \
+    							"Connection to lidar failed", log_info);
     	return -1;	// connection with lidar failed
     }
 
     /* If connection was successfull */
     /* show values of lidasensor*/
-    Alf_Log::alf_log_write((std::string)this->laser, log_info);
+    Alf_Log::alf_log_write((std::string) *(this->laser), log_info);
 
 
     /* Create object for calculating slam-algorithm */
     /* By Creation the startposition is given to the algorithm */
-    // Pat
-    /*this->slam
-		= (SinglePositionSLAM*)new Deterministic_SLAM(this->laser,
-													  this->map_size_pixels, this->map_size_meters,
-													  startpos_x, startpos_y, startpos_degrees);*/
-
+    if(slam != NULL)  delete ((Deterministic_SLAM *)slam);
     this->slam
-		= (SinglePositionSLAM*)new RMHC_SLAM(this->laser, this->map_size_pixels,
-											this->map_size_meters, 9999);
-
+		= (SinglePositionSLAM*)new Deterministic_SLAM(*(this->laser),
+													  this->map_size_pixels, this->map_size_meters,
+													  startpos_x, startpos_y, startpos_degrees);
 
     /* Load saved map, as pgm-File, into the slam-algorithm */
     char * mapbytes;
@@ -129,14 +139,13 @@ int BreezySLAM::startBreezySLAM(double startpos_x, double startpos_y, double sta
         int load_file_failed = this->load_map_from_file(mapbytes, srcpath2map);
         if(load_file_failed != 0)
         {
-        	Alf_Log::alf_log_write("Loading of pgm-File failed", log_info);
+        	Alf_Log::alf_log_write("startBreezySLAM():" \
+        							"Loading of pgm-File failed", log_info);
         	delete [] mapbytes;
         	return -2;	// loading of pgm-File failed
         }
     }
 
-
-    // Pat
     this->slam->setmap((unsigned char *)mapbytes);
 
 
@@ -146,7 +155,8 @@ int BreezySLAM::startBreezySLAM(double startpos_x, double startpos_y, double sta
     int rc = pthread_create(&(this->threadSlamAlg), NULL, runSlamAlgorithm, this);
     if (rc)
     {
-    	Alf_Log::alf_log_write("Running thread for breezyslam failed", log_info);
+    	Alf_Log::alf_log_write("startBreezySLAM():" \
+    							"Running thread for breezyslam failed", log_info);
     	return -3;	// running thread for breezyslam failed
     }
 
@@ -157,24 +167,71 @@ int BreezySLAM::startBreezySLAM(double startpos_x, double startpos_y, double sta
     return 0;
 }
 
-void BreezySLAM::getCurrentMap(unsigned char ** map)
+int BreezySLAM::getCurrentMap(unsigned char ** map)
 {
+	/* Check if slam-algorithm was started */
+	if((slam == NULL)||(laser == NULL))
+	{
+		Alf_Log::alf_log_write("getCurrentMap():" \
+								"getCurrentMap() was invoked" \
+								"without calling startBreezySLAM() before", log_info);
+		return -1;
+	}
+
 	/* Create a byte array to receive the computed maps */
 	*map = new unsigned char[this->map_size_pixels * this->map_size_pixels];
 
 	/* Get current map from slam-algorithm */
-	slam->getmap(*map);
+	if(this->slam!=NULL)
+		slam->getmap(*map);
+
+	return 0;
 }
 
-void BreezySLAM::getCurrentPos(double &x_mm, double &y_mm, double &theta_degrees)
+int BreezySLAM::getCurrentPos(double &x_mm, double &y_mm, double &theta_degrees)
 {
+	/* Check if slam-algorithm was started */
+	if((slam == NULL)||(laser == NULL))
+	{
+		Alf_Log::alf_log_write("getCurrentPos():" \
+								"getCurrentPos() was invoked" \
+								"without calling startBreezySLAM() before", log_info);
+		return -1;
+	}
+
 	/* Get current position from slam-algorithm */
-	Position currentPos = slam->getpos();
+	Position currentPos;
+	if(this->slam!=NULL)
+		currentPos = slam->getpos();
 
 	x_mm 			= currentPos.x_mm;
 	y_mm 			= currentPos.y_mm;
 	theta_degrees 	= currentPos.theta_degrees;
+
+	return 0;
 }
+
+int BreezySLAM::getCurrentPosAsPixel(int &x_pix, int &y_pix, double &theta_degrees)
+{
+	/* Get current positon as millimeter */
+	double x_mm, y_mm;
+	int ret = this->getCurrentPos(x_mm, y_mm, theta_degrees);
+
+	/* Check if position could be read */
+	if(ret != 0)
+	{
+		Alf_Log::alf_log_write("getCurrentPosAsPixel():" \
+								"Position could not be read from slam-algorithm", log_info);
+		return -1;
+	}
+
+	/* Convert from millimeter to pixel */
+	x_pix = (int)(x_mm / (this->map_size_meters * 1000. / this->map_size_pixels));
+	y_pix = (int)(y_mm / (this->map_size_meters * 1000. / this->map_size_pixels));
+
+	return 0;
+}
+
 
 int BreezySLAM::saveCurrentMap(char * destpath2map)
 {
@@ -182,13 +239,23 @@ int BreezySLAM::saveCurrentMap(char * destpath2map)
     FILE * output = fopen(destpath2map, "wt");
 	if(!output)
 	{
-		Alf_Log::alf_log_write("Opening pgm-file failed", log_info);
+		Alf_Log::alf_log_write("saveCurrentMap():" \
+								"Opening pgm-file failed", log_info);
 		return -1;	// opening pgm-file failed
 	}
 
 	/* Get the current map */
 	unsigned char * currentMap;
-	this->getCurrentMap(&currentMap);
+	int getMapSucceded = this->getCurrentMap(&currentMap);
+	if(getMapSucceded!=0)
+	{
+		Alf_Log::alf_log_write("saveCurrentMap():" \
+								"Getting map failed", log_info);
+
+	    fclose(output);
+
+		return -2;	// Getting map failed
+	}
 
 	/* Write/Save current map into opened pgm-File */
     fprintf(output, "P2\n%d %d 255\n", this->map_size_pixels, this->map_size_pixels);
@@ -206,23 +273,40 @@ int BreezySLAM::saveCurrentMap(char * destpath2map)
     delete [] currentMap;
     fclose(output);
 
+	Alf_Log::alf_log_write("Map was saved successfully", log_info);
+
     return 0;
 }
 
-void BreezySLAM::endBreezySLAM()
+int BreezySLAM::endBreezySLAM()
 {
+	/* Check if slam-algorithm was started */
+	if((slam == NULL)||(laser == NULL))
+	{
+		Alf_Log::alf_log_write("endBreezySLAM():" \
+								"endBreezySLAM() was invoked" \
+								"without calling startBreezySLAM() before", log_info);
+		return -1;
+	}
+
 	/* Running thread should stop his loop and ends itself*/
 	this->stopRunningSlamAlg = true;
 
 	/* wait until running slam-algorithm-thread is finished */
-	Alf_Log::alf_log_write("Wait until thread is finished", log_info);
+	Alf_Log::alf_log_write("Wait until slam-algorithm-thread is finished", log_info);
 	pthread_join(threadSlamAlg, NULL);
 
 	/* Free slam object */
-	// ToDo: Only delete, if slam != NULL
-	delete ((Deterministic_SLAM *)slam);
+	if(slam != NULL)  delete ((Deterministic_SLAM *)slam);
+	slam = NULL;
 
 	// ToDo: Disconnect lidarsensor
+	if(laser != NULL) delete laser;
+	laser = NULL;
+
+	Alf_Log::alf_log_write("BreezySLAM ended", log_info);
+
+	return 0;
 }
 
 
