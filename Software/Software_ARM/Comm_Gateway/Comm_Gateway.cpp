@@ -7,8 +7,10 @@
 #include <poll.h>
 #include <fcntl.h>
 
+#include "Robot_Alf.hpp"
+
 //Pat:
-#include "BreezySLAM.hpp"
+#include "usebreezyslam.hpp"
 //#include "log2pgm.hpp"
 
 ///Port on which socket is created
@@ -93,9 +95,18 @@ void HardwareReadHandler(void){
 void writeData(void) {
 	Alf_Log::alf_log_write("Started writeData thread", log_info);
 
+	double forward_dist =0;//new forward distance traveled in millimeters
+	double theta_degrees=0;//new angular rotation in degrees
+	double secounds=0;//secounds since last update
+	double timestamp= time(NULL);//wie soll timestamp aussehen?
+	Robot_Alf robot= Robot_Alf();
+
+	Velocities v;
 	Alf_Drive_Info drive_info_local_copy;
 	std::mutex mux;
 	std::unique_lock<std::mutex> lock(mux);
+
+
 	while(run_threads) {
 
 	
@@ -107,6 +118,8 @@ void writeData(void) {
 		}
 		if(shared_mem.Read(drive_info_local_copy) == ALF_NO_ERROR){
 			ServerComm.Write(drive_info_local_copy);
+			v= robot.computeVelocities(&drive_info_local_copy, timestamp);
+
 			if (DEBUG) printf("servercomm write something\n");
 			if (DEBUG) Alf_Log::alf_log_write("write Data thread doing something", log_info);
 		}
@@ -206,7 +219,7 @@ int main()
 			std::thread hardwareReadThread(HardwareReadHandler);
 			std::thread sendThread(writeData);
 			std::thread recThread(readData);
-			std::thread posThread(writePosition);
+			//std::thread posThread(writePosition);
 
 			Run_Main_Task_cond.wait(lck);
 
@@ -215,7 +228,7 @@ int main()
 			sendThread.join();
 			recThread.join();
 			hardwareReadThread.join();
-			posThread.join();
+			//posThread.join();
 
 			close(fd);
 			ServerComm.EndCommunication();
