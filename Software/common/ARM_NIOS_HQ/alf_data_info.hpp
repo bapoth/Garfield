@@ -27,6 +27,7 @@ public:
     float Gyroscope_Z;
     /// This is the temperature
     float temperature;
+
     //LEX::get the timestamp from the freertos system while measuring!!
     // Timestamp for data
     double timestamp;

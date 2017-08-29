@@ -68,6 +68,7 @@ public:
     * 		  -1: connection with lidar failed
     * 		  -2: loading of pgm-File failed
     * 		  -3: running thread for breezyslam failed
+    * 		  -4: startBreezySLAM() was invoked a second time without calling endBreezySLAM()
     */
 	int startBreezySLAM(double startpos_x, double startpos_y, double startpos_degrees,
 						char * srcpath2map=DEFAULT_SRC_PATH2MAP, bool use_srcpath2map=true);
@@ -77,37 +78,54 @@ public:
     * @param map 	address of pointer, which will point to the current map
     * 				memory for the map is allocated by the function itself
     * @note: dont forget to deallocate the memory for the map, if you dont need it anymore.
+    * @return  0: successfull
+    * 		  -1: getCurrentMap() was invoked without calling startBreezySLAM() before
     */
-	void getCurrentMap(unsigned char ** map);
+	int getCurrentMap(unsigned char ** map);
 
     /**
     * Get the current position, which is intern in the slam-algorithm.
     * @param x_mm			value, which will be set to the current X coordinate in millimeters
     * @param y_mm			value, which will be set to the current X coordinate in millimeters
     * @param theta_degrees	value, which will be set to the current rotation angle in degrees
+    * @return  0: successfull
+    * 		  -1: getCurrentPos() was invoked without calling startBreezySLAM() before
     */
-	void getCurrentPos(double &x_mm, double &y_mm, double &theta_degrees);
+	int getCurrentPos(double &x_mm, double &y_mm, double &theta_degrees);
+
+    /**
+    * Get the current position, which is intern in the slam-algorithm, as pixel.
+    * @param x_mm			value, which will be set to the current X coordinate in pixel
+    * @param y_mm			value, which will be set to the current X coordinate in pixel
+    * @param theta_degrees	value, which will be set to the current rotation angle in degrees
+    * @return  0: successfull
+    * 		  -1: position could not be read from slam-algorithm
+    */
+	int getCurrentPosAsPixel(int &x_pix, int &y_pix, double &theta_degrees);
 
     /**
     * Save the current map, which is intern in the slam-algorithm, as an pgm-File.
     * @param destpath2map 	the path for the be generated .pgm-File
     * @return  0: successfull
     * 		  -1: opening of pgm-File failed
+    * 		  -2: getting map failed
     */
 	int saveCurrentMap(char * destpath2map=DEFAULT_DEST_PATH2MAP);
 
     /**
     * End the slam-algorithm.
     * Used resources for algorithm are deallocated.
+    * @return  0: successfull
+    * 		  -1: endBreezySLAM() was invoked without calling startBreezySLAM() before
     */
-	void endBreezySLAM();
+	int endBreezySLAM();
 
 
 private:
     /**
-    * object for using the lidarsensor
+    * pointer to object for using the lidarsensor
     */
-	URG04LX laser;
+	URG04LX * laser;
 
     /**
     * object for using the slam-algorithm
