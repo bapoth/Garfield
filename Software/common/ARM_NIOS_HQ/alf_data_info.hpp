@@ -27,8 +27,9 @@ public:
     float Gyroscope_Z;
     /// This is the temperature
     float temperature;
-    /*/// Timestamp for data
-    double timestamp;*/
+    //LEX::get the timestamp from the freertos system while measuring!!
+    // Timestamp for data
+    double timestamp;
 };
 
 class Alf_Drive_Command {
