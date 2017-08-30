@@ -30,6 +30,7 @@
 #define ACC_MAP_UPDATE_MS 20
 
 #define SEND_REC_INTERVAL_MS 20
+#define DEBUG 1
 
 Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
     ui(new Ui::Garfield_control)
@@ -76,6 +77,7 @@ Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
     ui->DebugSlider_speed->setVisible(false);
     connect(ui->actionDebug, SIGNAL(triggered(bool)), this, SLOT(debug_settings(bool)));
     connect(ui->actionSettings, SIGNAL(triggered()), this, SLOT(open_settings()));
+    connect(ui->actionMap, SIGNAL(triggered()), this, SLOT(open_map()));
 
     //Connection Button & Label
     _connected = false;
@@ -361,6 +363,16 @@ void Garfield_control::saveSettings()
  settings.setValue("dev", _Dev);
 }
 
+void Garfield_control::open_map() {
+    mymap = new map();
+    //connect(mymap, SIGNAL(accepted()), this, SLOT(closed_map()));
+    //mymap->show();
+    mymap->open();
+}
+void Garfield_control::closed_map() {
+
+}
+
 void Garfield_control::getIP(QString *IP) {
     *IP = _IP;
 }
@@ -454,8 +466,9 @@ void Garfield_control::recThread() {
 
     while(!_disconnect) {
 
-        ClientComm.Read(readBuffer, msgType);
-
+        if (DEBUG) printf("readThread\n");
+        alf_error myError = ClientComm.Read(readBuffer, msgType);
+        if (DEBUG) printf("error :%s      ",std::to_string(myError));
         if(msgType == ALF_END_ID) {
             qDebug()<<"End";
             _disconnect = true;
@@ -472,6 +485,14 @@ void Garfield_control::recThread() {
 
         ui->temperatur_lineEdit->setText(QString::number(global_drive_info.temperature));
 
+        if(msgType == ALF_POSITION_ID){
+            printf("got position\n");
+            x_position = global_alf_position.x_position;
+            y_position = global_alf_position.y_position;
+            ui->label_2->setGeometry(x_position,y_position,ui->label_2->geometry().width(),ui->label_2->geometry().height());
+            ui->label_2->show();
+            ui->Gyro_Y_lineEdit->setText(QString::number(global_alf_position.y_position));
+        }
         QThread::msleep(SEND_REC_INTERVAL_MS);
     }
     open_close_connection();

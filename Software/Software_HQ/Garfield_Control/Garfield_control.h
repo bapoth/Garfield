@@ -10,6 +10,7 @@
 #include "joystick.h"
 
 #include "Settings.h"
+#include "map.h"
 
 #include "alf_communication.hpp"
 #include "alf_log.hpp"
@@ -183,7 +184,8 @@ class Garfield_control : public QMainWindow {
 
         /// object of class settings for the settings window
         Settings *settings;
-
+        /// object of class map for the map window
+        map *mymap;
         /// Garfield.conf settings file string
         QString m_sSettingsFile;
 
@@ -289,6 +291,14 @@ class Garfield_control : public QMainWindow {
         * @brief open_close_connection() slot which is called when connect/disconnect button is pressed
         */
         void open_close_connection();
+        /*!
+        * @brief open_map() slot which is called when menu item for map window is clicked
+        */
+        void open_map();
+        /*!
+        * @brief closed_map() slot which is called when the map window is closed
+        */
+        void closed_map();
         void on_pushButton_clicked();
 };
 

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'Settings.ui'
 **
-** Created by: Qt User Interface Compiler version 5.7.1
+** Created by: Qt User Interface Compiler version 5.5.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -114,10 +114,10 @@ public:
 
     void retranslateUi(QDialog *Settings)
     {
-        Settings->setWindowTitle(QApplication::translate("Settings", "Settings", Q_NULLPTR));
-        label_3->setText(QApplication::translate("Settings", "Controller: ", Q_NULLPTR));
-        label->setText(QApplication::translate("Settings", "ip address: ", Q_NULLPTR));
-        label_2->setText(QApplication::translate("Settings", "Port: ", Q_NULLPTR));
+        Settings->setWindowTitle(QApplication::translate("Settings", "Settings", 0));
+        label_3->setText(QApplication::translate("Settings", "Controller: ", 0));
+        label->setText(QApplication::translate("Settings", "ip address: ", 0));
+        label_2->setText(QApplication::translate("Settings", "Port: ", 0));
     } // retranslateUi
 
 };

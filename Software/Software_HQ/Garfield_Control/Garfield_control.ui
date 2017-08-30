@@ -332,16 +332,6 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QGraphicsView" name="graphicsView">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>290</y>
-      <width>271</width>
-      <height>251</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
@@ -409,6 +399,7 @@
     </property>
     <addaction name="actionSettings"/>
     <addaction name="actionDebug"/>
+    <addaction name="actionMap"/>
    </widget>
    <addaction name="menuConfig"/>
   </widget>
@@ -427,6 +418,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionMap">
+   <property name="text">
+    <string>map</string>
    </property>
   </action>
  </widget>

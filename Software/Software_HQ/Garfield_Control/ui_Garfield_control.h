@@ -14,7 +14,6 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
-#include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
@@ -36,6 +35,7 @@ class Ui_Garfield_control
 public:
     QAction *actionSettings;
     QAction *actionDebug;
+    QAction *actionMap;
     QWidget *centralwidget;
     QSlider *DebugSlider_speed;
     QWidget *layoutWidget;
@@ -73,7 +73,6 @@ public:
     QLabel *temperature_label;
     QLineEdit *temperatur_lineEdit;
     QSlider *DebugSlider_Dir;
-    QGraphicsView *graphicsView;
     QLabel *label;
     QPushButton *pushButton;
     QLabel *label_2;
@@ -91,6 +90,8 @@ public:
         actionDebug = new QAction(Garfield_control);
         actionDebug->setObjectName(QStringLiteral("actionDebug"));
         actionDebug->setCheckable(true);
+        actionMap = new QAction(Garfield_control);
+        actionMap->setObjectName(QStringLiteral("actionMap"));
         centralwidget = new QWidget(Garfield_control);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         DebugSlider_speed = new QSlider(centralwidget);
@@ -266,9 +267,6 @@ public:
         DebugSlider_Dir->setMaximum(90);
         DebugSlider_Dir->setValue(0);
         DebugSlider_Dir->setOrientation(Qt::Horizontal);
-        graphicsView = new QGraphicsView(centralwidget);
-        graphicsView->setObjectName(QStringLiteral("graphicsView"));
-        graphicsView->setGeometry(QRect(40, 290, 271, 251));
         label = new QLabel(centralwidget);
         label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(340, 280, 401, 301));
@@ -296,6 +294,7 @@ public:
         menubar->addAction(menuConfig->menuAction());
         menuConfig->addAction(actionSettings);
         menuConfig->addAction(actionDebug);
+        menuConfig->addAction(actionMap);
 
         retranslateUi(Garfield_control);
 
@@ -308,6 +307,7 @@ public:
         actionSettings->setText(QApplication::translate("Garfield_control", "Settings", 0));
         actionDebug->setText(QApplication::translate("Garfield_control", "Debug", 0));
         actionDebug->setShortcut(QApplication::translate("Garfield_control", "Ctrl+I", 0));
+        actionMap->setText(QApplication::translate("Garfield_control", "map", 0));
         pushButton_left->setText(QApplication::translate("Garfield_control", "\342\227\200", 0));
         pushButton_up->setText(QApplication::translate("Garfield_control", "\342\226\262", 0));
         pushButton_down->setText(QApplication::translate("Garfield_control", "\342\226\274", 0));
