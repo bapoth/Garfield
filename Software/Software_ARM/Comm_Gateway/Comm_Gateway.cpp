@@ -16,8 +16,8 @@
 #define COMFREQ 50
 
 ///delay of info-transportation to HQ/GUI
-#define COMPOSMAP 300
-#define COMSAVEMAP 300
+#define COMPOSMAP 30
+#define COMSAVEMAP 30
 
 ///BreezySLAM: File for saving the current map
 #define SAVEPGMFILE "/home/ubuntu/bin/savingSlamMap.pgm"
@@ -66,7 +66,6 @@ void HardwareReadHandler(void){
         .events = POLLIN,
     };
 	while(run_threads){
-		printf("Hallo vom HardwareReadHandler Task \n");
 	    irq_info = 1; /* unmask */
 
 	    nb = write(fd, &irq_info, sizeof(irq_info));
@@ -76,14 +75,11 @@ void HardwareReadHandler(void){
 	    	break;
 	    }
 
-	    //LEX:: Test: muss wieder einkommentiert werden
 		ret = poll(&fds, 1, -1);	//waiting until interrupt was coming
-		printf("es wurde was gepollt in der HardwareReadHandler \n");
         if (ret >= 1) {
             nb = read(fd, &irq_info, sizeof(irq_info));
             if (nb == sizeof(irq_info)) {
             	shared_mem.ReadInterruptHandler();
-            	printf("und das notify_ServerWrite_Task wurde gesetzt\n");
             	notify_ServerWrite_Task = true;
             	Run_ServerWrite_Task.notify_one();
             }
@@ -109,9 +105,9 @@ void saveCurrentMap(BreezySLAM slamAlg) {
 		slamAlg.saveCurrentMap((char*)SAVEPGMFILE);
 
 		/* Wait => avoid overloading of vehicle */
-		std::this_thread::sleep_for(std::chrono::milliseconds(1/COMSAVEMAP));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1/COMSAVEMAP*1000));
 	}
-	Alf_Log::alf_log_write("Ended writePosition thread", log_info);
+	Alf_Log::alf_log_write("Ended saveCurrentMap thread", log_info);
 }
 
 void writeData(void) {
@@ -194,9 +190,9 @@ void writePositionAndMap(BreezySLAM slamAlg) {
 			}
 
 			/* Wait => avoid overloading of vehicle */
-			std::this_thread::sleep_for(std::chrono::milliseconds(1/COMPOSMAP));
+			std::this_thread::sleep_for(std::chrono::milliseconds(1/COMPOSMAP*1000));
 	}
-	Alf_Log::alf_log_write("Ended writePosition thread", log_info);
+	Alf_Log::alf_log_write("Ended writePositionAndMap thread", log_info);
 }
 
 void readData(void) {
@@ -208,7 +204,6 @@ void readData(void) {
 		alf_mess_types msgType;
 
 		ServerComm.Read(readBuffer, msgType);
-		//printf("es wurde was vom server gelesen \n");
 		rec = "Speed: " + std::to_string(global_drive_command.speed);
 		rec += ", Direction: " + std::to_string(global_drive_command.direction);
 		rec += ", Angle: " + std::to_string(global_drive_command.angle);
@@ -273,6 +268,9 @@ int main()
 			hardwareReadThread.join();
 			posAndMapThread.join();
 			savingMapThread.join();
+
+			/* End the slam-algorithm "BreezySLAM" */
+			slamAlg.endBreezySLAM();
 
 			close(fd);
 			ServerComm.EndCommunication();

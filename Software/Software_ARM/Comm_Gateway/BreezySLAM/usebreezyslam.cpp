@@ -72,10 +72,14 @@ int BreezySLAM::load_map_from_file(char * mapbytes, char * path2pgm)
     fscanf(fp, "%d", &sizey);
     fscanf(fp, "%d", &res);
 
-    for(int i=0; i< this->map_size_pixels*this->map_size_pixels; i++)
+
+    for (int y=0; y<this->map_size_pixels; y++)
     {
-    	/* Read the pixel-information */
-        fscanf(fp, "%d", &mapbytes[i]);
+        for (int x=0; x<this->map_size_pixels; x++)
+        {
+        	/* Read the pixel-information */
+            fscanf(fp, "%d", &mapbytes[coords2index(x, this->map_size_pixels-y)]);
+        }
     }
 
     /* Close file */
@@ -264,7 +268,8 @@ int BreezySLAM::saveCurrentMap(char * destpath2map)
     {
         for (int x=0; x<this->map_size_pixels; x++)
         {
-            fprintf(output, "%d ", currentMap[coords2index(x, y)]);
+            fprintf(output, "%d ", currentMap[coords2index(x, this->map_size_pixels-y)]);
+            //Note: With "this->map_size_pixels-y" -> avoid mirror at x-axis
         }
         fprintf(output, "\n");
     }
@@ -297,10 +302,12 @@ int BreezySLAM::endBreezySLAM()
 	pthread_join(threadSlamAlg, NULL);
 
 	/* Free slam object */
+	Alf_Log::alf_log_write("Free: slam object", log_info);
 	if(slam != NULL)  delete ((Deterministic_SLAM *)slam);
 	slam = NULL;
 
-	// ToDo: Disconnect lidarsensor
+	/* Disconnect lidarsensor */
+	Alf_Log::alf_log_write("Free: laser object", log_info);
 	if(laser != NULL) delete laser;
 	laser = NULL;
 
