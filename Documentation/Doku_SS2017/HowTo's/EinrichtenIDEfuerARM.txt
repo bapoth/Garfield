@@ -73,3 +73,10 @@ Erweiterung: Garfield-Projekt mit BreezySLAM-Library
 	Project->Properties->C/C++-Build->Settings->Cross G++ Compiler->Includes:	"C:\Users\bauma\hspII_workplace\Software\Software_ARM\Comm_Gateway\BreezySLAM\c"
 											"C:\Users\bauma\hspII_workplace\Software\Software_ARM\Comm_Gateway\BreezySLAM\cpp"
 
+- Hinzufügen von Files als Links:
+	C:\Users\bauma\hspII_workplace\Software\Software_ARM\Comm_Gateway\BreezySLAM\cpp\Robot_Alf.hpp
+	C:\Users\bauma\hspII_workplace\Software\Software_ARM\Comm_Gateway\BreezySLAM\cpp\Robot_Alf.cpp
+
+!!Hinweis: Kompilierte Projektdatei als auch .so-File(=Library) müssen beide auf Vehikel gezogen werden
+  -> Projektdatei in /home/ubuntu/bin/
+  -> .so-File 	  in /usr/local/lib -> dann ausführen "ldconfig"; LIBDIR muss beinhaltet /usr/local/lib
