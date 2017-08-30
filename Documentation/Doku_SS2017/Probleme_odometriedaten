@@ -1,0 +1,6 @@
+?1. Odometriewerte, die ausgehend von MPU-Werten berechnet wurden sind lageabhängig.
+  -> die werte sind lageabhängig. bsp: zeit die vorderseite des autos "nach unten" wirkt die erdanziehungskraft in diese Richtung. -> einfach umrechnen in beschleunigungswerte und geschwindigkeit von auto nicht möglich.
+  ==> lösungsansatz: aus den werten könnte ein Vektor berechnet werden mit der lage im Raum. daraus eine eindeutige beschleunigung in x-Achsenrichtung zu berechnen geht nicht.
+  ====> BSP: Vektor wäre (0.5,1.0,0.0) [x,y,z]. wurde das auto um 0.5 in x-Richtung beschleunigt, oder ist es 45Grad geneigt und beschleunigt in richtung vektor?
+2. Fehler summieren sich zu stark auf. bereits nach wenigen messungen stimmt die geschwindigkeit nicht mehr -> nicht geeignet, um breezyslam zu optimieren(ohne funktionierts besser)
+3. MPU sensor liefert fehlerhafte werte(v.a mit angeschlossenem akku)
