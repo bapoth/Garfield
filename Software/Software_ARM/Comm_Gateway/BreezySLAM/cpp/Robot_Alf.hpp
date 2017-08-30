@@ -14,7 +14,7 @@ public:
 
 	Robot_Alf();
 
-    Velocities computeVelocities(Alf_Drive_Info * odometry,double timestamp/*, Velocities & velocities*/);
+    Velocities computeVelocities(Alf_Drive_Info * odometry/*,double timestamp/*, Velocities & velocities*/);
 
 protected:
 

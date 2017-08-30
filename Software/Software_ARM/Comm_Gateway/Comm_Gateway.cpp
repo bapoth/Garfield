@@ -66,7 +66,7 @@ void HardwareReadHandler(void){
         .events = POLLIN,
     };
 	while(run_threads){
-		printf("Hallo vom HardwareReadHandler Task \n");
+		//printf("Hallo vom HardwareReadHandler Task \n");
 	    irq_info = 1; /* unmask */
 
 	    nb = write(fd, &irq_info, sizeof(irq_info));
@@ -78,12 +78,12 @@ void HardwareReadHandler(void){
 
 	    //LEX:: Test: muss wieder einkommentiert werden
 		ret = poll(&fds, 1, -1);	//waiting until interrupt was coming
-		printf("es wurde was gepollt in der HardwareReadHandler \n");
+		//printf("es wurde was gepollt in der HardwareReadHandler \n");
         if (ret >= 1) {
             nb = read(fd, &irq_info, sizeof(irq_info));
             if (nb == sizeof(irq_info)) {
             	shared_mem.ReadInterruptHandler();
-            	printf("und das notify_ServerWrite_Task wurde gesetzt\n");
+            	//printf("und das notify_ServerWrite_Task wurde gesetzt\n");
             	notify_ServerWrite_Task = true;
             	Run_ServerWrite_Task.notify_one();
             }
@@ -122,7 +122,7 @@ void writeData(void) {
 	double secounds=0;//secounds since last update
 	double timestamp= time(NULL);//wie soll timestamp aussehen?
 	Robot_Alf robot= Robot_Alf();
-
+	float geschwindigkeit;
 	Velocities v;
 	Alf_Drive_Info drive_info_local_copy;
 	std::mutex mux;
@@ -131,14 +131,24 @@ void writeData(void) {
 
 	while(run_threads) {
 
-		if(DEBUG) printf("write Data thread\n");
+		//if(DEBUG) printf("write Data thread\n");
 		while(not notify_ServerWrite_Task){
 			Run_ServerWrite_Task.wait(lock);
 		}
 		if(shared_mem.Read(drive_info_local_copy) == ALF_NO_ERROR){
-			ServerComm.Write(drive_info_local_copy);
-			v= robot.computeVelocities(&drive_info_local_copy, timestamp);
+			//ServerComm.Write(drive_info_local_copy);
+			//printf("before: gx= %.2f | gy= %.2f | accx= %.2f | accy= %.2f | time= %.1f \n",
+			//		drive_info_local_copy.Gyroscope_X, drive_info_local_copy.Gyroscope_Y, drive_info_local_copy.acceleration, drive_info_local_copy.lateral_acceleration, drive_info_local_copy.timestamp);
 
+			v= robot.computeVelocities(&drive_info_local_copy);
+			geschwindigkeit= v.dxy_mm/(1000*v.dt_seconds);
+			//printf("geschwindigkeit: %.2f m/s \n", geschwindigkeit);
+			printf("v.sec: %.1f | v.dist: %.1f | v[m/s]= %.4f \n",v.dt_seconds, v.dxy_mm, geschwindigkeit);
+			//printf("after: gx= %.2f | gy= %.2f | accx= %.2f | accy= %.2f | time= %.1f \n",
+			//		drive_info_local_copy.Gyroscope_X, drive_info_local_copy.Gyroscope_Y, drive_info_local_copy.acceleration, drive_info_local_copy.lateral_acceleration, drive_info_local_copy.timestamp);
+			/*printf("mit d= %.2f  || t= %d  | gx= %.2f | acc= %.2f |time= %d",
+					v.dxy_mm,  v.dt_seconds, drive_info_local_copy.Gyroscope_X, drive_info_local_copy.acceleration, drive_info_local_copy.timestamp);
+*/
 			if (DEBUG) printf("servercomm write something\n");
 			if (DEBUG) Alf_Log::alf_log_write("write Data thread doing something", log_info);
 		}
@@ -214,7 +224,7 @@ void readData(void) {
 		rec += ", Angle: " + std::to_string(global_drive_command.angle);
 		rec += ", Light: " + std::to_string(global_drive_command.light);
 
-		mylog.alf_log_write(rec, log_info);
+		//mylog.alf_log_write(rec, log_info);
 		if(DEBUG) printf("read Data: %s",rec.c_str());
 
 		shared_mem.Write(global_drive_command);

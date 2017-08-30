@@ -10,7 +10,7 @@
 #include <netdb.h>
 
 using std::string;
-#define DEBUG 1
+#define DEBUG 0
 
 uint8_t Client::startConnection(const uint32_t& _portno, const string& _server)
 {
