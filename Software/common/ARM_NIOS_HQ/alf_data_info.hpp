@@ -31,6 +31,10 @@ public:
     //LEX::get the timestamp from the freertos system while measuring!!
     // Timestamp for data
     double timestamp;
+
+    ///For Copying the map-pgm-file from ARM to HQ:
+    /// ARM advise HQ to copy the map-pgm-file
+    bool invokeCopyMapFile;
 };
 
 class Alf_Drive_Command {
@@ -43,6 +47,10 @@ public:
     int8_t angle;
     /// This holds the state of the light
     bool light;
+
+    ///For Copying the map-pgm-file from ARM to HQ:
+    /// HQ has successfully finished the copying of the file
+    bool finishedCopyMapFile;
 };
 
 class Alf_Position{
