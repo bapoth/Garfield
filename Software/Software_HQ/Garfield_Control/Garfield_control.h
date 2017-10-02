@@ -163,6 +163,11 @@ class Garfield_control : public QMainWindow {
          * @brief recThread() is executed in an extra thread. It handles all data that are received over the socket
          */
         void recThread();
+        /*!
+         * @brief getMapThread() is executed in an extra thread. It handles the received map over ssh
+         */
+        void getMapThread(); //P:
+
         void paintEvent(QPaintEvent *);
     private:
         /// Joystick object for getting all data  of the gamepad
