@@ -36,8 +36,8 @@ Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
     ui(new Ui::Garfield_control)
     {
     ui->setupUi(this);
-    ui->label->setPixmap(QPixmap("/home/lex/Dokumente/BreezySLAM-master/examples/exp2.pgm"));
-    ui->label_2->setPixmap(QPixmap("/home/lex/Downloads/auto.png"));
+    //ui->label->setPixmap(QPixmap("/home/lex/Dokumente/BreezySLAM-master/examples/exp2.pgm"));
+    //ui->label_2->setPixmap(QPixmap("/home/lex/Downloads/auto.png"));
     //Set initial values
     _speed = 0;
     _direction = 0;
@@ -215,8 +215,8 @@ void Garfield_control::keyPressEvent(QKeyEvent* e) {
         command_left();
         x_position--;
     }
-    ui->label_2->setGeometry(x_position,y_position,ui->label_2->geometry().width(),ui->label_2->geometry().height());
-    ui->label_2->show();
+    //ui->label_2->setGeometry(x_position,y_position,ui->label_2->geometry().width(),ui->label_2->geometry().height());
+    //ui->label_2->show();
 
     QMainWindow::keyPressEvent(e);
 }
@@ -408,6 +408,7 @@ void Garfield_control::getLight(bool &light) {
 void Garfield_control::open_close_connection() {
     static QFuture<void> f1;
     static QFuture<void> f2;
+    static QFuture<void> f3;
 
     if(_connected==false) {
         bool ret = ClientComm.Init(_IP.toUtf8().constData(), _Port.toInt());
@@ -420,7 +421,9 @@ void Garfield_control::open_close_connection() {
             ui->connect_pushButton->setText("disconnect");
 
             f1 = QtConcurrent::run(this, &Garfield_control::sendThread);
-            f2 = QtConcurrent::run(this, &Garfield_control::recThread);
+            //f2 = QtConcurrent::run(this, &Garfield_control::recThread);
+            f3 = QtConcurrent::run(this, &Garfield_control::mapThread);
+
         }
         else {
             ui->connstate_label->setText("not connected");
@@ -452,7 +455,7 @@ void Garfield_control::sendThread() {
         global_drive_command.direction = _direction;
         global_drive_command.angle = _angle;
         global_drive_command.light = _light;
-
+        if(DEBUG) printf("\n sendthread.... \n");
         ClientComm.Write(global_drive_command);
 
         QThread::msleep(SEND_REC_INTERVAL_MS);
@@ -464,6 +467,7 @@ void Garfield_control::recThread() {
     Alf_Urg_Measurements_Buffer readBuffer(10);
     alf_mess_types msgType;
 
+    printf("\n recThread started");
     while(!_disconnect) {
 
         if (DEBUG) printf("readThread\n");
@@ -489,10 +493,26 @@ void Garfield_control::recThread() {
             printf("got position\n");
             x_position = global_alf_position.x_position;
             y_position = global_alf_position.y_position;
-            ui->label_2->setGeometry(x_position,y_position,ui->label_2->geometry().width(),ui->label_2->geometry().height());
-            ui->label_2->show();
-            ui->Gyro_Y_lineEdit->setText(QString::number(global_alf_position.y_position));
+            //ui->label_2->setGeometry(x_position,y_position,ui->label_2->geometry().width(),ui->label_2->geometry().height());
+            //ui->label_2->show();
+            //ui->Gyro_Y_lineEdit->setText(QString::number(global_alf_position.y_position));
         }
+        QThread::msleep(SEND_REC_INTERVAL_MS);
+    }
+    open_close_connection();
+    return;
+}
+
+void Garfield_control::mapThread() {
+
+    printf("\n mapThread started \n");
+    while(!_disconnect) {
+
+        if (DEBUG) printf("trying to save map");
+        alf_error myError2 = ClientComm.Read("/home/lex/Dokumente/mymap.pgm");
+        if (DEBUG) printf("error :%s      ",std::to_string(myError2));
+
+
         QThread::msleep(SEND_REC_INTERVAL_MS);
     }
     open_close_connection();
@@ -518,6 +538,6 @@ void Garfield_control::paintEvent(QPaintEvent *)
 
 void Garfield_control::on_pushButton_clicked()
 {
-    ui->label->setPixmap(QPixmap("/home/lex/Dokumente/BreezySLAM-master/examples/exp4.pgm"));
-    ui->label->show();
+    //ui->label->setPixmap(QPixmap("/home/lex/Dokumente/BreezySLAM-master/examples/exp4.pgm"));
+   // ui->label->show();
 }

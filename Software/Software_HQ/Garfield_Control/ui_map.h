@@ -86,6 +86,7 @@ public:
         label_map->setGeometry(QRect(10, 10, 781, 561));
         label_map->setCursor(QCursor(Qt::PointingHandCursor));
         label_map->setMouseTracking(false);
+        label_map->setContextMenuPolicy(Qt::CustomContextMenu);
         label_map->setPixmap(QPixmap(QString::fromUtf8("../../../../../Dokumente/BreezySLAM-master/examples/exp2.pgm")));
         label_map->setScaledContents(true);
         pushButton_2 = new QPushButton(map);

@@ -73,9 +73,6 @@ public:
     QLabel *temperature_label;
     QLineEdit *temperatur_lineEdit;
     QSlider *DebugSlider_Dir;
-    QLabel *label;
-    QPushButton *pushButton;
-    QLabel *label_2;
     QMenuBar *menubar;
     QMenu *menuConfig;
     QStatusBar *statusBar;
@@ -84,7 +81,7 @@ public:
     {
         if (Garfield_control->objectName().isEmpty())
             Garfield_control->setObjectName(QStringLiteral("Garfield_control"));
-        Garfield_control->resize(766, 625);
+        Garfield_control->resize(766, 330);
         actionSettings = new QAction(Garfield_control);
         actionSettings->setObjectName(QStringLiteral("actionSettings"));
         actionDebug = new QAction(Garfield_control);
@@ -267,19 +264,6 @@ public:
         DebugSlider_Dir->setMaximum(90);
         DebugSlider_Dir->setValue(0);
         DebugSlider_Dir->setOrientation(Qt::Horizontal);
-        label = new QLabel(centralwidget);
-        label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(340, 280, 401, 301));
-        label->setPixmap(QPixmap(QString::fromUtf8("../../../../../Dokumente/BreezySLAM-master/examples/exp2.pgm")));
-        label->setScaledContents(true);
-        pushButton = new QPushButton(centralwidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(60, 550, 80, 22));
-        label_2 = new QLabel(centralwidget);
-        label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(390, 390, 61, 41));
-        label_2->setPixmap(QPixmap(QString::fromUtf8("../../../../../Downloads/auto.png")));
-        label_2->setScaledContents(true);
         Garfield_control->setCentralWidget(centralwidget);
         menubar = new QMenuBar(Garfield_control);
         menubar->setObjectName(QStringLiteral("menubar"));
@@ -324,9 +308,6 @@ public:
         Gyro_Y_label->setText(QApplication::translate("Garfield_control", "Gyroscope Y", 0));
         Gyro_Z_label->setText(QApplication::translate("Garfield_control", "Gyroscope Z", 0));
         temperature_label->setText(QApplication::translate("Garfield_control", "Temperature", 0));
-        label->setText(QString());
-        pushButton->setText(QApplication::translate("Garfield_control", "PushButton", 0));
-        label_2->setText(QString());
         menuConfig->setTitle(QApplication::translate("Garfield_control", "config", 0));
     } // retranslateUi
 

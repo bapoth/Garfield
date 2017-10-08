@@ -18,9 +18,11 @@ public:
     void open();
     void mouseMoveEvent(QMouseEvent *ev);
     void setPosition(QPoint);
+    void move(const QPoint pos);
 signals:
 
 public slots:
+    void setFlag(QPoint pos);
 
 };
 

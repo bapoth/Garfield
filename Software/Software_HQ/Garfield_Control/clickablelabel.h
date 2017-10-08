@@ -16,6 +16,7 @@ public:
 
 signals:
     void clicked();
+    void clickedOnMap(QPoint pos);
 
 protected:
     void mousePressEvent(QMouseEvent* event);
