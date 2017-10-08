@@ -14,6 +14,7 @@ Rechner mit Netzwerk von Vehikel verbunden sein.
 		- Pwd:	 temppwd
 
 	1.2	Ausführen von:
+		- sudo chmod 777 /dev/ttyACM0	//Für Nutzen von Lidarsensor
 		- sudo -s
 		- ./startup im Home-Verzeichnis
 		- bin/HSP_ARM_Gateway im Home-Verzeichnis

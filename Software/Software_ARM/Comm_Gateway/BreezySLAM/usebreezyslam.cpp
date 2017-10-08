@@ -44,6 +44,7 @@ void * BreezySLAM::runSlamAlgorithm(void * arg)
 	    pObj->laser->getScan(lidarsensor_values);
 
 	    // Update current map & position in slam-algorithm
+//	    pObj->slam->update((int*)lidarsensor_values);
 	    pObj->slam->update((int*)lidarsensor_values, velocities_values);
 	}
 
@@ -129,10 +130,18 @@ int BreezySLAM::startBreezySLAM(double startpos_x, double startpos_y, double sta
     /* Create object for calculating slam-algorithm */
     /* By Creation the startposition is given to the algorithm */
     if(slam != NULL)  delete ((Deterministic_SLAM *)slam);
+//    this->slam
+//		= (SinglePositionSLAM*)new Deterministic_SLAM(*(this->laser),
+//													  this->map_size_pixels, this->map_size_meters,
+//													  startpos_x, startpos_y, startpos_degrees);
+
     this->slam
-		= (SinglePositionSLAM*)new Deterministic_SLAM(*(this->laser),
-													  this->map_size_pixels, this->map_size_meters,
-													  startpos_x, startpos_y, startpos_degrees);
+    		= (SinglePositionSLAM*)new RMHC_SLAM(*(this->laser), this->map_size_pixels,
+    											this->map_size_meters, 9999);
+
+//        this->slam
+//    		= (SinglePositionSLAM*)new Deterministic_SLAM(*(this->laser),
+//    													  this->map_size_pixels, this->map_size_meters);
 
     /* Load saved map, as pgm-File, into the slam-algorithm */
     char * mapbytes;

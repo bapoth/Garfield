@@ -66,6 +66,16 @@ void writePositionAndMap(BreezySLAM slamAlg);
  */
 void readData(void);
 
+///*!
+// * @brief freeMapForHQ() Function runs in a thread and free the local map-pgm-file
+// */
+//void freeMapForHQ(void);
+
+///*!
+// * @brief startMapAccessByHQ() Function runs in a thread and invokes cyclic the request for copying the map-pgm-file by HQ
+// */
+//void startMapAccessByHQ(void);
+
 /*!
  * @brief The Main function
  */

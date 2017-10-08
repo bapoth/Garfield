@@ -18,6 +18,10 @@
 #include <QDebug>
 #include <qpainter.h>
 
+//P:
+//#include <mutex>
+#include <condition_variable>
+
 #define ANGLE_MAX_VAL 90
 #define ANGLE_MIN_VAL -90
 #define SPEED_MAX_VAL 255
@@ -31,6 +35,12 @@
 
 #define SEND_REC_INTERVAL_MS 20
 #define DEBUG 1
+
+//P:
+/// global variables for switching map between HQ and ARM
+std::condition_variable Run_getMapThread;
+bool notify_getMapThread = false;
+bool invokedCopyingMapFinished = false;
 
 Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
     ui(new Ui::Garfield_control)
@@ -408,7 +418,10 @@ void Garfield_control::getLight(bool &light) {
 void Garfield_control::open_close_connection() {
     static QFuture<void> f1;
     static QFuture<void> f2;
+
     static QFuture<void> f3;
+
+    static QFuture<void> f4;//P:
 
     if(_connected==false) {
         bool ret = ClientComm.Init(_IP.toUtf8().constData(), _Port.toInt());
@@ -422,7 +435,10 @@ void Garfield_control::open_close_connection() {
 
             f1 = QtConcurrent::run(this, &Garfield_control::sendThread);
             //f2 = QtConcurrent::run(this, &Garfield_control::recThread);
-            f3 = QtConcurrent::run(this, &Garfield_control::mapThread);
+	//            f3 = QtConcurrent::run(this, &Garfield_control::mapThread);
+
+            f2 = QtConcurrent::run(this, &Garfield_control::recThread);
+            f3 = QtConcurrent::run(this, &Garfield_control::getMapThread);//P:
 
         }
         else {
@@ -439,6 +455,7 @@ void Garfield_control::open_close_connection() {
 
         f1.cancel();
         f2.cancel();
+        f3.cancel();//P:
 
         ClientComm.EndCommunication();
         ui->connstate_label->hide();
@@ -450,6 +467,17 @@ void Garfield_control::open_close_connection() {
 void Garfield_control::sendThread() {
 
     while(!_disconnect) {
+
+        //P:
+        // decide if invoked request by ARM was fullfilled
+        if(invokedCopyingMapFinished)
+        {
+            printf("Test: Send Reply to ARM after Copyying map\n");
+            global_drive_command.finishedCopyMapFile = true;
+            invokedCopyingMapFinished = false;
+        } else {
+            global_drive_command.finishedCopyMapFile = false;
+        }
 
         global_drive_command.speed = _speed;
         global_drive_command.direction = _direction;
@@ -497,27 +525,52 @@ void Garfield_control::recThread() {
             //ui->label_2->show();
             //ui->Gyro_Y_lineEdit->setText(QString::number(global_alf_position.y_position));
         }
+
+        //P:
+        // Check, if ARM send a request to invoke the copying of map-pgm-file on the vehicle
+        // If Yes, invoke the copying
+        printf("Test: invokeCopyMapFile = %d\n", global_drive_info.invokeCopyMapFile);
+        if(global_drive_info.invokeCopyMapFile)
+        {
+            printf("Test: Request is received from ARM\n");
+            notify_getMapThread = true;
+            Run_getMapThread.notify_one();
+            global_drive_info.invokeCopyMapFile = false;
+        }
+
         QThread::msleep(SEND_REC_INTERVAL_MS);
     }
     open_close_connection();
     return;
 }
 
-void Garfield_control::mapThread() {
+//P:
+void Garfield_control::getMapThread() {
+    Alf_Urg_Measurements_Buffer readBuffer(10);
+    alf_mess_types msgType;
 
-    printf("\n mapThread started \n");
+    std::mutex mux;
+    std::unique_lock<std::mutex> lock(mux);
+
     while(!_disconnect) {
 
-        if (DEBUG) printf("trying to save map");
-        alf_error myError2 = ClientComm.Read("/home/lex/Dokumente/mymap.pgm");
-        if (DEBUG) printf("error :%s      ",std::to_string(myError2));
+        // thread sleep until notified by request of ARM
+        while(not notify_getMapThread){
+            Run_getMapThread.wait(lock);
+        }
+        printf("Test: Copy the map-pgm-file from ARM to HQ\n");
+        notify_getMapThread = false;
 
+        system("sshpass -p \"temppwd\" scp -o StrictHostKeyChecking=no ubuntu@192.168.100.149:/home/ubuntu/bin/savingSlamMap.pgm testSavingSSH.pgm");
 
-        QThread::msleep(SEND_REC_INTERVAL_MS);
+        invokedCopyingMapFinished = true;
+
+        // QThread::msleep(3000);
     }
     open_close_connection();
     return;
 }
+
 
 void Garfield_control::paintEvent(QPaintEvent *)
 {
@@ -541,3 +594,4 @@ void Garfield_control::on_pushButton_clicked()
     //ui->label->setPixmap(QPixmap("/home/lex/Dokumente/BreezySLAM-master/examples/exp4.pgm"));
    // ui->label->show();
 }
+
