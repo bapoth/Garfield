@@ -257,7 +257,28 @@ private:
 class RMHC_SLAM : public SinglePositionSLAM
 {
 
+private:
+    /**
+    * Helper-method for the constructor.
+    * @param random_seed seed for psuedorandom number generator in particle filter
+    */
+	void RMHC_SLAM_Init(unsigned random_seed);
+
 public:
+
+    /**
+    * Creates an RMHC_SLAM object.
+    * @param laser a Laser object containing parameters for your Lidar equipment
+    * @param map_size_pixels the size of the desired map (map is square)
+    * @param map_size_meters the size of the area to be mapped, in meters
+    * @param random_seed seed for psuedorandom number generator in particle filter
+    * @param startpos_x 		the x coordinate of the startposition
+    * @param startpos_y 		the y coordinate of the startposition
+    * @param startpos_degrees	the theta degress coordinate of the startposition
+    * @return a new CoreSLAM object
+    */
+	RMHC_SLAM(Laser & laser, int map_size_pixels, double map_size_meters, unsigned random_seed,
+			  double startpos_x, double startpos_y, double startpos_degrees);
 
     /**
     * Creates an RMHC_SLAM object.
