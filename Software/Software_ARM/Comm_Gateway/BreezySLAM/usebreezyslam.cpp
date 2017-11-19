@@ -44,7 +44,6 @@ void * BreezySLAM::runSlamAlgorithm(void * arg)
 	    pObj->laser->getScan(lidarsensor_values);
 
 	    // Update current map & position in slam-algorithm
-//	    pObj->slam->update((int*)lidarsensor_values);
 	    pObj->slam->update((int*)lidarsensor_values, velocities_values);
 	}
 
@@ -98,8 +97,8 @@ int BreezySLAM::coords2index(double x,  double y)
 int BreezySLAM::startBreezySLAM(double startpos_x, double startpos_y, double startpos_degrees,
 								char * srcpath2map, bool use_srcpath2map)
 {
-	/* Check if: */
-	/* startBreezySLAM() was invoked a second time
+	/* Check if:
+	   startBreezySLAM() was invoked a second time
 	   without calling endBreezySLAM() to end the previous execution */
 	if((slam != NULL)||(laser != NULL)){
 		Alf_Log::alf_log_write("startBreezySLAM(): "\
@@ -129,19 +128,19 @@ int BreezySLAM::startBreezySLAM(double startpos_x, double startpos_y, double sta
 
     /* Create object for calculating slam-algorithm */
     /* By Creation the startposition is given to the algorithm */
-    if(slam != NULL)  delete ((Deterministic_SLAM *)slam);
-//    this->slam
-//		= (SinglePositionSLAM*)new Deterministic_SLAM(*(this->laser),
-//													  this->map_size_pixels, this->map_size_meters,
-//													  startpos_x, startpos_y, startpos_degrees);
+    if(slam != NULL)  delete ((RMHC_SLAM *)slam);
 
-    this->slam
+    if(use_srcpath2map == false)
+    {
+    	this->slam
     		= (SinglePositionSLAM*)new RMHC_SLAM(*(this->laser), this->map_size_pixels,
     											this->map_size_meters, 9999);
-
-//        this->slam
-//    		= (SinglePositionSLAM*)new Deterministic_SLAM(*(this->laser),
-//    													  this->map_size_pixels, this->map_size_meters);
+    } else {
+    	this->slam
+    		= (SinglePositionSLAM*)new RMHC_SLAM(*(this->laser), this->map_size_pixels,
+    											this->map_size_meters, 9999,
+												startpos_x, startpos_y, startpos_degrees);
+    }
 
     /* Load saved map, as pgm-File, into the slam-algorithm */
     char * mapbytes;
@@ -157,9 +156,9 @@ int BreezySLAM::startBreezySLAM(double startpos_x, double startpos_y, double sta
         	delete [] mapbytes;
         	return -2;	// loading of pgm-File failed
         }
-    }
 
-    this->slam->setmap((unsigned char *)mapbytes);
+        this->slam->setmap((unsigned char *)mapbytes);
+    }
 
 
     /* Start thread for running slam-algorithm */
@@ -278,7 +277,7 @@ int BreezySLAM::saveCurrentMap(char * destpath2map)
         for (int x=0; x<this->map_size_pixels; x++)
         {
             fprintf(output, "%d ", currentMap[coords2index(x, this->map_size_pixels-y)]);
-            //Note: With "this->map_size_pixels-y" -> avoid mirror at x-axis
+            //Note: With "this->map_size_pixels-y" -> avoid mirroring at x-axis
         }
         fprintf(output, "\n");
     }
@@ -312,7 +311,7 @@ int BreezySLAM::endBreezySLAM()
 
 	/* Free slam object */
 	Alf_Log::alf_log_write("Free: slam object", log_info);
-	if(slam != NULL)  delete ((Deterministic_SLAM *)slam);
+	if(slam != NULL)  delete ((RMHC_SLAM *)slam);
 	slam = NULL;
 
 	/* Disconnect lidarsensor */

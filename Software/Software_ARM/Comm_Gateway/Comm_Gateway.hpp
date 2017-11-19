@@ -46,38 +46,25 @@ void Stop_Program(int sig);
 void HardwareReadHandler(void);
 
 /*!
- * @brief writeData() Function runs in a thread an saves cyclic the current map of the slam-algorithm into an pgm-File.
+ * @brief saveCurrentMap() Function runs in a thread an saves cyclic the current map of the slam-algorithm into an pgm-File.
+ * 		  After the map was saved, the functions invokes the process to send the map to HQ.
  */
 void saveCurrentMap(BreezySLAM slamAlg);
 
 /*!
- * @brief writeData() Function runs in a thread an writes cyclic the alf_drive_info data in the socket for Garfield_control to display
+ * @brief writeData() Function runs in a thread an writes cyclic the alf_drive_info data in the socket for Garfield_control to display.
+ *        The current Position of the vehicle and the state to invoke the sending of map is also part of the alf_drive_info.
  */
 void writeData(BreezySLAM slamAlg);
-void writePosition(BreezySLAM slamAlg);
-/*!
- * @brief writeData() Function runs in a thread an writes cyclic the Alf_PositionAndMap data in the socket for Garfield_control to display
- * 		  Alf_PositionAndMap data is gotten from the slam-algorithm.
- */
-void writePositionAndMap(BreezySLAM slamAlg);
 
 /*!
  * @brief readData() Function runs in a thread an reads cyclic the alf_drive_command data from the socket to send it over the Mailbox to the NIOS2
  */
 void readData(void);
 
-///*!
-// * @brief freeMapForHQ() Function runs in a thread and free the local map-pgm-file
-// */
-//void freeMapForHQ(void);
-
-///*!
-// * @brief startMapAccessByHQ() Function runs in a thread and invokes cyclic the request for copying the map-pgm-file by HQ
-// */
-//void startMapAccessByHQ(void);
-
 /*!
  * @brief The Main function
+ * 		  This function starts all necessary functions plus starts the slam-algorithm.
  */
 int main();
 

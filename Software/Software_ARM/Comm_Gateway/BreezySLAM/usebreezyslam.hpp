@@ -18,7 +18,9 @@
 #include "Laser.hpp"
 #include "algorithms.hpp"
 
-
+/*!
+ * @brief wrapper for the SLAM-algorithm, called BreezySLAM.
+ */
 class BreezySLAM{
 public:
 
@@ -86,7 +88,7 @@ public:
     /**
     * Get the current position, which is intern in the slam-algorithm.
     * @param x_mm			value, which will be set to the current X coordinate in millimeters
-    * @param y_mm			value, which will be set to the current X coordinate in millimeters
+    * @param y_mm			value, which will be set to the current Y coordinate in millimeters
     * @param theta_degrees	value, which will be set to the current rotation angle in degrees
     * @return  0: successfull
     * 		  -1: getCurrentPos() was invoked without calling startBreezySLAM() before

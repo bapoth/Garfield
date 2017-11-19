@@ -15,12 +15,8 @@
 ///Send/Receive Frequence in Hz
 #define COMFREQ 50
 
-/////delay of info-transportation to HQ/GUI in Hz
-//#define COMPOSMAP 30
 ///SavingMapLocalOnVehicle Frequence in Hz
-#define SAVEMAPLOCALFREQ 30
-
-#define ALLOCFREEMAPPGMFREQ 30
+#define SAVEMAPLOCALFREQ 6
 
 
 ///BreezySLAM: File for saving the current map
@@ -28,21 +24,23 @@
 ///BreezySLAM: File, which is loaded into slam-algorithm
 #define SOURCEPGMFILE "/home/ubuntu/bin/srcSlamMap.pgm"
 
+///Communication ARM -> HQ:
+///  Number of writeData-cycles until the position of the vehicle should be updated on HQ
+#define UPDATEPOSITIONCOUNTER 100
+
 ///Alf Communication Server object
 Alf_Communication<Server> ServerComm;
 
 /// variable to let sleep the main thread
 std::condition_variable Run_Main_Task_cond;
 std::condition_variable Run_ServerWrite_Task;
-/// variable to let sleep the release map-pgm-file thread
+/// variable to let sleep the saveCurrentMap thread
 std::condition_variable Run_HQ_Relase_Map_Task;
 
 /// mutex to for the main thread
 std::mutex Run_Main_Task_mut;
-///// mutex for read/write of Map as pgm-file
-//std::mutex Access_Map_Pgm_mut;
 
-///Alf Log
+
 Alf_Log mylog;
 
 ///Shared Memory Mailbox object
@@ -117,16 +115,10 @@ void saveCurrentMap(BreezySLAM slamAlg) {
 	/* Loop: save map into an pgm-File*/
 	while(run_threads) {
 
-//		//allocate map-pgm-file, if no other access
-//		Access_Map_Pgm_mut.lock();
-
-		printf("Test: Save the map local on vehicle\n");
-
 		/* Save the current map */
 		slamAlg.saveCurrentMap((char*)SAVEPGMFILE);
 
-//		//release map-pgm-file, if no other access
-//		Access_Map_Pgm_mut.unlock();
+		if (DEBUG) printf("map is saved on vehicle\n");
 
 		// ARM should send a request to HQ to invoke copying
 		allowHQAccessMAP = true;
@@ -135,24 +127,19 @@ void saveCurrentMap(BreezySLAM slamAlg) {
 		while(not notify_HQ_Relase_Map_Task){
 			Run_HQ_Relase_Map_Task.wait(lock);
 		}
-		printf("Test: Continue after receiving Reply from HQ\n");
+		if (DEBUG) printf("Continue saving-map-thread after receiving Reply from HQ\n");
 		notify_HQ_Relase_Map_Task = false;
 
 		/* Wait => avoid overloading of vehicle */
-		std::this_thread::sleep_for(std::chrono::milliseconds(1/SAVEMAPLOCALFREQ*5000));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1/SAVEMAPLOCALFREQ*1000));
 	}
 	Alf_Log::alf_log_write("Ended saveCurrentMap thread", log_info);
 }
 
 void writeData(BreezySLAM slamAlg) {
+
 	Alf_Log::alf_log_write("Started writeData thread", log_info);
 
-	double forward_dist =0;//new forward distance traveled in millimeters
-	double theta_degrees=0;//new angular rotation in degrees
-	double secounds=0;//secounds since last update
-	double timestamp= time(NULL);//wie soll timestamp aussehen?
-	Robot_Alf robot= Robot_Alf();
-	float geschwindigkeit;
 	Velocities v;
 	Alf_Drive_Info drive_info_local_copy;
 	std::mutex mux;
@@ -165,79 +152,52 @@ void writeData(BreezySLAM slamAlg) {
 
 	while(run_threads) {
 
-		//if(DEBUG) printf("write Data thread\n");
 		while(not notify_ServerWrite_Task){
 			Run_ServerWrite_Task.wait(lock);
 		}
-		if(shared_mem.Read(drive_info_local_copy) == ALF_NO_ERROR){ //P:
+		if(shared_mem.Read(drive_info_local_copy) == ALF_NO_ERROR){
 
 			// decide if HQ should invoke a copying of map-pgm-file
 			if(allowHQAccessMAP)
 			{
-				printf("Test: Send Request from ARM to HQ\n");
+				if (DEBUG) printf("Send Request from ARM to HQ\n");
 				drive_info_local_copy.invokeCopyMapFile = true;
 				allowHQAccessMAP = false;
-				//writePosition(SlamAlg);
+
 			} else {
 				drive_info_local_copy.invokeCopyMapFile = false;
 			}
-//			drive_info_local_copy.x_position = 200;
-//			drive_info_local_copy.y_position =200;
-//			drive_info_local_copy.theta_position = 3.0;
-			// Send info to HQ
-			if(calculatePositionCounter == 100) {
-			slamAlg.getCurrentPosAsPixel(currentXPos, currentYPos, currentThetaPos);
-			drive_info_local_copy.x_position = currentXPos;
-			drive_info_local_copy.y_position = currentYPos;
-			drive_info_local_copy.theta_position = currentThetaPos;
-			calculatePositionCounter =0;
+
+			// Decide, if the current position of the vehicle should also be send to HQ
+			if(calculatePositionCounter == UPDATEPOSITIONCOUNTER) {
+
+				// Get the current position of the vehicle
+				slamAlg.getCurrentPosAsPixel(currentXPos, currentYPos, currentThetaPos);
+				drive_info_local_copy.x_position = currentXPos;
+				drive_info_local_copy.y_position = currentYPos;
+				drive_info_local_copy.theta_position = currentThetaPos;
+				calculatePositionCounter =0;
 			}
 			else
 			{
+				// Don´t update the position of the vehicle
 				drive_info_local_copy.x_position = currentXPos;
 				drive_info_local_copy.y_position = currentYPos;
 				drive_info_local_copy.theta_position = currentThetaPos;
 			}
 			calculatePositionCounter++;
+
+			// Send info to HQ
 			ServerComm.Write(drive_info_local_copy);
 
 			if (DEBUG) printf("servercomm write something\n");
 			if (DEBUG) Alf_Log::alf_log_write("write Data thread doing something", log_info);
-		} //P:
+		}
 		notify_ServerWrite_Task = false;
 	}
 	Alf_Log::alf_log_write("Ended writeData thread", log_info);
 }
 
-
-void writePosition(BreezySLAM slamAlg) {
-	Alf_Log::alf_log_write("Started writePosition thread", log_info);
-
-	int currentXPos;
-	int currentYPos;
-	double currentThetaPos;
-	Alf_Position currentPosition;
-
-
-
-	/* Loop: Update&Send current position and map to HQ/GUI */
-	//while(run_threads) {
-
-			/* Get current position values from slam-algorithm */
-			slamAlg.getCurrentPosAsPixel(currentXPos, currentYPos, currentThetaPos);
-			currentPosition.x_position 		= currentXPos;
-			currentPosition.y_position 		= currentYPos;
-			currentPosition.theta_position 	= currentThetaPos;
-
-
-			printf("position data x: %d y: %d ",currentPosition.x_position,currentPosition.y_position);
-			ServerComm.Write(currentPosition);
-
-			/* Wait => avoid overloading of vehicle */
-			std::this_thread::sleep_for(std::chrono::milliseconds(1/30*5000));
-	//}
-	Alf_Log::alf_log_write("Ended writePositionAndMap thread", log_info);
-}
 
 void readData(void) {
 	std::string rec;
@@ -247,22 +207,23 @@ void readData(void) {
 		Alf_Urg_Measurements_Buffer readBuffer(10);
 		alf_mess_types msgType;
 
+		// Read the userinput from the string, which is sended by HQ
 		ServerComm.Read(readBuffer, msgType);
 		rec = "Speed: " + std::to_string(global_drive_command.speed);
 		rec += ", Direction: " + std::to_string(global_drive_command.direction);
 		rec += ", Angle: " + std::to_string(global_drive_command.angle);
 		rec += ", Light: " + std::to_string(global_drive_command.light);
 
-		//mylog.alf_log_write(rec, log_info);
 		if(DEBUG) printf("read Data: %s",rec.c_str());
-		//aglobal_drive_command.speed = 255;
+
+		// Forward the userinput to the FPGA
 		shared_mem.Write(global_drive_command);
 
 		// Check, if HQ has finished copying the map-pgm-file.
-		// If Yes, rescource can be released
+		// If Yes, resource can be released
 		if(global_drive_command.finishedCopyMapFile)
 		{
-			printf("Test: Reply from HQ is received\n");
+			if(DEBUG) printf("Reply from HQ is received\n");
 			notify_HQ_Relase_Map_Task = true;
 			Run_HQ_Relase_Map_Task.notify_one();
 			global_drive_command.finishedCopyMapFile = false;
@@ -314,19 +275,23 @@ int main()
 
 			Alf_Log::alf_log_write("Created socket", log_info);
 			shared_mem.WriteInterfaceStatus = true;
+
+			// Init all necessary threads
 			std::thread hardwareReadThread(HardwareReadHandler);
 			std::thread sendThread(writeData,slamAlg);
 			std::thread recThread(readData);
-
 			std::thread savingMapThread(saveCurrentMap, slamAlg);
+
+			// Wait until Programm is stopped by user
 			Run_Main_Task_cond.wait(lck);
 
+			// Invoke the finishing of the created threads
 			run_threads = false;
 
+			// Wait until all threads are finished
 			sendThread.join();
 			recThread.join();
 			hardwareReadThread.join();
-
 			savingMapThread.join();
 
 			/* End the slam-algorithm "BreezySLAM" */
