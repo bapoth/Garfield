@@ -205,15 +205,29 @@ double SinglePositionSLAM::sintheta(void)
 
 // RMHC_SLAM class ------------------------------------------------------------------------------------------------------
 
-RMHC_SLAM::RMHC_SLAM(Laser & laser, int map_size_pixels, double map_size_meters, unsigned random_seed) :
-SinglePositionSLAM(laser, map_size_pixels, map_size_meters)
-{    
+void RMHC_SLAM::RMHC_SLAM_Init(unsigned random_seed)
+{
     this->sigma_xy_mm = DEFAULT_SIGMA_XY_MM;
     this->sigma_theta_degrees = DEFAULT_SIGMA_THETA_DEGREES;
-    
+
     this->max_search_iter = DEFAULT_MAX_SEARCH_ITER;
-    
+
     this->randomizer = random_new(random_seed);
+}
+
+RMHC_SLAM::RMHC_SLAM(Laser & laser, int map_size_pixels, double map_size_meters, unsigned random_seed,
+		  	  	  	 double startpos_x, double startpos_y, double startpos_degrees) :
+SinglePositionSLAM(laser, map_size_pixels, map_size_meters,
+				   startpos_x, startpos_y, startpos_degrees)
+{
+	RMHC_SLAM::RMHC_SLAM_Init(random_seed);
+}
+
+
+RMHC_SLAM::RMHC_SLAM(Laser & laser, int map_size_pixels, double map_size_meters, unsigned random_seed) :
+SinglePositionSLAM(laser, map_size_pixels, map_size_meters)
+{
+	RMHC_SLAM::RMHC_SLAM_Init(random_seed);
 }
 
 RMHC_SLAM::~RMHC_SLAM(void)
