@@ -53,8 +53,8 @@ void saveCurrentMap(BreezySLAM slamAlg);
 /*!
  * @brief writeData() Function runs in a thread an writes cyclic the alf_drive_info data in the socket for Garfield_control to display
  */
-void writeData(void);
-
+void writeData(BreezySLAM slamAlg);
+void writePosition(BreezySLAM slamAlg);
 /*!
  * @brief writeData() Function runs in a thread an writes cyclic the Alf_PositionAndMap data in the socket for Garfield_control to display
  * 		  Alf_PositionAndMap data is gotten from the slam-algorithm.

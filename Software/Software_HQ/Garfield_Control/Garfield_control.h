@@ -191,7 +191,7 @@ class Garfield_control : public QMainWindow {
         /// object of class settings for the settings window
         Settings *settings;
         /// object of class map for the map window
-        map *mymap;
+        map *mymap = NULL;
         /// Garfield.conf settings file string
         QString m_sSettingsFile;
 
@@ -306,6 +306,8 @@ class Garfield_control : public QMainWindow {
         */
         void closed_map();
         void on_pushButton_clicked();
+signals:
+        void displayAlfPosition(int x ,int y ,double t);
 };
 
 #endif //GARFIELD_CONTROL_H

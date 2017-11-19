@@ -89,6 +89,7 @@ Garfield_control::Garfield_control(QMainWindow *parent) :  QMainWindow(parent),
     connect(ui->actionSettings, SIGNAL(triggered()), this, SLOT(open_settings()));
     connect(ui->actionMap, SIGNAL(triggered()), this, SLOT(open_map()));
 
+
     //Connection Button & Label
     _connected = false;
     connect(ui->connect_pushButton, SIGNAL(clicked(bool)), this, SLOT(open_close_connection()));
@@ -375,6 +376,7 @@ void Garfield_control::saveSettings()
 
 void Garfield_control::open_map() {
     mymap = new map();
+    connect(this,SIGNAL(displayAlfPosition(int,int,double)),mymap,SLOT(setAlfPosition(int,int,double)));
     //connect(mymap, SIGNAL(accepted()), this, SLOT(closed_map()));
     //mymap->show();
     mymap->open();
@@ -421,7 +423,6 @@ void Garfield_control::open_close_connection() {
 
     static QFuture<void> f3;
 
-    static QFuture<void> f4;//P:
 
     if(_connected==false) {
         bool ret = ClientComm.Init(_IP.toUtf8().constData(), _Port.toInt());
@@ -434,11 +435,14 @@ void Garfield_control::open_close_connection() {
             ui->connect_pushButton->setText("disconnect");
 
             f1 = QtConcurrent::run(this, &Garfield_control::sendThread);
-            //f2 = QtConcurrent::run(this, &Garfield_control::recThread);
-	//            f3 = QtConcurrent::run(this, &Garfield_control::mapThread);
 
             f2 = QtConcurrent::run(this, &Garfield_control::recThread);
             f3 = QtConcurrent::run(this, &Garfield_control::getMapThread);//P:
+            //f2 = QtConcurrent::run(this, &Garfield_control::recThread);
+	//            f3 = QtConcurrent::run(this, &Garfield_control::mapThread);
+
+
+
 
         }
         else {
@@ -483,7 +487,7 @@ void Garfield_control::sendThread() {
         global_drive_command.direction = _direction;
         global_drive_command.angle = _angle;
         global_drive_command.light = _light;
-        if(DEBUG) printf("\n sendthread.... \n");
+        //if(DEBUG) printf("\n sendthread.... \n");
         ClientComm.Write(global_drive_command);
 
         QThread::msleep(SEND_REC_INTERVAL_MS);
@@ -517,19 +521,20 @@ void Garfield_control::recThread() {
 
         ui->temperatur_lineEdit->setText(QString::number(global_drive_info.temperature));
 
+        if(mymap != NULL){
+            emit displayAlfPosition(global_drive_info.x_position,global_drive_info.y_position,global_drive_info.theta_position);
+        }
+
         if(msgType == ALF_POSITION_ID){
             printf("got position\n");
             x_position = global_alf_position.x_position;
             y_position = global_alf_position.y_position;
-            //ui->label_2->setGeometry(x_position,y_position,ui->label_2->geometry().width(),ui->label_2->geometry().height());
-            //ui->label_2->show();
-            //ui->Gyro_Y_lineEdit->setText(QString::number(global_alf_position.y_position));
         }
 
         //P:
         // Check, if ARM send a request to invoke the copying of map-pgm-file on the vehicle
         // If Yes, invoke the copying
-        printf("Test: invokeCopyMapFile = %d\n", global_drive_info.invokeCopyMapFile);
+        printf("Test: invokeCopyMapFilee = %d\n", global_drive_info.invokeCopyMapFile);
         if(global_drive_info.invokeCopyMapFile)
         {
             printf("Test: Request is received from ARM\n");
@@ -546,8 +551,6 @@ void Garfield_control::recThread() {
 
 //P:
 void Garfield_control::getMapThread() {
-    Alf_Urg_Measurements_Buffer readBuffer(10);
-    alf_mess_types msgType;
 
     std::mutex mux;
     std::unique_lock<std::mutex> lock(mux);
@@ -561,8 +564,9 @@ void Garfield_control::getMapThread() {
         printf("Test: Copy the map-pgm-file from ARM to HQ\n");
         notify_getMapThread = false;
 
-        system("sshpass -p \"temppwd\" scp -o StrictHostKeyChecking=no ubuntu@192.168.100.149:/home/ubuntu/bin/savingSlamMap.pgm testSavingSSH.pgm");
-
+        system("sudo sshpass -p temppwd scp -o StrictHostKeyChecking=no ubuntu@192.168.100.149:/home/ubuntu/bin/savingSlamMap.pgm /home/lex/Dokumente/testSavingSSH.pgm");
+        if(mymap != NULL)
+            mymap->setMapImage();
         invokedCopyingMapFinished = true;
 
         // QThread::msleep(3000);

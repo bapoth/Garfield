@@ -35,6 +35,15 @@ public:
     ///For Copying the map-pgm-file from ARM to HQ:
     /// ARM advise HQ to copy the map-pgm-file
     bool invokeCopyMapFile;
+
+    ///This variable holds the x-coordinate of the car's current position on the map
+    int x_position;
+    ///This variable holds the y-coordinate of the car's current position on the map
+    int y_position;
+    ///This variable holds the theta-coordinate of the car's current position on the map
+    double theta_position;
+
+
 };
 
 class Alf_Drive_Command {

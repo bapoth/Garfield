@@ -181,8 +181,12 @@ alf_error Alf_Communication<_comType>::Write(Alf_Drive_Info &info) {
         to_send += std::to_string(info.Gyroscope_Y) + __delim;
         to_send += std::to_string(info.Gyroscope_Z) + __delim;
         to_send += std::to_string(info.temperature) + __delim;
-        to_send += std::to_string(info.invokeCopyMapFile) + __end_delim;
+        to_send += std::to_string(info.invokeCopyMapFile) + __delim;
+        to_send += std::to_string(info.x_position) + __delim;
+        to_send += std::to_string(info.y_position) + __delim;
+        to_send += std::to_string(info.theta_position) + __end_delim;
         ret_val = ALF_NO_ERROR;
+        //printf("write_alfdriveinfo %s\n",to_send.c_str());
         ret_val = __writeLine(__comHandler, to_send);
     }
     return ret_val;
@@ -315,6 +319,15 @@ alf_error Alf_Communication<_comType>::Read(Alf_Urg_Measurements_Buffer& readBuf
                             case 9:
                             	global_drive_info.invokeCopyMapFile = std::stoi(match.str());
                                 break;
+                            case 10:
+                                global_drive_info.x_position = std::stoi(match.str());
+                                break;
+                            case 11:
+                            	global_drive_info.y_position = std::stoi(match.str());
+                            	break;
+                            case 12:
+                            	global_drive_info.theta_position =std::stoi(match.str());
+                            	break;
                         }
                         //if(DEBUG) printf("drive info "+ global_drive_info.speed + " accel" + global_drive_info.acceleration + "gyro_xyz" + global_drive_info.Gyroscope_X+","+global_drive_info.Gyroscope_Y +"," + global_drive_info.Gyroscope_Z + " temperature" + global_drive_info.temperature +"\n");
                         if (DEBUG) printf("drive info %d accel : %f gyro_xyz %f  %f  %f temp: %f",global_drive_info.speed,global_drive_info.acceleration,global_drive_info.Gyroscope_X,global_drive_info.Gyroscope_Y,global_drive_info.Gyroscope_Z,global_drive_info.temperature);
@@ -338,6 +351,7 @@ alf_error Alf_Communication<_comType>::Read(Alf_Urg_Measurements_Buffer& readBuf
                             case 5:
                                 global_drive_command.finishedCopyMapFile = std::stoi(match.str());
                             	break;
+
                         }
                         if(DEBUG) printf("drive command speed %d direction %d angle %d  light %d \n",global_drive_command.speed,global_drive_command.direction,global_drive_command.angle,global_drive_command.light);
                     }
@@ -350,6 +364,9 @@ alf_error Alf_Communication<_comType>::Read(Alf_Urg_Measurements_Buffer& readBuf
                                 break;
                             case 2:
                                 global_alf_position.y_position = std::stoi(match.str());
+                                break;
+                            case 3:
+                                global_alf_position.theta_position = std::stod(match.str());
                                 break;
                         }
                         if(DEBUG) printf("position %d  %d \n",global_alf_position.x_position,global_alf_position.y_position);

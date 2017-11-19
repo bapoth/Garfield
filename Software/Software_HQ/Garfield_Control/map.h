@@ -19,10 +19,13 @@ public:
     void mouseMoveEvent(QMouseEvent *ev);
     void setPosition(QPoint);
     void move(const QPoint pos);
+    void setMapImage();
+   // void setAlfPosition(int xPos,int yPos, double thetaPos);
 signals:
 
 public slots:
     void setFlag(QPoint pos);
+    void setAlfPosition(int xPos, int yPos, double thetaPos);
 
 };
 
